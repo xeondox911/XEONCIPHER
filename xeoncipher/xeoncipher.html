@@ -2958,8 +2958,12 @@ const FIREBASE_CONFIG = {
 
 let db = null;
 try {
-  firebase.initializeApp(FIREBASE_CONFIG);
-  db = firebase.firestore();
+  if (typeof firebase !== 'undefined') {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+  } else {
+    console.warn("[XEONCIPHER] Firebase SDK not loaded — database features disabled.");
+  }
 } catch(e) { console.error("[XEONCIPHER] Firebase init error:", e); }
 
 async function saveEntryToFirestore(entry) {
