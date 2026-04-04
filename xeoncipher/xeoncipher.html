@@ -5,6 +5,8 @@
 <title>XEONCIPHER</title>
 <link rel="icon" type="image/png" href="assets/icon.png">
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
 :root {
   /* ── CIPHER COLUMN COLORS (history grid) ── */
@@ -2011,8 +2013,98 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   height: 22px; display: flex; align-items: center; justify-content: center;
   box-sizing: border-box;
 }
-.s-group.hidden { display:none; }
-.s-row.hidden { display:none; }
+/* ─── DATABASE BUTTON ─── */
+#dbSearchBtn {
+  display: block;
+  margin: 0 auto 10px auto;
+  background: transparent;
+  border: 1px solid #1a3a2a;
+  color: #3a8a5a;
+  font-family: var(--font-buttons);
+  font-size: 0.68rem;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 7px 22px;
+  cursor: pointer;
+  clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+  position: relative;
+}
+#dbSearchBtn:hover {
+  color: #62bf80;
+  border-color: #2d5a3d;
+  background: rgba(98,191,128,0.04);
+}
+#dbSearchBtn.db-loading {
+  color: #2a6a3a;
+  pointer-events: none;
+}
+
+/* ─── DATABASE RESULTS PANEL ─── */
+#dbResultsPanel {
+  display: none;
+  width: max-content;
+  max-width: 96vw;
+  margin: 0 auto 24px auto;
+  background: #00030a;
+  border: 1px solid #1a3a2a;
+  clip-path: polygon(20px 0%, 100% 0%, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0% 100%, 0% 20px);
+  padding: 20px 28px 24px 28px;
+  font-family: var(--font-history);
+}
+#dbResultsPanel.db-visible { display: block; }
+
+#dbResultsTitle {
+  font-family: var(--font-history-header);
+  font-size: 0.62rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #2a6a4a;
+  margin-bottom: 16px;
+}
+
+.db-result-row {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  padding: 9px 0;
+  border-bottom: 1px solid #0d1f12;
+}
+.db-result-row:last-child { border-bottom: none; }
+
+.db-result-text {
+  color: #d4ede0;
+  font-size: var(--sz-history-font);
+  min-width: 120px;
+  flex-shrink: 0;
+}
+
+.db-result-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+}
+
+.db-badge {
+  font-size: 0.52rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1px solid currentColor;
+  opacity: 0.85;
+  clip-path: polygon(4px 0%, 100% 0%, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0% 100%, 0% 4px);
+}
+
+.db-no-results {
+  color: #2a5a3a;
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 10px 0;
+}
 </style>
 <script>window.__BAKED_SETTINGS__ = {"--cipher-ordinal":"#00ff4c","--cipher-revOrdinal":"#00ff88","--cipher-reduction":"#00aeff","--cipher-revReduction":"#00f7ff","--cipher-sumerian":"#c4fa92","--cipher-revSumerian":"#fff09b","--cipher-satanic":"#ff0d00","--cipher-revSatanic":"#ff6868","--cipher-jewish":"#9a38d8","--cipher-chaldean":"#88bf93","--bd-ordinal-title":"#00ff4c","--bd-ordinal-underline":"#00882a","--bd-ordinal-letter":"#00ff4c","--bd-ordinal-value":"#00cc3d","--bd-revOrdinal-title":"#00ff88","--bd-revOrdinal-underline":"#008844","--bd-revOrdinal-letter":"#00ff88","--bd-revOrdinal-value":"#00b35c","--bd-reduction-title":"#00aeff","--bd-reduction-underline":"#005f99","--bd-reduction-letter":"#00aeff","--bd-reduction-value":"#0088cc","--bd-revReduction-title":"#00f7ff","--bd-revReduction-underline":"#008899","--bd-revReduction-letter":"#00f7ff","--bd-revReduction-value":"#00c4cc","--bd-sumerian-title":"#c4fa92","--bd-sumerian-underline":"#6a9944","--bd-sumerian-letter":"#c4fa92","--bd-sumerian-value":"#9acc70","--bd-revSumerian-title":"#fff09b","--bd-revSumerian-underline":"#998844","--bd-revSumerian-letter":"#fff09b","--bd-revSumerian-value":"#ccbe7a","--bd-satanic-title":"#ff160a","--bd-satanic-underline":"#880800","--bd-satanic-letter":"#ff2a1f","--bd-satanic-value":"#ff0d00","--bd-revSatanic-title":"#ff6868","--bd-revSatanic-underline":"#883030","--bd-revSatanic-letter":"#ff6868","--bd-revSatanic-value":"#cc5252","--bd-jewish-title":"#7c2ed4","--bd-jewish-underline":"#6a2480","--bd-jewish-letter":"#8e3bc4","--bd-jewish-value":"#8530a0","--bd-chaldean-title":"#6c9973","--bd-chaldean-underline":"#567b59","--bd-chaldean-letter":"#83b57d","--bd-chaldean-value":"#899d7b","--g-btn-neon-1":"#003d07","--g-btn-neon-2":"#084200","--g-btn-inner-bg":"#060b0f","--g-btn-text":"#c8f0da","--g-menu-bg":"#007bff","--g-menu-border":"#2d5a3d","--g-menu-text":"#62bf80","--g-menu-hover":"#0d1f12","--g-menu-item-text":"#8ed4a8","--g-chk-bg":"#000000","--g-chk-border":"#2c4b58","--g-chk-active":"#8aff8c","--g-chk-label":"#e0e0e0","--g-search-bg":"#000a0f","--g-search-border":"#000000","--g-search-border-focus":"#001f0d","--g-search-text":"#25ad50","--g-search-placeholder":"#12973c","--g-search-icon":"#008a30","--g-search-icon-focus":"#62bf80","--g-search-btn-bg":"#050e10","--g-search-btn-icon":"#00a334","--g-search-topline":"#000000","--g-search-label":"#008028","--g-search-status":"#008028","--g-search-corner":"#00c73f","--g-search-spore":"#000000","--g-totals-left-poly":"#000000","--g-totals-right-poly":"#000b19","--g-totals-stroke":"#62bf80","--g-totals-name-text":"#d4ede0","--g-totals-val-text":"#62bf80","--g-totals-divider":"#1e4a2c","--g-totals-orb":"#4a9e6b","--g-totals-row-hover":"#8ed4a8","--bd-bg":"#000919","--bd-title-text":"#62bf80","--bd-title-line":"#2d5a3d","--bd-space-color":"#1e4a2c","--g-history-outer-border":"#00142e","--g-history-inner-bg":"#04000a","--g-history-header-text":"#ffffff","--g-history-text-col":"#d4ede0","--g-history-header-border":"#1e4a2c","--g-date-wrap-border":"#1c1c1c","--g-date-section-bg":"#000000","--g-date-label-text":"#dedede","--g-date-input-bg":"#000000","--g-date-input-border":"#292929","--g-date-input-text":"#95e9b0","--g-date-result-bg":"#000305","--g-date-result-border":"#1c1c1c","--g-date-result-text":"#44ca6f","--g-date-divider":"#262626","--g-date-detail-title":"#64b983","--g-date-detail-text":"#4abf6f","--g-popup-bg":"#00030a","--g-popup-border":"#62bf80","--g-popup-text":"#c8fed7","--g-popup-label":"#c8fed7","--g-popup-shadow":"#62bf80","--s-overlay-bg":"#000000","--s-panel-bg":"#02080f","--s-panel-border":"#1a3a2a","--s-header-bg":"#010508","--s-header-border":"#1a3a2a","--s-title-text":"#6dbf9e","--s-close-bg":"#010508","--s-close-border":"#1a3a2a","--s-close-text":"#4a9e6b","--s-close-hover-bg":"#1a3a2a","--s-close-hover-text":"#6dbf9e","--s-body-bg":"#02080f","--s-scrollbar-thumb":"#1a3a2a","--s-group-label-text":"#2a6a4a","--s-group-label-border":"#1a3a2a","--s-row-label-text":"#4a9e6b","--s-footer-bg":"#010508","--s-footer-border":"#1a3a2a","--s-reset-bg":"#010508","--s-reset-border":"#1a3a2a","--s-reset-text":"#4a9e6b","--s-reset-hover-bg":"#1a3a2a","--s-reset-hover-text":"#6dbf9e","--s-save-bg":"#1a3a2a","--s-save-border":"#2a5a3a","--s-save-text":"#6dbf9e","--s-save-hover-bg":"#2a5a3a","--s-saved-bg":"#4a9e6b","--s-saved-text":"#010508","--sz-btn-font":"1.35em","--sz-btn-w":"232px","--sz-btn-h":"74.4px","--sz-btn-ls":"4.3px","--sz-search-height":"80.4px","--sz-search-font":"1.66rem","--sz-input-font":"0.85rem","--sz-totals-name-font":"32.2px","--sz-totals-val-font":"41.8px","--sz-bd-title-font":"27.6px","--sz-bd-letter-font":"26px","--sz-bd-value-font":"14.8px","--sz-history-font":"29.2px","--sz-date-input-w":"139.6px","--sz-date-label-font":"0.5rem","--sz-detail-label-font":"1.11rem","--sz-detail-val-font":"1.63rem","--sz-popup-w":"327px","--sz-popup-font":"25px","--sz-popup-label-font":"0.98em","--sz-co-tile-w":"679px","--sz-co-tile-h":"95.6px","--sz-co-tile-font":"1.46rem","--sz-settings-w":"380px","--sz-header-font":"0.7rem","--pos-app-margin-top":"56px","--pos-app-width":"101%","--pos-header-mb":"52px","--pos-search-mb":"36.8px","--pos-totals-mb":"54.8px","--pos-breakdown-mb":"64.8px","--pos-section-padding":"69.2px","--pos-date-max-w":"962px","--pos-bd-section-pad-h":"52px","--pos-co-overlay-pt":"35px","--pos-bd-underline-bottom":"12.6px","--sz-menu-pad":"24px","--sz-menu-w":"300px","--sz-menu-item-font":"20px","--sz-menu-item-pad":"12px","--sz-co-panel-gap":"14px","--sz-co-title-font":"0.48rem","--sz-co-title-ls":"7px","--sz-co-hint-font":"0.42rem","--sz-co-grid-gap":"23.2px","--sz-co-tile-clip":"20px","--sz-co-bar-w":"-43.8px","--sz-co-content-pl":"91.4px","--sz-co-content-pr":"65.8px","--sz-co-tile-ls":"2.5px","--sz-co-pip-size":"11.2px","--sz-chk-size":"44.4px","--sz-chk-dot":"19.2px","--sz-chk-font":"20px","--sz-search-pad-top":"24px","--sz-search-pad-bot":"21.6px","--sz-search-max-w":"960px","--sz-search-border":"0.8px","--sz-search-icon-sz":"25.4px","--sz-search-btn-icon":"33.4px","--sz-search-input-pad":"19px","--sz-search-input-ls":"2.8px","--sz-search-label-font":"0.8rem","--sz-search-label-ls":"2px","--sz-search-status-font":"0.59rem","--sz-search-status-ls":"1px","--sz-search-corner-sz":"13.6px","--sz-search-corner-pos":"20px","--sz-spore-1":"5.8px","--sz-spore-2":"4px","--sz-spore-3":"7px","--sz-totals-max-w":"960px","--sz-totals-td-pad-v":"7px","--sz-totals-td-pad-h":"6.2px","--sz-totals-row-h":"92px","--sz-totals-row-minw":"320px","--sz-totals-name-pt":"6.8px","--sz-totals-name-pl":"10px","--sz-totals-name-ls":"1px","--sz-totals-val-pt":"-80.2px","--sz-totals-val-pr":"12.8px","--sz-totals-val-ls":"1.1px","--sz-bd-clip":"22px","--sz-bd-pad-top":"4.4px","--sz-bd-pad-bot":"7.6px","--sz-bd-min-w":"440px","--sz-bd-max-w":"1010px","--sz-bd-title-mb":"-6px","--sz-bd-container-gap":"18.4px","--sz-bd-word-gap":"1.6px","--sz-bd-val-mt":"0.2px","--sz-hist-clip-out":"25px","--sz-hist-clip-in":"22px","--sz-hist-outer-pad":"2.2px","--sz-hist-inner-pad-v":"22.4px","--sz-hist-inner-pad-h":"35.6px","--sz-hist-cell-pad-v":"13px","--sz-hist-cell-pad-h":"14px","--sz-hist-header-font":"20.4px","--sz-hist-text-maxw":"378px","--sz-popup-h":"214px","--sz-popup-pad-v":"12px","--sz-popup-pad-h":"20px","--pos-popup-offset-y":"8px","--sz-date-clip":"24px","--sz-date-row-gap":"57.6px","--sz-date-group-gap":"34.4px","--sz-date-grp-lbl-font":"0.86rem","--sz-date-grp-lbl-ls":"14.9px","--sz-date-inputs-gap":"58.4px","--sz-date-input-pad-v":"11.8px","--sz-date-input-pad-h":"8px","--sz-date-input-font":"1.81rem","--sz-date-input-ls":"1px","--sz-date-sec-lbl-font":"1.04rem","--sz-date-sec-lbl-ls":"2.9px","--sz-date-sec-lbl-mb":"31px","--sz-date-opts-gap":"21.2px","--sz-date-dur-gap":"56.4px","--sz-date-res-font":"53.2px","--sz-date-res-lh":"-7.06px","--sz-date-res-pad-v":"37.2px","--sz-date-res-pad-h":"46px","--sz-detail-head-font":"1.57rem","--sz-detail-head-ls":"3.9px","--sz-detail-head-mb":"15px","--sz-detail-head-pb":"18.6px","--sz-detail-panel-pad":"23.6px","--sz-detail-row-mb":"38.4px","--sz-detail-lbl-ls":"2.1px","--sz-detail-lbl-mb":"10.2px","--sz-detail-val-ls":"1px","--sz-detail-bd-font":"0.91rem","--sz-detail-bd-mt":"4px","--pos-app-mb":"50px","--pos-header-max-w":"960px","--pos-date-margin-v":"40px","--pos-date-pad-h":"51.6px","--g-black":"#060f09","--g-deeper":"#1e4a2c","--g-deep":"#132e19","--g-dark":"#2d5a3d","--g-hover":"#3a7a52","--g-mid":"#62bf80","--g-bright":"#8ed4a8","--matrix-color":"#62bf80","--matrix-bg":"#000000","--bd-shadow-light":"rgba(20,50,30,0.7)","--bd-shadow-dark":"rgba(0,0,0,1)","--bd-clip-border":"#2d5a3d","--bd-title-text-glow":"rgba(98,191,128,0.3)","--g-history-cell-bg":"transparent","--g-history-row-hover":"rgba(45,90,61,0.12)","--g-date-outer-bg":"#060f09","--s-panel-shadow":"rgba(0,0,0,0.8)","--s-row-divider":"rgba(30,74,44,0.2)","--co-overlay-bg":"rgba(0,0,0,0.82)","--co-tile-bg":"#000000","--co-tile-active-bg":"#000000","--co-tile-name-off":"#2a2a2a","--co-tile-border-off":"rgba(255,255,255,0.055)","--co-color-ordinal":"#00992e","--co-color-revOrdinal":"#00a87e","--co-color-reduction":"#0076ad","--co-color-revReduction":"#00adb3","--co-color-sumerian":"#84a465","--co-color-revSumerian":"#a19863","--co-color-satanic":"#b31800","--co-color-revSatanic":"#a84343","--co-color-jewish":"#9a38d8","--co-color-chaldean":"#88bf93","--sz-bd-letter-ls":"0px","--sz-bd-word-val-font":"23px","--sz-bd-word-val-ls":"-0.2px","--sz-bd-word-wrap-gap":"10.2px","--sz-bd-total-font":"44.6px","--sz-bd-total-ls":"4.9px","--sz-bd-total-mt":"3.6px","--bd-word-val-color":"#aaffcc","--bd-total-color":"#00ff4c","--font-body":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-buttons":"\"AEB\", \"Consolas\", \"Courier New\", monospace","--font-search-input":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-search-meta":"\"77\", \"Consolas\", \"Courier New\", monospace","--font-search-status":"\"77\", \"Consolas\", \"Courier New\", monospace","--font-totals":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-totals-name":"\"AEB\", \"Consolas\", \"Courier New\", monospace","--font-totals-value":"\"AEB\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-title":"\"GOS\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-letters":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-values":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-bd-word-total":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-bd-grand-total":"\"AEB\", \"Consolas\", \"Courier New\", monospace","--font-history":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-history-header":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-date":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-date-input":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-date-result":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-popup":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-cipher-overlay":"\"GOS\", \"Consolas\", \"Courier New\", monospace","--font-settings":"\"AESR\", \"Consolas\", \"Courier New\", monospace","--fw-buttons":"bold","--fw-search-input":"600","--fw-search-label":"900","--fw-search-status":"900","--fw-totals-name":"bold","--fw-totals-value":"bold","--fw-bd-title":"bold","--fw-bd-letters":"normal","--fw-bd-values":"normal","--fw-bd-word-total":"normal","--fw-bd-grand-total":"normal","--fw-history-cell":"normal","--fw-history-header":"normal","--fw-date-label":"normal","--fw-date-input":"normal","--fw-date-result":"normal","--fw-popup":"normal","--fw-overlay-tile":"bold","--fw-settings":"normal","--tt-buttons":"uppercase","--tt-search-input":"uppercase","--tt-search-label":"uppercase","--tt-search-status":"uppercase","--tt-totals-name":"uppercase","--tt-totals-value":"none","--tt-bd-title":"none","--tt-bd-letters":"uppercase","--tt-bd-values":"none","--tt-history-header":"none","--tt-date-label":"uppercase","--tt-date-input":"none","--tt-date-result":"none","--tt-popup":"none","--tt-overlay-tile":"uppercase","--sz-hist-row-gap":"-18px"};</script>
 </head>
@@ -2103,6 +2195,12 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
       <div class="breakdown-container" id="breakdownContainer"></div>
       <div class="breakdown-total" id="breakdownTotal"></div>
     </div>
+  </div>
+
+  <button id="dbSearchBtn">◈ DATABASE</button>
+  <div id="dbResultsPanel">
+    <div id="dbResultsTitle">MATCHES FROM DATABASE</div>
+    <div id="dbResultsBody"></div>
   </div>
 
   <div id="compareSection" class="compare-section" style="display:none;">
@@ -2877,6 +2975,156 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
 
 <script>
 /* =============================================
+   FIREBASE SETUP
+   Fill in your config values from Firebase Console
+   → Project Settings → Your Apps → SDK setup
+   ============================================= */
+const firebaseConfig = {
+  apiKey: "AIzaSyAchpKVlGtBSbaRgos6mBVaIBExztTIkag",
+  authDomain: "xeoncipher322.firebaseapp.com",
+  databaseURL: "https://xeoncipher322-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "xeoncipher322",
+  storageBucket: "xeoncipher322.firebasestorage.app",
+  messagingSenderId: "794650756541",
+  appId: "1:794650756541:web:8443a5b11af8758934fed4"
+};
+
+let db = null;
+(function initFirebase() {
+  if (Object.values(FIREBASE_CONFIG).some(v => v.startsWith("REPLACE_WITH"))) {
+    console.warn("[XEONCIPHER] Firebase not configured — fill in FIREBASE_CONFIG.");
+    return;
+  }
+  try {
+    firebase.initializeApp(FIREBASE_CONFIG);
+    db = firebase.firestore();
+  } catch(e) { console.error("[XEONCIPHER] Firebase init error:", e); }
+})();
+
+/* ── Save an entry to the community database ── */
+async function saveEntryToFirestore(entry) {
+  if (!db) return;
+  try {
+    // Avoid saving pure duplicate texts (case-insensitive)
+    const existing = await db.collection("entries")
+      .where("textLower", "==", entry.text.toLowerCase()).limit(1).get();
+    if (!existing.empty) return; // already in database
+    await db.collection("entries").add({
+      text:      entry.text,
+      textLower: entry.text.toLowerCase(),
+      totals:    entry.totals,
+      savedAt:   Date.now()
+    });
+  } catch(e) { console.error("[XEONCIPHER] Save error:", e); }
+}
+
+/* ── Badge colour per cipher (matches CSS variable colours) ── */
+const CIPHER_BADGE_COLORS = {
+  ordinal:      "#00ff4c", revOrdinal:   "#00ff88",
+  reduction:    "#00aeff", revReduction: "#00f7ff",
+  sumerian:     "#c4fa92", revSumerian:  "#fff09b",
+  satanic:      "#ff0d00", revSatanic:   "#ff6868",
+  jewish:       "#9a38d8", chaldean:     "#88bf93"
+};
+const CIPHER_LABELS = {
+  ordinal:"ORD", revOrdinal:"R.ORD", reduction:"RED", revReduction:"R.RED",
+  sumerian:"SUM", revSumerian:"R.SUM", satanic:"SAT", revSatanic:"R.SAT",
+  jewish:"JEW", chaldean:"CHA"
+};
+
+/* ── Search the database for entries matching the current input ── */
+async function searchDatabase() {
+  const panel = document.getElementById("dbResultsPanel");
+  const body  = document.getElementById("dbResultsBody");
+  const btn   = document.getElementById("dbSearchBtn");
+
+  // If panel is already open, close it
+  if (panel.classList.contains("db-visible")) {
+    panel.classList.remove("db-visible");
+    return;
+  }
+
+  const inputText = lastSubmittedText || document.getElementById("textInput").value.trim();
+  if (!inputText) {
+    body.innerHTML = '<div class="db-no-results">TYPE SOMETHING FIRST</div>';
+    panel.classList.add("db-visible");
+    return;
+  }
+
+  if (!db) {
+    body.innerHTML = '<div class="db-no-results">DATABASE NOT CONNECTED</div>';
+    panel.classList.add("db-visible");
+    return;
+  }
+
+  btn.textContent = "◈ SEARCHING...";
+  btn.classList.add("db-loading");
+
+  try {
+    const myTotals = calcTotals(inputText);
+    const snap = await db.collection("entries").get();
+
+    // Score each entry: count how many cipher values match
+    const results = [];
+    snap.forEach(doc => {
+      const d = doc.data();
+      if (!d.text || !d.totals) return;
+      if (d.textLower === inputText.toLowerCase()) return; // skip the input itself
+
+      const matchedCiphers = [];
+      for (const cipher of Object.keys(myTotals)) {
+        if (d.totals[cipher] !== undefined && d.totals[cipher] === myTotals[cipher]) {
+          matchedCiphers.push(cipher);
+        }
+      }
+      if (matchedCiphers.length > 0) {
+        results.push({ text: d.text, matchedCiphers, score: matchedCiphers.length });
+      }
+    });
+
+    // Sort: most matching ciphers first
+    results.sort((a, b) => b.score - a.score);
+
+    body.innerHTML = "";
+    if (results.length === 0) {
+      body.innerHTML = '<div class="db-no-results">NO MATCHES FOUND</div>';
+    } else {
+      results.forEach(r => {
+        const row = document.createElement("div");
+        row.className = "db-result-row";
+
+        const textEl = document.createElement("div");
+        textEl.className = "db-result-text";
+        textEl.textContent = r.text;
+
+        const badges = document.createElement("div");
+        badges.className = "db-result-badges";
+        r.matchedCiphers.forEach(cipher => {
+          const b = document.createElement("span");
+          b.className = "db-badge";
+          b.textContent = CIPHER_LABELS[cipher];
+          b.style.color = CIPHER_BADGE_COLORS[cipher];
+          badges.appendChild(b);
+        });
+
+        row.appendChild(textEl);
+        row.appendChild(badges);
+        body.appendChild(row);
+      });
+    }
+
+    panel.classList.add("db-visible");
+  } catch(e) {
+    body.innerHTML = '<div class="db-no-results">ERROR READING DATABASE</div>';
+    panel.classList.add("db-visible");
+    console.error("[XEONCIPHER] Search error:", e);
+  } finally {
+    btn.textContent = "◈ DATABASE";
+    btn.classList.remove("db-loading");
+  }
+}
+
+/* =============================================
    CIPHER LOGIC
    ============================================= */
 const cipherMeta = {
@@ -3219,7 +3467,9 @@ function submitText() {
   const text=input.value.trim();
   if(!text)return;
   lastSubmittedText=text;
-  historyData.push({text,totals:calcTotals(text)});
+  const entry={text,totals:calcTotals(text)};
+  historyData.push(entry);
+  saveEntryToFirestore(entry);   // ← saves to community database
   rebuildCompare();
   renderBreakdown(text);
   input.value="";
@@ -3227,6 +3477,7 @@ function submitText() {
 
 document.getElementById("enterBtn").addEventListener("click",submitText);
 document.getElementById("textInput").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();submitText();}});
+document.getElementById("dbSearchBtn").addEventListener("click", searchDatabase);
 
 /* --- HEADER MENUS --- */
 const ciphersBtn=document.getElementById("ciphersBtn");
