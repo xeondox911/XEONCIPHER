@@ -2317,20 +2317,7 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
           <div class="co-tile-content"><span class="co-tile-name">Duration Box</span><span class="co-tile-pip"></span></div>
         </div>
       </div>
-      <div class="co-tile-frame" style="--tile-color:#ffdd57;--tile-color-dim:rgba(255,221,87,0.22); margin-top:52px;">
-        <div class="co-tile dl-tile" id="linkBuyMeCoffee">
-          <div class="co-tile-bar"></div>
-          <div class="co-tile-glow"></div>
-          <div class="co-tile-content"><span class="co-tile-name">Buy Me a Coffee</span><span class="co-tile-pip"></span></div>
-        </div>
-      </div>
-      <div class="co-tile-frame" style="--tile-color:#e1306c;--tile-color-dim:rgba(225,48,108,0.22);">
-        <div class="co-tile dl-tile" id="linkInstagram">
-          <div class="co-tile-bar"></div>
-          <div class="co-tile-glow"></div>
-          <div class="co-tile-content"><span class="co-tile-name">Instagram</span><span class="co-tile-pip"></span></div>
-        </div>
-      </div>
+
     </div>
     <div class="co-close-hint">Click outside or press ESC to close</div>
   </div>
@@ -3490,9 +3477,7 @@ function refreshDlTileStates() {
   document.getElementById('downloadHistory').classList.toggle('dl-dim', !historyAvail);
   document.getElementById('downloadBreakdown').classList.toggle('dl-dim', !breakdownAvail);
   document.getElementById('downloadDuration').classList.toggle('dl-dim', !durationAvail);
-  // Link tiles are always available
-  document.getElementById('linkBuyMeCoffee').classList.remove('dl-dim');
-  document.getElementById('linkInstagram').classList.remove('dl-dim');
+
 }
 
 function animateDlTilesIn() {
@@ -4147,24 +4132,6 @@ document.getElementById("downloadBreakdown").addEventListener("click", e => {
   triggerDlTileAnim(tile, () => {
     closeDownloadOverlay();
     setTimeout(() => downloadBreakdownCanvas(), 220);
-  });
-});
-
-document.getElementById("linkBuyMeCoffee").addEventListener("click", e => {
-  e.stopPropagation();
-  const tile = document.getElementById("linkBuyMeCoffee");
-  triggerDlTileAnim(tile, () => {
-    const url = "YOUR_BUYMEACOFFEE_LINK_HERE"; // ← paste your link here
-    if (url && url !== "YOUR_BUYMEACOFFEE_LINK_HERE") window.open(url, "_blank");
-  });
-});
-
-document.getElementById("linkInstagram").addEventListener("click", e => {
-  e.stopPropagation();
-  const tile = document.getElementById("linkInstagram");
-  triggerDlTileAnim(tile, () => {
-    const url = "https://instagram.com/xeoncipher"; // ← paste your link here
-    if (url && url !== "YOUR_INSTAGRAM_LINK_HERE") window.open(url, "_blank");
   });
 });
 
