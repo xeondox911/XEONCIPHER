@@ -219,6 +219,12 @@ canvas#matrix {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 2px;
 }
+.feature-card.feature-card--centre {
+  grid-column: 1 / -1;
+  max-width: calc(50% - 1px);
+  margin: 0 auto;
+  width: 100%;
+}
 
 .feature-card {
   background: #04000a;
@@ -707,6 +713,19 @@ body::after {
       </span>
       <span class="stat-label">EFFORTLESS DOWNLOADS</span>
     </div>
+    <div class="stat-item">
+      <span class="stat-num" style="line-height:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00ff4c" stroke-width="1.5" width="1.4rem" height="1.4rem" style="filter:drop-shadow(0 0 8px rgba(0,255,76,0.35));display:block;">
+          <ellipse cx="12" cy="5" rx="9" ry="3"/>
+          <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+          <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+          <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+          <line x1="17" y1="17" x2="21" y2="21" stroke-width="2"/>
+          <polyline points="15,19 17,17 19,19" stroke-width="1.5"/>
+        </svg>
+      </span>
+      <span class="stat-label">RANKED MATCH DATABASE</span>
+    </div>
   </div>
 
   <!-- FEATURES — accordion -->
@@ -756,7 +775,7 @@ body::after {
 
       <div class="feature-card" onclick="toggleFeature(this)">
         <div class="feature-header">
-          <div class="feature-name">DATE NUMEROLOGY</div>
+          <div class="feature-name">DATE CALCULATION</div>
           <div class="feature-arrow">
             <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
           </div>
@@ -787,6 +806,18 @@ body::after {
         </div>
         <div class="feature-body">
           <div class="feature-desc">ADJUST FONTS, COLORS, SPACING, AND WHICH CIPHERS ARE VISIBLE. EVERY SETTING IS SAVED TO YOUR BROWSER.</div>
+        </div>
+      </div>
+
+      <div class="feature-card feature-card--centre" onclick="toggleFeature(this)">
+        <div class="feature-header">
+          <div class="feature-name">MATCH DATABASE</div>
+          <div class="feature-arrow">
+            <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
+          </div>
+        </div>
+        <div class="feature-body">
+          <div class="feature-desc">SEARCH A DATABASE OF WORDS AND PHRASES THAT MATCH YOUR INPUT. RESULTS SHOW HOW MANY CIPHERS EACH MATCH SHARES WITH YOUR ENTRY AND ARE RANKED VISUALLY BY CIPHER OVERLAP.</div>
         </div>
       </div>
 
