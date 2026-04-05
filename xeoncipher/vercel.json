@@ -1,4 +1,7 @@
 {
+  "rewrites": [
+    { "source": "/terminal", "destination": "/xeoncipher.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
