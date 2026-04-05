@@ -203,15 +203,40 @@ canvas#matrix {
   font-family: var(--font-buttons);
   font-size: 0.85rem; letter-spacing: 4px;
   color: #d4706a;
+  flex-wrap: wrap;
 }
 .db-note-header > svg { stroke: #a04444; flex-shrink: 0; }
-.db-note-title { flex: 1; }
+.db-note-title { flex: 1; min-width: 0; }
 .db-note-urgency {
   font-family: var(--font-meta);
   font-size: 0.6rem; letter-spacing: 2px;
   color: #a04444;
   white-space: nowrap;
   flex-shrink: 0;
+}
+@media (max-width: 520px) {
+  .db-note-header {
+    font-size: 0.72rem;
+    letter-spacing: 2px;
+    padding: 20px 18px;
+    gap: 8px;
+    row-gap: 6px;
+  }
+  .db-note-title {
+    order: 1;
+    flex-basis: calc(100% - 44px);
+  }
+  .db-note-header > svg { order: 0; }
+  .db-note-arrow { order: 2; }
+  .db-note-urgency {
+    order: 3;
+    flex-basis: 100%;
+    padding-left: 24px;
+    font-size: 0.58rem;
+    letter-spacing: 1.5px;
+  }
+  .db-note-body { padding: 0 18px; }
+  .db-note.open .db-note-body { padding: 0 18px 20px 18px; }
 }
 .db-note-arrow {
   width: 26px; height: 26px;
