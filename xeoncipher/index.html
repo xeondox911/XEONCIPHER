@@ -181,6 +181,46 @@ canvas#matrix {
 .cta-btn:active .cta-inner { inset: 3px; background: repeating-linear-gradient(to bottom,transparent 0%,var(--g-btn-neon-2) 1px,var(--g-btn-neon-2) 3px,transparent 3px,transparent 5px),var(--g-btn-inner-bg); }
 @keyframes neonRot { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
 
+/* ── DATABASE NOTE ── */
+.db-note {
+  margin-top: 2px;
+  background: #04000a;
+  padding: 26px 28px 24px 28px;
+  position: relative;
+  clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+}
+.db-note::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(to right, transparent, #1e4a2c, transparent);
+  pointer-events: none;
+}
+.db-note-header {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-family: var(--font-buttons);
+  font-size: 0.85rem; letter-spacing: 4px;
+  color: var(--c-bright);
+  margin-bottom: 18px;
+}
+.db-note-header svg { stroke: var(--c-bright); }
+.db-note-body {
+  display: flex; flex-direction: column; gap: 0;
+}
+.db-note-body p {
+  font-family: var(--font-sub);
+  font-size: 0.75rem; letter-spacing: 1px; line-height: 2;
+  color: var(--c-mid);
+  border-top: 1px solid #0d2014;
+  padding-top: 14px;
+  padding-bottom: 14px;
+}
+.db-note-warn {
+  color: var(--c-mid) !important;
+}
+.db-note-patience {
+  color: var(--c-mid) !important;
+  opacity: 1;
+}
+
 .cta-hint {
   font-family: var(--font-meta);
   font-size: 0.65rem; letter-spacing: 3px;
@@ -428,6 +468,13 @@ canvas#matrix {
 }
 .support-tile:hover .s-txt { color: #fff; text-shadow: 2px 3px 1px var(--g-btn-neon-1),2px 2px 1px var(--g-btn-neon-2),0 0 18px rgba(255,255,255,0.55); }
 .support-tile:active .s-inner { inset: 3px; background: repeating-linear-gradient(to bottom,transparent 0%,var(--g-btn-neon-2) 1px,var(--g-btn-neon-2) 3px,transparent 3px,transparent 5px),var(--g-btn-inner-bg); }
+
+.support-tile--disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.35;
+  filter: saturate(0.3);
+}
 
 .support-tile .s-txt { color: var(--g-btn-text); }
 .support-note {
@@ -847,6 +894,24 @@ body::after {
       </div>
 
     </div>
+
+    <div class="db-note">
+      <div class="db-note-header">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="1rem" height="1rem" style="flex-shrink:0;margin-top:1px;">
+          <ellipse cx="12" cy="5" rx="9" ry="3"/>
+          <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
+          <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
+          <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
+        </svg>
+        <span>DATABASE — HOW IT WORKS &amp; HOW YOU CAN HELP</span>
+      </div>
+      <div class="db-note-body">
+        <p>EVERY ENTRY YOU FEED INTO THE HISTORY TABLE IS AUTOMATICALLY SUBMITTED TO THE BACKEND DATABASE — ITS TEXT AND ALL CIPHER VALUES ARE STORED AND BECOME SEARCHABLE FOR EVERY USER. YOU CAN ALSO QUERY THE DATABASE DIRECTLY: JUST TYPE ANY WORD OR PHRASE AND HIT THE DATABASE BUTTON WITHOUT ADDING IT TO YOUR HISTORY TABLE.</p>
+        <p class="db-note-warn">&#x26A0;&nbsp; PLEASE KEEP THE DATABASE MEANINGFUL. AVOID SUBMITTING RANDOM STRINGS, TEST INPUTS, OR ENTRIES WITH NO RESEARCH VALUE — EVERY RECORD IS PERMANENT AND BAD DATA DEGRADES RESULTS FOR EVERYONE.</p>
+        <p class="db-note-patience">&#x25B8;&nbsp; THE DATABASE FEATURE MAY RETURN FEW OR NO MATCHES WHILE THE COLLECTION IS STILL GROWING. THIS IS EXPECTED. AS MORE USERS CONTRIBUTE QUALITY ENTRIES AND THE DATABASE IS PERIODICALLY EXPORTED TO THE GITHUB REPOSITORY, MATCH QUALITY WILL IMPROVE SIGNIFICANTLY. YOUR CONTRIBUTIONS NOW BUILD THE FOUNDATION FOR EVERYONE LATER.</p>
+        <p class="db-note-warn">&#x26A0;&nbsp; THE DATABASE MAY ALSO RETURN NO RESULTS EVEN WHEN MATCHES EXIST — THIS IS A KNOWN LIMITATION OF THE CURRENT BACKEND DUE TO RESTRICTED READ/WRITE CAPACITY. IT IS NOT A BUG IN YOUR INPUT. THIS WILL BE RESOLVED ONCE THE DATABASE IS MIGRATED OFFLINE AND BUNDLED DIRECTLY INTO THE GITHUB REPOSITORY.</p>
+      </div>
+    </div>
   </section>
 
   <!-- BLOG -->
@@ -877,7 +942,7 @@ body::after {
         <span class="s-inner"></span>
         <span class="s-txt">&#x25C8; INSTAGRAM</span>
       </a>
-      <a class="support-tile" href="later" target="_blank">
+      <a class="support-tile support-tile--disabled">
         <span class="s-inner"></span>
         <span class="s-txt">&#x25C8; DONATE</span>
       </a>
