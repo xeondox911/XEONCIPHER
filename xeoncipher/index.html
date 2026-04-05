@@ -185,25 +185,65 @@ canvas#matrix {
 .db-note {
   margin-top: 2px;
   background: #04000a;
-  padding: 26px 28px 24px 28px;
+  padding: 0;
   position: relative;
   clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+  cursor: pointer;
+  transition: background 0.2s;
 }
 .db-note::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(to right, transparent, #1e4a2c, transparent);
+  background: linear-gradient(to right, transparent, #5a1a1a, transparent);
   pointer-events: none;
 }
+.db-note:hover { background: #0a0008; }
 .db-note-header {
-  display: flex; align-items: flex-start; gap: 10px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 24px 28px;
   font-family: var(--font-buttons);
   font-size: 0.85rem; letter-spacing: 4px;
-  color: var(--c-bright);
-  margin-bottom: 18px;
+  color: #d4706a;
 }
-.db-note-header svg { stroke: var(--c-bright); }
+.db-note-header > svg { stroke: #a04444; flex-shrink: 0; }
+.db-note-title { flex: 1; }
+.db-note-urgency {
+  font-family: var(--font-meta);
+  font-size: 0.6rem; letter-spacing: 2px;
+  color: #a04444;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.db-note-arrow {
+  width: 26px; height: 26px;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid #5a1a1a;
+  background: transparent;
+  clip-path: polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);
+  transition: border-color 0.2s, background 0.2s;
+  pointer-events: none;
+}
+.db-note-arrow svg {
+  width: 11px; height: 11px;
+  stroke: #a04444;
+  fill: none;
+  stroke-width: 2;
+  transition: stroke 0.2s, transform 0.3s;
+}
+.db-note:hover .db-note-arrow { border-color: #7a2a2a; background: #150505; }
+.db-note:hover .db-note-arrow svg { stroke: #d4706a; }
+.db-note.open .db-note-arrow { border-color: #d4706a; background: #1a0808; }
+.db-note.open .db-note-arrow svg { stroke: #d4706a; transform: rotate(180deg); }
 .db-note-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
+  padding: 0 28px;
   display: flex; flex-direction: column; gap: 0;
+}
+.db-note.open .db-note-body {
+  max-height: 1200px;
+  padding: 0 28px 26px 28px;
 }
 .db-note-body p {
   font-family: var(--font-sub);
@@ -217,8 +257,7 @@ canvas#matrix {
   color: var(--c-mid) !important;
 }
 .db-note-patience {
-  color: var(--c-mid) !important;
-  opacity: 1;
+  color: var(--c-min) !important;
 }
 
 .cta-hint {
@@ -895,7 +934,7 @@ body::after {
 
     </div>
 
-    <div class="db-note">
+    <div class="db-note" onclick="toggleDbNote(this)">
       <div class="db-note-header">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="1rem" height="1rem" style="flex-shrink:0;margin-top:1px;">
           <ellipse cx="12" cy="5" rx="9" ry="3"/>
@@ -903,7 +942,11 @@ body::after {
           <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
           <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
         </svg>
-        <span>DATABASE — HOW IT WORKS &amp; HOW YOU CAN HELP</span>
+        <span class="db-note-title">DATABASE — HOW IT WORKS &amp; HOW YOU CAN HELP</span>
+        <span class="db-note-urgency">&#x21E8;&nbsp; IMPORTANT — READ BEFORE USING</span>
+        <div class="db-note-arrow">
+          <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
+        </div>
       </div>
       <div class="db-note-body">
         <p>EVERY ENTRY YOU FEED INTO THE HISTORY TABLE IS AUTOMATICALLY SUBMITTED TO THE BACKEND DATABASE — ITS TEXT AND ALL CIPHER VALUES ARE STORED AND BECOME SEARCHABLE FOR EVERY USER. YOU CAN ALSO QUERY THE DATABASE DIRECTLY: JUST TYPE ANY WORD OR PHRASE AND HIT THE DATABASE BUTTON WITHOUT ADDING IT TO YOUR HISTORY TABLE.</p>
@@ -964,6 +1007,9 @@ body::after {
 <script>
   function toggleFeature(card) {
     card.classList.toggle('open');
+  }
+  function toggleDbNote(el) {
+    el.classList.toggle('open');
   }
 </script>
 
