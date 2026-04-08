@@ -104,7 +104,7 @@ canvas#matrix {
 .hero-title {
   font-family: var(--font-display);
   font-size: clamp(2.8rem, 8vw, 5.4rem);
-  letter-spacing: 18px;
+  letter-spacing: -2px;
   color: #00ff4c;
   text-shadow: 0 0 20px rgba(0,255,76,0.25), 0 0 60px rgba(0,255,76,0.08);
   line-height: 1;
@@ -122,6 +122,17 @@ canvas#matrix {
   background: #00882a;
   opacity: 0.6;
 }
+.hero-tm {
+  font-family: var(--font-display);
+  font-size: 0.45em;
+  letter-spacing: 0;
+  color: rgba(0,255,76,0.55);
+  text-shadow: none;
+  vertical-align: super;
+  position: relative;
+  top: 0.1em;
+}
+/* ── HERO SUBTITLE ──*/
 .hero-subtitle {
   font-family: var(--font-sub);
   font-size: clamp(0.7rem, 2.5vw, 1.1rem);
@@ -592,7 +603,7 @@ body::after {
 
   .hero-title {
     font-size: clamp(1.6rem, 9vw, 2.6rem);
-    letter-spacing: 4px;
+    letter-spacing: -2px;
   }
 
   /* Keep underline decoration proportional */
@@ -801,7 +812,7 @@ body::after {
 
   <!-- HERO — no nav, no eyebrow -->
   <section class="hero">
-    <div class="hero-title">XEONCIPHER</div>
+    <div class="hero-title">XEONCIPHER<sup class="hero-tm">&#x2122;</sup></div>
     <div class="hero-subtitle">CIPHER BASED CRYPTOGRAPHY I.E GEMATRIA</div>
     <div class="cta-wrap">
       <a class="cta-btn" href="terminal">
