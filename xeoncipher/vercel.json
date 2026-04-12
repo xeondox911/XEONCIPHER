@@ -1,5 +1,6 @@
 {"rewrites": [
-{ "source": "/terminal", "destination": "/xeoncipher.html" }
+{ "source": "/terminal", "destination": "/xeoncipher.html" },
+{ "source": "/blog", "destination": "/blog.html" }
 ],
 "headers": [
 {
