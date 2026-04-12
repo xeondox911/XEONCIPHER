@@ -452,8 +452,8 @@ canvas#matrix {
   background: #04000a;
   clip-path: polygon(20px 0%,100% 0%,calc(100% - 20px) 100%,0% 100%);
   padding: 40px 48px;
-  display: flex; align-items: center;
-  justify-content: space-between;
+  display: flex; align-items: center; flex-direction: column;
+  justify-content: center; text-align: center;
   gap: 32px; flex-wrap: wrap;
   position: relative; overflow: hidden;
 }
@@ -657,6 +657,13 @@ body::after {
     margin-left: 0;
   }
 
+  .stat-item:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    width: calc(50% - 1.5px) !important;
+    margin-left: auto !important;
+    margin-right: auto;
+  }
+
   .stat-num {
     font-size: 1.25rem;
     letter-spacing: 1px;
@@ -732,10 +739,16 @@ body::after {
 
   .write-banner {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     padding: 20px 16px;
     gap: 16px;
     clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+  }
+
+  .write-banner .cta-btn {
+    align-self: center;
+    margin: 0 auto;
   }
 
   .write-banner-title {
@@ -815,7 +828,7 @@ body::after {
     <div class="hero-title">XEONCIPHER<sup class="hero-tm">&#x2122;</sup></div>
     <div class="hero-subtitle">CIPHER BASED CRYPTOGRAPHY I.E GEMATRIA</div>
     <div class="cta-wrap">
-      <a class="cta-btn" href="terminal">
+      <a class="cta-btn" href="xeoncipher.html">
         <span class="cta-inner"></span>
         <span class="cta-txt">
         ENTER TERMINAL</span>
@@ -875,123 +888,7 @@ body::after {
     </div>
   </div>
 
-  <!-- FEATURES — accordion -->
-  <section class="features">
-    <div class="section-header">
-      <div class="section-header-line"></div>
-      <div class="section-title">&#x25C8; WHAT IT DOES</div>
-      <div class="section-header-line right"></div>
-    </div>
-    <div class="features-grid">
 
-      <div class="feature-card" onclick="toggleFeature(this)">
-        <div class="feature-header">
-          <div class="feature-name">MULTI-CIPHER ENGINE</div>
-          <div class="feature-arrow">
-            <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
-          </div>
-        </div>
-        <div class="feature-body">
-          <div class="feature-desc">CALCULATE ACROSS 10 CIPHER SYSTEMS AT ONCE. EVERY WORD SCORED IN EVERY SYSTEM THE MOMENT YOU TYPE IT.</div>
-        </div>
-      </div>
-
-      <div class="feature-card" onclick="toggleFeature(this)">
-        <div class="feature-header">
-          <div class="feature-name">LETTER BREAKDOWN</div>
-          <div class="feature-arrow">
-            <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
-          </div>
-        </div>
-        <div class="feature-body">
-          <div class="feature-desc">SEE THE VALUE OF EVERY INDIVIDUAL LETTER IN THE ACTIVE CIPHER. SWITCH CIPHERS AND THE BREAKDOWN UPDATES INSTANTLY.</div>
-        </div>
-      </div>
-
-      <div class="feature-card" onclick="toggleFeature(this)">
-        <div class="feature-header">
-          <div class="feature-name">HISTORY TABLE</div>
-          <div class="feature-arrow">
-            <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
-          </div>
-        </div>
-        <div class="feature-body">
-          <div class="feature-desc">EVERY ENTRY YOU RUN GETS LOGGED IN A SCROLLABLE COMPARISON TABLE. SPOT MATCHING VALUES ACROSS PHRASES AT A GLANCE.</div>
-        </div>
-      </div>
-
-      <div class="feature-card" onclick="toggleFeature(this)">
-        <div class="feature-header">
-          <div class="feature-name">DATE CALCULATION</div>
-          <div class="feature-arrow">
-            <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
-          </div>
-        </div>
-        <div class="feature-body">
-          <div class="feature-desc">CALCULATE THE EXACT DURATION BETWEEN TWO DATES AND EXTRACT THE NUMEROLOGICAL VALUES OF BOTH DATES SIMULTANEOUSLY.</div>
-        </div>
-      </div>
-
-      <div class="feature-card" onclick="toggleFeature(this)">
-        <div class="feature-header">
-          <div class="feature-name">EXPORT &amp; DOWNLOAD</div>
-          <div class="feature-arrow">
-            <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
-          </div>
-        </div>
-        <div class="feature-body">
-          <div class="feature-desc">DOWNLOAD YOUR HISTORY TABLE, CIPHER BREAKDOWN, AND DURATION BOX AS CLEAN PNG IMAGES READY TO SHARE.</div>
-        </div>
-      </div>
-
-      <div class="feature-card" onclick="toggleFeature(this)">
-        <div class="feature-header">
-          <div class="feature-name">FULLY CUSTOMISABLE</div>
-          <div class="feature-arrow">
-            <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
-          </div>
-        </div>
-        <div class="feature-body">
-          <div class="feature-desc">ADJUST FONTS, COLORS, SPACING, AND WHICH CIPHERS ARE VISIBLE. EVERY SETTING IS SAVED TO YOUR BROWSER.</div>
-        </div>
-      </div>
-
-      <div class="feature-card feature-card--centre" onclick="toggleFeature(this)">
-        <div class="feature-header">
-          <div class="feature-name">MATCH DATABASE</div>
-          <div class="feature-arrow">
-            <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
-          </div>
-        </div>
-        <div class="feature-body">
-          <div class="feature-desc">SEARCH A DATABASE OF WORDS AND PHRASES THAT MATCH YOUR INPUT. RESULTS SHOW HOW MANY CIPHERS EACH MATCH SHARES WITH YOUR ENTRY AND ARE RANKED VISUALLY BY CIPHER OVERLAP.</div>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="db-note" onclick="toggleDbNote(this)">
-      <div class="db-note-header">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="1rem" height="1rem" style="flex-shrink:0;margin-top:1px;">
-          <ellipse cx="12" cy="5" rx="9" ry="3"/>
-          <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
-          <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
-          <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
-        </svg>
-        <span class="db-note-title">DATABASE — HOW IT WORKS &amp; HOW YOU CAN HELP</span>
-        <span class="db-note-urgency">&#x21E8;&nbsp; IMPORTANT — READ BEFORE USING</span>
-        <div class="db-note-arrow">
-          <svg viewBox="0 0 12 12"><polyline points="2,4 6,8 10,4"/></svg>
-        </div>
-      </div>
-      <div class="db-note-body">
-        <p>EVERY ENTRY YOU FEED INTO THE HISTORY TABLE IS AUTOMATICALLY SUBMITTED TO THE BACKEND DATABASE — ITS TEXT AND ALL CIPHER VALUES ARE STORED AND BECOME SEARCHABLE FOR EVERY USER. YOU CAN ALSO QUERY THE DATABASE DIRECTLY: JUST TYPE ANY WORD OR PHRASE AND HIT THE DATABASE BUTTON WITHOUT ADDING IT TO YOUR HISTORY TABLE.</p>
-        <p class="db-note-warn">&#x26A0;&nbsp; PLEASE KEEP THE DATABASE MEANINGFUL. AVOID SUBMITTING RANDOM STRINGS, TEST INPUTS, OR ENTRIES WITH NO RESEARCH VALUE — EVERY RECORD IS PERMANENT AND BAD DATA DEGRADES RESULTS FOR EVERYONE.</p>
-        <p class="db-note-patience">&#x25B8;&nbsp; THE DATABASE FEATURE MAY RETURN FEW OR NO MATCHES WHILE THE COLLECTION IS STILL GROWING. THIS IS EXPECTED. AS MORE USERS CONTRIBUTE QUALITY ENTRIES AND THE DATABASE IS PERIODICALLY EXPORTED TO THE GITHUB REPOSITORY, MATCH QUALITY WILL IMPROVE SIGNIFICANTLY. YOUR CONTRIBUTIONS NOW BUILD THE FOUNDATION FOR EVERYONE LATER.</p>
-        <p class="db-note-warn">&#x26A0;&nbsp; THE DATABASE MAY ALSO RETURN NO RESULTS EVEN WHEN MATCHES EXIST — THIS IS A KNOWN LIMITATION OF THE CURRENT BACKEND DUE TO RESTRICTED READ/WRITE CAPACITY. IT IS NOT A BUG IN YOUR INPUT. THIS WILL BE RESOLVED ONCE THE DATABASE IS MIGRATED OFFLINE AND BUNDLED DIRECTLY INTO THE GITHUB REPOSITORY.</p>
-      </div>
-    </div>
-  </section>
 
   <!-- BLOG -->
   <section class="blog">
@@ -1003,9 +900,12 @@ body::after {
     <div class="write-banner">
       <div class="write-banner-text">
         <div class="write-banner-title">&#x25C8; WANT TO PUBLISH YOUR OWN DECODE?</div>
-        <div class="write-banner-sub">THE BLOG IS NOT YET OPEN FOR SUBMISSIONS. WHEN IT LAUNCHES, ANYONE WILL BE ABLE TO SUBMIT A GEMATRIA DECODE FOR REVIEW. STAY TUNED.</div>
+        <div class="write-banner-sub">THE BLOG IS NOW LIVE. EXPLORE COMMUNITY DECODES, RESEARCH BREAKDOWNS, AND CIPHER ANALYSIS — OR SUBMIT YOUR OWN WHEN SUBMISSIONS OPEN.</div>
       </div>
-      <div class="write-banner-badge">COMING SOON</div>
+      <a href="blog.html" class="cta-btn" style="width:320px;height:64px;text-decoration:none;">
+        <span class="cta-inner"></span>
+        <span class="cta-txt">BLOG SECTION</span>
+      </a>
     </div>
   </section>
 
@@ -1040,14 +940,6 @@ body::after {
 </div>
 
 <script src="js/rain.js"></script>
-<script>
-  function toggleFeature(card) {
-    card.classList.toggle('open');
-  }
-  function toggleDbNote(el) {
-    el.classList.toggle('open');
-  }
-</script>
 
 </body>
 </html>
