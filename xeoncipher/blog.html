@@ -1523,7 +1523,8 @@ body::after {
     <div class="search-wrap">
       <input type="text" id="sections-search" class="search-input"
         placeholder="&#x25C8; FIND RESEARCH TOPICS.."
-        autocomplete="new-password" spellcheck="false"
+        autocomplete="off" spellcheck="false" readonly
+        onfocus="this.removeAttribute('readonly')"
         oninput="filterSections(this.value)">
       <div class="input-border"></div>
       <span class="search-icon" id="search-icon">&#x2315;</span>
@@ -2653,7 +2654,7 @@ function fmtDateLong(iso){
 loadSession();
 history.replaceState({ view:'sections' }, '');
 showSections(false);
-setTimeout(() => { const s = document.getElementById('sections-search'); if(s) s.value = ''; }, 100);
+setTimeout(() => { const s = document.getElementById('sections-search'); if(s) s.value = ''; }, 300);
 </script>
 </body>
 </html>
