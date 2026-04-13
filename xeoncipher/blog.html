@@ -104,7 +104,7 @@ body::after {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
   flex-wrap: nowrap;
 }
 
@@ -152,35 +152,24 @@ body::after {
 }
 .nav-logout:hover { color: #ff4444; border-color: #5a1a1a; }
 
-/* NAV LOGIN BUTTON */
-.nav-btn {
-  font-family: var(--font-meta);
+/* NAV NEW BUTTON (TERMINAL + LOGIN) */
+.nav-new-btn {
+  margin-bottom: 0 !important;
+  height: 36px;
   font-size: 0.65rem;
   letter-spacing: 3px;
-  color: var(--g-btn-text);
-  background: transparent;
-  border: 1px solid #1e4a2c;
-  cursor: pointer;
-  padding: 0;
-  position: relative;
-  overflow: hidden;
-  height: 36px;
-  min-width: 100px;
-  clip-path: polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px);
-  transition: border-color 0.2s, background 0.2s;
+  padding: 0 1.2em;
+  min-width: 80px;
+  text-decoration: none;
+  display: inline-grid;
 }
-.nav-btn-inner {
-  display: block;
-  position: absolute; inset: 1.5px;
-  background: var(--g-btn-inner-bg);
-  clip-path: polygon(6px 0,calc(100% - 6px) 0,100% 6px,100% calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,0 calc(100% - 6px),0 6px);
-  z-index: 0;
-}
-.nav-btn-txt { position: relative; z-index: 2; pointer-events: none; white-space: nowrap; }
-.nav-btn:hover { border-color: #2d5a3d; background: #040c07; }
-.nav-btn:hover .nav-btn-txt { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
 
 @keyframes neonRot { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+@keyframes move-bg7234 {
+  0%   { background-position: 31% 0%; }
+  50%  { background-position: 70% 100%; }
+  100% { background-position: 31% 0%; }
+}
 
 /* ── BLOG HERO ── */
 .blog-hero {
@@ -249,22 +238,81 @@ body::after {
 
 /* ── NEW BUTTON ── */
 .new-btn {
+  --border-color: linear-gradient(-45deg, #00ff4c, #003d07, #004d14, #00ff4c);
+  --border-width: 0.125em;
+  --curve-size: 0.5em;
+  --blur: 30px;
+  --bg: #04000a;
+  --color: #ffffff;
+  color: var(--color);
   font-family: var(--font-meta);
   font-size: 0.65rem;
   letter-spacing: 3px;
-  color: var(--c-mid);
-  background: #04000a;
-  border: 1px solid #1e4a2c;
-  clip-path: polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
   cursor: pointer;
-  padding: 12px 20px;
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-content: center;
+  padding: 0.6em 1.4em;
+  border: 0;
+  outline: none;
   white-space: nowrap;
   margin-bottom: 28px;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
   flex-shrink: 0;
+  text-transform: uppercase;
+  box-shadow: 6px 6px 16px rgba(0,0,0,0.6);
+  clip-path: polygon(
+    0% var(--curve-size),
+    var(--curve-size) 0,
+    100% 0,
+    100% calc(100% - var(--curve-size)),
+    calc(100% - var(--curve-size)) 100%,
+    0 100%
+  );
+  transition: color 250ms, transform 0.08s ease;
+  user-select: none;
 }
-.new-btn:hover { color: var(--c-bright); border-color: #2d5a3d; background: #060010; }
-.new-btn:active { background: #080018; }
+.new-btn::after,
+.new-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.new-btn::before {
+  background: var(--border-color);
+  background-size: 300% 300%;
+  animation: move-bg7234 5s ease infinite;
+  z-index: -2;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+.new-btn::after {
+  background: var(--bg);
+  z-index: -1;
+  clip-path: polygon(
+    var(--border-width) calc(var(--curve-size) + var(--border-width) * 0.5),
+    calc(var(--curve-size) + var(--border-width) * 0.5) var(--border-width),
+    calc(100% - var(--border-width)) var(--border-width),
+    calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+    calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)),
+    var(--border-width) calc(100% - var(--border-width))
+  );
+  transition: clip-path 500ms;
+}
+.new-btn:where(:hover,:focus)::after {
+  clip-path: polygon(
+    calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+    calc(100% - var(--border-width)) var(--border-width),
+    calc(100% - var(--border-width)) var(--border-width),
+    calc(100% - var(--border-width)) calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)),
+    calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width)),
+    calc(100% - calc(var(--curve-size) + var(--border-width) * 0.5)) calc(100% - var(--border-width))
+  );
+  transition: 200ms;
+}
+.new-btn:where(:hover,:focus) { color: #ffffff; }
+.new-btn:where(:hover,:focus)::before { opacity: 1; }
+.new-btn:active { transform: scale(0.955); transition: transform 0.06s ease; }
 
 /* ── SECTIONS GRID ── */
 .sections-grid {
@@ -703,9 +751,9 @@ body::after {
 
 .pc-comments {
   font-family: var(--font-meta);
-  font-size: 0.58rem;
+  font-size: 0.72rem;
   letter-spacing: 1.5px;
-  color: var(--c-min);
+  color: #00ff4c;
   margin-left: auto;
   display: flex;
   align-items: center;
@@ -1232,30 +1280,51 @@ body::after {
 .back-all-btn:hover { color: #00ff4c; border-color: #2d5a3d; background: #060010; }
 
 /* ── SEARCH BAR ── */
-.search-wrap { position: relative; margin-bottom: 28px; }
+.search-wrap {
+  position: relative;
+  margin-bottom: 28px;
+  --border-before-color: #2a5038;
+  --border-after-color: #007728;
+  --border-height: 1px;
+}
 .search-input {
-  width: 100%;
-  background: #04000a;
-  border: 1px solid #1e4a2c;
   color: var(--c-bright);
   font-family: var(--font-body);
   font-size: 0.78rem;
   letter-spacing: 2px;
-  padding: 14px 44px 14px 18px;
+  background-color: transparent;
+  width: 100%;
+  box-sizing: border-box;
+  padding-inline: 0.5em;
+  padding-block: 0.75em;
+  padding-right: 44px;
+  border: none;
+  border-bottom: var(--border-height) solid var(--border-before-color);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
   outline: none;
   text-transform: uppercase;
-  clip-path: polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
-  transition: border-color 0.2s, box-shadow 0.2s;
   display: block;
 }
-.search-input::placeholder { color: #1e4a2c; font-family: var(--font-sub); font-size: 0.7rem; letter-spacing: 1px; }
-.search-input:focus { border-color: #2d5a3d; box-shadow: 0 0 14px rgba(0,255,76,0.05); }
+.search-input::placeholder { color: #2a5038; font-family: var(--font-sub); font-size: 0.7rem; letter-spacing: 1px; }
+.input-border {
+  position: absolute;
+  background: var(--border-after-color);
+  box-shadow: 0 0 6px rgba(0,204,68,0.22);
+  width: 0%;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  transition: width 0.3s cubic-bezier(0.6,-0.28,0.735,0.045);
+  pointer-events: none;
+}
+.search-input:focus { outline: none; }
+.search-input:focus + .input-border { width: 100%; }
 .search-icon {
-  position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-  font-family: var(--font-meta); font-size: 0.75rem; color: #1e4a2c;
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  font-family: var(--font-meta); font-size: 1.05rem; color: #00ff4c;
   pointer-events: none; transition: color 0.2s;
 }
-.search-wrap:focus-within .search-icon { color: var(--c-min); }
+.search-wrap:focus-within .search-icon { color: #00ff4c; }
 .search-clear {
   position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
   font-family: var(--font-meta); font-size: 0.7rem; color: var(--c-min);
@@ -1342,9 +1411,12 @@ body::after {
 /* ── FOOTER ── */
 .footer {
   border-top: 1px solid #0d1f12;
-  padding-top: 32px;
-  margin-top: 80px;
+  padding-top: 24px;
+  margin-top: 140px;
   text-align: center;
+  max-width: 360px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .footer-copy {
   font-family: var(--font-meta);
@@ -1413,8 +1485,9 @@ body::after {
   .sc-footer { padding: 14px 18px 18px 18px; }
   .nav-link { font-size: 0.52rem; letter-spacing: 1px; padding: 6px 8px; }
   .breadcrumb { font-size: 0.55rem; letter-spacing: 1px; }
-  .nav-btn { min-width: 72px; font-size: 0.55rem; letter-spacing: 2px; }
+  .nav-new-btn { min-width: 72px; font-size: 0.55rem; letter-spacing: 2px; }
   .nav-logo-link { font-size: clamp(0.8rem, 4vw, 1.1rem); }
+  .footer { max-width: 280px; margin-top: 100px; padding-top: 18px; }
 }
   </style>
 </head>
@@ -1429,13 +1502,9 @@ body::after {
   <nav class="blog-nav">
     <a href="/" class="nav-logo-link">XEONCIPHER<sup class="nav-tm">&#x2122;</sup></a>
     <div class="nav-links">
-      <a href="/" class="nav-link">&#x25C8; HOME</a>
-      <a href="/xeoncipher.html" class="nav-link">&#x25C8; TERMINAL</a>
+      <a href="/xeoncipher.html" class="new-btn nav-new-btn">&#x25C8; TERMINAL</a>
       <div id="nav-auth-area">
-        <button class="nav-btn" onclick="openAuth()">
-          <span class="nav-btn-inner"></span>
-          <span class="nav-btn-txt">&#x25C8; LOGIN</span>
-        </button>
+        <button class="new-btn nav-new-btn" onclick="openAuth()">&#x25C8; LOGIN</button>
       </div>
     </div>
   </nav>
@@ -1448,19 +1517,15 @@ body::after {
 
   <!-- ── VIEW: SECTIONS (DEFAULT) ── -->
   <div id="view-sections">
-    <div class="view-header">
-      <div class="section-header" style="flex:1;margin-bottom:0;">
-        <div class="section-header-line"></div>
-        <div class="section-title">&#x25C8; DECODE SECTIONS</div>
-        <div class="section-header-line right"></div>
-      </div>
-      <button class="new-btn" onclick="requireAuth('new-section')">+ NEW SECTION</button>
+    <div class="view-header" style="align-items:flex-end;">
+      <button class="new-btn" onclick="requireAuth('new-section')">ADD RESEARCH TOPIC</button>
     </div>
     <div class="search-wrap">
       <input type="text" id="sections-search" class="search-input"
-        placeholder="&#x25C8; SEARCH SECTIONS..."
+        placeholder="&#x25C8; FIND RESEARCH TOPICS.."
         autocomplete="new-password" spellcheck="false"
         oninput="filterSections(this.value)">
+      <div class="input-border"></div>
       <span class="search-icon" id="search-icon">&#x2315;</span>
       <button class="search-clear" id="search-clear" onclick="clearSearch()">&#x2715;</button>
     </div>
@@ -1502,9 +1567,7 @@ body::after {
     </div>
   </div>
 
-  <footer class="footer">
-    <div class="footer-copy">&#x25C8; XEONCIPHER &nbsp;&#x2014;&nbsp; ESTABLISHED 2026 &nbsp;&#x2014;&nbsp; DECODE BLOG</div>
-  </footer>
+
 </div>
 
 <!-- ── MODAL: AUTH ── -->
@@ -1556,7 +1619,7 @@ body::after {
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label">SECTION TITLE</label>
-        <input type="text" id="ns-title" class="form-input" placeholder="E.G. 9/11, MOON LANDING, JFK..." maxlength="60" autocomplete="off">
+        <input type="text" id="ns-title" class="form-input" placeholder="" maxlength="60" autocomplete="off">
       </div>
       <div class="form-group">
         <label class="form-label">DESCRIPTION</label>
@@ -1719,10 +1782,7 @@ function renderNav(){
       </div>`;
   } else {
     area.innerHTML = `
-      <button class="nav-btn" onclick="openAuth()">
-        <span class="nav-btn-inner"></span>
-        <span class="nav-btn-txt">&#x25C8; LOGIN</span>
-      </button>`;
+      <button class="new-btn nav-new-btn" onclick="openAuth()">&#x25C8; LOGIN</button>`;
   }
 }
 
@@ -1896,7 +1956,7 @@ function updateHero(view, sectionTitle){
   if(view === 'sections'){
     titleEl.innerHTML = '&#x25C8; DECODE BLOG';
     subEl.style.display = '';
-    hero.classList.remove('no-drip');
+    hero.classList.add('no-drip');
   } else {
     titleEl.textContent = '◈ ' + (sectionTitle || '');
     subEl.style.display = 'none';
@@ -2114,7 +2174,7 @@ async function renderSection(sectionId){
             <div class="pc-meta">
               <span class="pc-author">${esc(p.author)}</span>
               <span class="pc-date">${fmtDate(p.created_at)}</span>
-              <span class="pc-comments">&#x25A1; ${cmtCount} ${cmtCount===1?'COMMENT':'COMMENTS'}</span>
+              <span class="pc-comments">${cmtCount} ${cmtCount===1?'COMMENT':'COMMENTS'}</span>
               ${isOwner ? `<button class="dots-btn" style="margin-left:auto;" onclick="event.stopPropagation();openActionOverlay('post','${p.id}')">&#x22EE;</button>` : ''}
             </div>
           </div>
@@ -2397,7 +2457,6 @@ function openActionOverlay(type, id){
   if(type === 'post'){
     el.innerHTML = `
       <div class="action-box">
-        <div class="action-box-label">&#x25C8; ${esc(label)}</div>
         <button class="action-box-btn edit" id="ao-edit">
           <span class="action-box-icon">&#x270E;</span> EDIT DECODE
         </button>
@@ -2410,7 +2469,6 @@ function openActionOverlay(type, id){
   } else {
     el.innerHTML = `
       <div class="action-box">
-        <div class="action-box-label">&#x25C8; ${esc(label)}</div>
         <button class="action-box-btn del" id="ao-del">
           <span class="action-box-icon">&#x2715;</span> DELETE SECTION
         </button>
