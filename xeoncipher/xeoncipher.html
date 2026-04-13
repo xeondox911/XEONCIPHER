@@ -2072,11 +2072,11 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   border: 1px solid #1a3a2a;
   color: #3a8a5a;
   font-family: var(--font-buttons);
-  font-size: 0.68rem;
+  font-size: 0.98rem;
   font-weight: bold;
-  letter-spacing: 3px;
+  letter-spacing: 4.5px;
   text-transform: uppercase;
-  padding: 7px 22px;
+  padding: 13px 38px;
   cursor: pointer;
   clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
   transition: color 0.2s, border-color 0.2s, background 0.2s;
@@ -3838,235 +3838,174 @@ document.addEventListener("paste",e=>{if(e.target.id!=="textInput")e.preventDefa
 function downloadHistoryCanvas() {
   if (!historyData.length) return;
 
-  const root  = document.documentElement;
-  const cs    = v => getComputedStyle(root).getPropertyValue(v).trim();
-  const px    = v => parseFloat(cs(v)) || 0;
+  const root = document.documentElement;
+  const cs   = v => getComputedStyle(root).getPropertyValue(v).trim();
 
-  // Colors
-  const bgOuter   = cs('--g-history-outer-border') || '#2d5a3d';
-  const bgInner   = cs('--g-history-inner-bg')     || '#000000';
-  const headerTxt = cs('--g-history-header-text')  || '#ffffff';
-  const textCol   = cs('--g-history-text-col')     || '#d4ede0';
-  const divider   = cs('--g-history-header-border')|| '#1e4a2c';
-  const cipherColors = {
-    ordinal:      cs('--cipher-ordinal'),
-    revOrdinal:   cs('--cipher-revOrdinal'),
-    reduction:    cs('--cipher-reduction'),
-    revReduction: cs('--cipher-revReduction'),
-    sumerian:     cs('--cipher-sumerian'),
-    revSumerian:  cs('--cipher-revSumerian'),
-    satanic:      cs('--cipher-satanic'),
-    revSatanic:   cs('--cipher-revSatanic'),
-    jewish:       cs('--cipher-jewish'),
-    chaldean:     cs('--cipher-chaldean'),
-  };
+  const wrapper = document.getElementById('compareWrapper');
+  const grid    = document.getElementById('compareGrid');
+  if (!wrapper || !grid) return;
 
-  // Fonts
-  const cellFontFamily   = cs('--font-history').replace(/"/g,"'")        || 'monospace';
-  const hdrFontFamily    = cs('--font-history-header').replace(/"/g,"'") || 'monospace';
-  const cellFontSize     = px('--sz-history-font')     || 13;
-  const hdrFontSize      = px('--sz-hist-header-font') || 12;
-  const cellFontWeight   = cs('--fw-history-cell')     || 'normal';
-  const hdrFontWeight    = cs('--fw-history-header')   || 'normal';
-  const hdrTransform     = cs('--tt-history-header')   || 'none';
-
-  // Padding / spacing
-  const padV      = px('--sz-hist-cell-pad-v')   || 8;
-  const padH      = px('--sz-hist-cell-pad-h')   || 14;
-  const outerPad  = px('--sz-hist-outer-pad')    || 3;
-  const innerPadV = px('--sz-hist-inner-pad-v')  || 6;
-  const innerPadH = px('--sz-hist-inner-pad-h')  || 12;
-  const textMaxW  = px('--sz-hist-text-maxw')    || 240;
-  const rowGap    = px('--sz-hist-row-gap')        || 0;
-
-  const DPR = window.devicePixelRatio || 1;
+  const isVertical       = grid.classList.contains('headers-vertical');
   const activeCipherKeys = Object.keys(activeCiphers).filter(k => activeCiphers[k]);
 
-  const measureCanvas = document.createElement('canvas');
-  const mctx = measureCanvas.getContext('2d');
+  // ── Colors ──
+  const bgOuter  = cs('--g-history-outer-border') || '#00142e';
+  const bgInner  = cs('--g-history-inner-bg')     || '#04000a';
+  const textCol  = cs('--g-history-text-col')      || '#d4ede0';
+  const gridLine = '#252525';
+  const cipherColors = {};
+  activeCipherKeys.forEach(k => { cipherColors[k] = cs(`--cipher-${k}`) || textCol; });
 
-  function applyFont(ctx, size, weight, family) {
-    ctx.font = `${weight} ${size}px ${family}`;
-  }
-  function measureText(ctx, text, size, weight, family) {
-    applyFont(ctx, size, weight, family);
-    return ctx.measureText(text).width;
-  }
-  function transformText(text, transform) {
-    if (transform === 'uppercase') return text.toUpperCase();
-    if (transform === 'lowercase') return text.toLowerCase();
-    if (transform === 'capitalize') return text.replace(/\b\w/g, c => c.toUpperCase());
-    return text;
-  }
+  // ── DOM rects (viewport-relative; subtract wrapRect for canvas coords) ──
+  const wrapRect = wrapper.getBoundingClientRect();
+  const gridRect = grid.getBoundingClientRect();
 
-  // Character-level break fallback for a single word wider than maxW
-  function breakWord(ctx, word, maxW) {
-    const result = [];
-    let chunk = '';
-    for (const ch of word) {
-      const test = chunk + ch;
-      if (ctx.measureText(test).width > maxW && chunk) {
-        result.push(chunk);
-        chunk = ch;
-      } else {
-        chunk = test;
-      }
-    }
-    if (chunk) result.push(chunk);
-    return result.length ? result : [word];
-  }
+  const headerCells = Array.from(document.querySelectorAll('#historyHeader .compare-cell'));
+  const dataRows    = Array.from(document.querySelectorAll('#compareBody .compare-row'))
+                       .map(row => Array.from(row.querySelectorAll('.compare-cell')));
 
-  // Wrap text into lines that fit within maxW — word boundaries first,
-  // character-level fallback for single words that are still too wide
-  function wrapText(ctx, text, maxW, size, weight, family) {
-    applyFont(ctx, size, weight, family);
-    if (ctx.measureText(text).width <= maxW) return [text];
-    const words = text.split(' ');
-    const lines = [];
-    let line = '';
-    for (const word of words) {
-      if (ctx.measureText(word).width > maxW) {
-        if (line) { lines.push(line); line = ''; }
-        const broken = breakWord(ctx, word, maxW);
-        for (let i = 0; i < broken.length - 1; i++) lines.push(broken[i]);
-        line = broken[broken.length - 1];
-        continue;
-      }
-      const test = line ? line + ' ' + word : word;
-      if (ctx.measureText(test).width > maxW && line) {
-        lines.push(line);
-        line = word;
-      } else {
-        line = test;
-      }
-    }
-    if (line) lines.push(line);
-    return lines.length ? lines : [text];
-  }
+  const DPR     = window.devicePixelRatio || 1;
+  const canvasW = Math.ceil(wrapRect.width);
+  const canvasH = Math.ceil(wrapRect.height);
 
-  // Header labels
-  const cipherHeaders = activeCipherKeys.map(k => {
-    const parts = cipherMeta[k].label.split(' ');
-    return parts.length > 1 ? [parts[0], parts.slice(1).join(' ')] : [parts[0]];
-  });
-
-  // Measure cipher column widths
-  const hdrColWidths = cipherHeaders.map(lines => {
-    let w = 0;
-    lines.forEach(line => {
-      w = Math.max(w, measureText(mctx, transformText(line, hdrTransform), hdrFontSize, hdrFontWeight, hdrFontFamily));
-    });
-    return w + padH * 2;
-  });
-  const dataColWidths = activeCipherKeys.map((k, ci) => {
-    let w = hdrColWidths[ci];
-    historyData.forEach(entry => {
-      const val = String(entry.totals[k] ?? '');
-      w = Math.max(w, measureText(mctx, val, cellFontSize, cellFontWeight, cellFontFamily) + padH * 2);
-    });
-    return w;
-  });
-
-  // Text column width — capped at textMaxW
-  applyFont(mctx, hdrFontSize, hdrFontWeight, hdrFontFamily);
-  let textColW = padH * 2;
-  historyData.forEach(entry => {
-    applyFont(mctx, cellFontSize, cellFontWeight, cellFontFamily);
-    const tw = mctx.measureText(entry.text).width + padH * 2;
-    textColW = Math.max(textColW, Math.min(tw, textMaxW + padH * 2));
-  });
-  textColW = Math.min(textColW, textMaxW + padH * 2);
-  const usableTextW = textColW - padH * 2;
-
-  const colWidths = [textColW, ...dataColWidths];
-  const totalW = colWidths.reduce((a, b) => a + b, 0);
-
-  // Header row height
-  const hdrLineH  = hdrFontSize * 1.4;
-  const maxHdrLines = Math.max(...cipherHeaders.map(l => l.length));
-  const hdrRowH = hdrLineH * maxHdrLines + padV + padV * 1.5;
-
-  // Per-row heights (based on wrapped line count in text column)
-  const rowLineH = cellFontSize * 1.5;
-  const dataRowHeights = historyData.map(entry => {
-    const lines = wrapText(mctx, entry.text, usableTextW, cellFontSize, cellFontWeight, cellFontFamily);
-    return Math.max(rowLineH + padV * 2, lines.length * rowLineH + padV * 2);
-  });
-
-  const gridH  = hdrRowH + dataRowHeights.reduce((a, b) => a + b, 0) + rowGap * historyData.length;
-  const canvasW = totalW + innerPadH * 2 + outerPad * 2;
-  const canvasH = gridH  + innerPadV * 2 + outerPad * 2;
-
-  const canvas = document.createElement('canvas');
+  const canvas  = document.createElement('canvas');
   canvas.width  = canvasW * DPR;
   canvas.height = canvasH * DPR;
   const ctx = canvas.getContext('2d');
   ctx.scale(DPR, DPR);
 
-  // Outer frame
+  // Cell rect in canvas coords
+  function rel(el) {
+    const r = el.getBoundingClientRect();
+    return {
+      x: Math.round(r.left - wrapRect.left),
+      y: Math.round(r.top  - wrapRect.top),
+      w: Math.round(r.width),
+      h: Math.round(r.height),
+    };
+  }
+
+  // Read font from a live element
+  function elFont(el) {
+    const s = getComputedStyle(el);
+    return { size: parseFloat(s.fontSize) || 13, weight: s.fontWeight || 'normal', family: s.fontFamily || 'monospace' };
+  }
+
+  // Word-wrap helper (used for text column)
+  function breakWord(c, word, maxW) {
+    const res = []; let chunk = '';
+    for (const ch of word) {
+      const t = chunk + ch;
+      if (c.measureText(t).width > maxW && chunk) { res.push(chunk); chunk = ch; } else chunk = t;
+    }
+    if (chunk) res.push(chunk);
+    return res.length ? res : [word];
+  }
+  function wrapText(c, text, maxW) {
+    if (c.measureText(text).width <= maxW) return [text];
+    const words = text.split(' '), lines = []; let line = '';
+    for (const word of words) {
+      if (c.measureText(word).width > maxW) {
+        if (line) { lines.push(line); line = ''; }
+        const b = breakWord(c, word, maxW);
+        for (let i = 0; i < b.length - 1; i++) lines.push(b[i]);
+        line = b[b.length - 1]; continue;
+      }
+      const test = line ? line + ' ' + word : word;
+      if (c.measureText(test).width > maxW && line) { lines.push(line); line = word; } else line = test;
+    }
+    if (line) lines.push(line);
+    return lines.length ? lines : [text];
+  }
+
+  // ── 1. Outer frame (plain rectangle — no bevels) ──
   ctx.fillStyle = bgOuter;
   ctx.fillRect(0, 0, canvasW, canvasH);
 
-  // Inner grid background
-  const gx = outerPad + innerPadH;
-  const gy = outerPad + innerPadV;
+  // ── 2. Inner grid background ──
+  const gr = rel(grid);
   ctx.fillStyle = bgInner;
-  ctx.fillRect(gx - innerPadH, gy - innerPadV, totalW + innerPadH * 2, gridH + innerPadV * 2);
+  ctx.fillRect(gr.x, gr.y, gr.w, gr.h);
 
-  // Header row
-  let cx = gx;
-  cx += colWidths[0];
+  // ── 3. Draw all cells ──
+  function drawCell(cell) {
+    const r    = rel(cell);
+    const isHdr      = cell.classList.contains('header-cell');
+    const isTextCell = cell.classList.contains('compare-text');
+    const cipherKey  = cell.dataset.cipher;
 
-  activeCipherKeys.forEach((k, ci) => {
-    const lines = cipherHeaders[ci].map(l => transformText(l, hdrTransform));
-    const color = cipherColors[k] || headerTxt;
-    applyFont(ctx, hdrFontSize, hdrFontWeight, hdrFontFamily);
-    ctx.fillStyle = color;
-    ctx.textAlign = 'center';
-    const totalLineH = lines.length * hdrLineH;
-    const startY = gy + padV + hdrLineH * maxHdrLines / 2 - totalLineH / 2 + hdrLineH / 2;
-    lines.forEach((line, li) => ctx.fillText(line, cx + dataColWidths[ci] / 2, startY + li * hdrLineH));
-    cx += dataColWidths[ci];
-  });
+    // Grid lines: right border + bottom border
+    ctx.strokeStyle = gridLine;
+    ctx.lineWidth   = 1;
+    ctx.beginPath(); ctx.moveTo(r.x + r.w + 0.5, r.y); ctx.lineTo(r.x + r.w + 0.5, r.y + r.h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(r.x, r.y + r.h - 0.5); ctx.lineTo(r.x + r.w, r.y + r.h - 0.5); ctx.stroke();
 
-  // Data rows
-  let rowY = gy + hdrRowH + rowGap;
-  historyData.forEach((entry, ri) => {
-    const rowH  = dataRowHeights[ri];
-    const midY  = rowY + rowH / 2;
+    // Blank corner cell (header + text col) — borders only
+    if (isHdr && isTextCell) return;
 
-    // Text cell — wrapped, right-aligned to match live history table
-    applyFont(ctx, cellFontSize, cellFontWeight, cellFontFamily);
-    const lines = wrapText(ctx, entry.text, usableTextW, cellFontSize, cellFontWeight, cellFontFamily);
-    ctx.fillStyle = textCol;
-    ctx.textAlign = 'right';
-    ctx.textBaseline = 'middle';
+    const { size, weight, family } = elFont(cell);
     ctx.save();
-    ctx.beginPath();
-    ctx.rect(gx, rowY, colWidths[0], rowH);
-    ctx.clip();
-    const totalTextH = lines.length * rowLineH;
-    const firstLineY = rowY + rowH / 2 - totalTextH / 2 + rowLineH / 2;
-    lines.forEach((line, li) => ctx.fillText(line, gx + colWidths[0] - padH, firstLineY + li * rowLineH));
-    ctx.restore();
 
-    // Cipher value cells
-    let dcx = gx + colWidths[0];
-    activeCipherKeys.forEach((k, ci) => {
-      const val = String(entry.totals[k] ?? '');
-      const color = cipherColors[k] || textCol;
-      applyFont(ctx, cellFontSize, cellFontWeight, cellFontFamily);
+    if (isHdr) {
+      // Header cipher label — cipher-colored
+      const color = cipherColors[cipherKey] || cs('--g-history-header-text') || '#fff';
+      ctx.fillStyle = color;
+      ctx.textBaseline = 'middle';
+
+      if (isVertical) {
+        // Rotated text (matches CSS writing-mode:vertical-rl + rotate(180deg) → reads bottom→top)
+        const label = CIPHER_LABELS[cipherKey] || cipherMeta[cipherKey].label;
+        ctx.font = `${weight} ${size}px ${family}`;
+        ctx.textAlign = 'center';
+        ctx.translate(r.x + r.w / 2, r.y + r.h / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText(label, 0, 0);
+      } else {
+        // Stacked lines (normal mode)
+        const spans = cell.querySelectorAll('.cipher-stack span');
+        const lines = spans.length ? Array.from(spans).map(s => s.textContent.trim()) : [cell.textContent.trim()];
+        ctx.font = `${weight} ${size}px ${family}`;
+        ctx.textAlign = 'center';
+        const lineH  = size * 1.4;
+        const totalH = lines.length * lineH;
+        const startY = r.y + r.h / 2 - totalH / 2 + lineH / 2;
+        lines.forEach((line, i) => ctx.fillText(line, r.x + r.w / 2, startY + i * lineH));
+      }
+
+    } else if (isTextCell) {
+      // Text (phrase) column — right-aligned, wrapped
+      const innerSpan = cell.querySelector('.compare-text-inner') || cell;
+      const text  = innerSpan.textContent.trim();
+      const padH  = parseFloat(cs('--sz-hist-cell-pad-h')) || 14;
+      const maxW  = r.w - padH * 2;
+      ctx.font = `${weight} ${size}px ${family}`;
+      const lines  = wrapText(ctx, text, maxW);
+      const lineH  = size * 1.5;
+      const totalH = lines.length * lineH;
+      const startY = r.y + r.h / 2 - totalH / 2 + lineH / 2;
+      ctx.fillStyle  = textCol;
+      ctx.textAlign  = 'right';
+      ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.clip();
+      lines.forEach((line, i) => ctx.fillText(line, r.x + r.w - padH, startY + i * lineH));
+
+    } else {
+      // Cipher value cell — centered, cipher-colored
+      const valSpan = cell.querySelector('.value') || cell;
+      const text  = valSpan.textContent.trim();
+      const color = cipherColors[cipherKey] || textCol;
+      ctx.font      = `${weight} ${size}px ${family}`;
       ctx.fillStyle = color;
       ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(val, dcx + dataColWidths[ci] / 2, midY);
-      dcx += dataColWidths[ci];
-    });
+      ctx.fillText(text, r.x + r.w / 2, r.y + r.h / 2);
+    }
 
-    rowY += rowH + rowGap;
-  });
+    ctx.restore();
+  }
 
-  // Download
+  headerCells.forEach(drawCell);
+  dataRows.forEach(row => row.forEach(drawCell));
+
+  // ── 4. Download ──
   const link = document.createElement('a');
   link.download = 'history-table.png';
   link.href = canvas.toDataURL('image/png');
