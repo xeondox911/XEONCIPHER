@@ -4032,8 +4032,9 @@ function downloadHistoryCanvas() {
       const lineH  = size * 1.5;
       const totalH = lines.length * lineH;
       const startY = r.y + r.h / 2 - totalH / 2 + lineH / 2;
-      ctx.fillStyle  = textCol;
-      ctx.textAlign  = 'right';
+      ctx.fillStyle    = textCol;
+      ctx.textAlign    = 'right';
+      ctx.textBaseline = 'middle';
       ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.clip();
       lines.forEach((line, i) => ctx.fillText(line, r.x + r.w - padH, startY + i * lineH));
 
@@ -4042,9 +4043,10 @@ function downloadHistoryCanvas() {
       const valSpan = cell.querySelector('.value') || cell;
       const text  = valSpan.textContent.trim();
       const color = cipherColors[cipherKey] || textCol;
-      ctx.font      = `${weight} ${size}px ${family}`;
-      ctx.fillStyle = color;
-      ctx.textAlign = 'center';
+      ctx.font         = `${weight} ${size}px ${family}`;
+      ctx.fillStyle    = color;
+      ctx.textAlign    = 'center';
+      ctx.textBaseline = 'middle';
       ctx.fillText(text, r.x + r.w / 2, r.y + r.h / 2);
     }
 
