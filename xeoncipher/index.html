@@ -6,6 +6,14 @@
 
   <title>XEONCIPHER — Advanced Gematria Terminal</title>
   <link rel="icon" type="image/png" href="assets/icon.png">
+  <link rel="canonical" href="https://xeoncipher.com/" />
+
+  <!-- Force HTTPS so Instagram/social scrapers always hit the canonical URL -->
+  <script>
+    if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      location.replace('https://' + location.hostname + location.pathname + location.search);
+    }
+  </script>
 
   <!-- Primary Meta -->
   <meta name="description" content="XEONCIPHER is an advanced gematria terminal for cipher-based cryptography. Decode words and phrases across multiple ciphers with a real-time updating database, and explore community decodes in the blog." />
@@ -39,6 +47,7 @@
 @font-face { font-family: "AESB"; src: url("AESB.ttf") format("truetype"); }
 @font-face { font-family: "GOS";  src: url("GOS.ttf")  format("truetype"); }
 @font-face { font-family: "77";   src: url("77.ttf")   format("truetype"); }
+@font-face { font-family: "22";   src: url("22.ttf")   format("truetype"); }
 @font-face { font-family: "G7";   src: url("G7.ttf")   format("truetype"); }
 
 :root {
@@ -46,14 +55,14 @@
   --g-btn-neon-2:   #084200;
   --g-btn-inner-bg: #060b0f;
   --g-btn-text:     #c8f0da;
-  --c-min:    #4a7a5a;
+  --c-min:    #7abf95;
   --c-mid:    #62bf80;
-  --c-bright: #8ed4a8;
+  --c-bright: #a8d8bc;
   --c-text:   #d4ede0;
-  --font-body:    "AER",  "Consolas", "Courier New", monospace;
+  --font-body:    "AESB",  "Consolas", "Courier New", monospace;
   --font-buttons: "AEB",  "Consolas", "Courier New", monospace;
   --font-display: "GOS",  "Consolas", "Courier New", monospace;
-  --font-meta:    "77",   "Consolas", "Courier New", monospace;
+  --font-meta:    "22",   "Consolas", "Courier New", monospace;
   --font-sub:     "AESR", "Consolas", "Courier New", monospace;
 }
 
@@ -93,13 +102,7 @@ canvas#matrix {
   margin-bottom: 96px;
   position: relative;
 }
-.hero::before {
-  content: '';
-  display: block;
-  width: 1px; height: 60px;
-  background: linear-gradient(to bottom, transparent, #2d5a3d);
-  margin: 0 auto 40px auto;
-}
+
 
 .hero-title {
   font-family: var(--font-display);
@@ -108,20 +111,11 @@ canvas#matrix {
   color: #00ff4c;
   text-shadow: 0 0 20px rgba(0,255,76,0.25), 0 0 60px rgba(0,255,76,0.08);
   line-height: 1;
-  margin-bottom: 28px;
+  margin-bottom: 10px;
   position: relative;
   display: inline-block;
 }
-.hero-title::after {
-  content: '';
-  position: absolute;
-  bottom: -14px; left: 50%;
-  transform: translateX(-50%);
-  width: 80%; height: 10px;
-  clip-path: polygon(0px 0px,85px 0px,90px 5px,100% 5px,100% 6px,85px 6px,80px 10px,0px 10px);
-  background: #00882a;
-  opacity: 0.6;
-}
+
 .hero-tm {
   font-family: var(--font-display);
   font-size: 0.45em;
@@ -138,8 +132,8 @@ canvas#matrix {
   font-size: clamp(0.7rem, 2.5vw, 1.1rem);
   letter-spacing: clamp(2px, 1.5vw, 7px);
   color: var(--c-mid);
-  margin-top: 16px;
-  margin-bottom: 52px;
+  margin-top: 6px;
+  margin-bottom: 32px;
 }
 
 /* ── CTA BUTTON ── */
@@ -595,28 +589,17 @@ body::after {
     margin-bottom: 40px;
   }
 
-  /* Shrink the decorative line — it's a space hog on small screens */
-  .hero::before {
-    height: 28px;
-    margin-bottom: 20px;
-  }
-
   .hero-title {
     font-size: clamp(1.6rem, 9vw, 2.6rem);
     letter-spacing: -2px;
-  }
-
-  /* Keep underline decoration proportional */
-  .hero-title::after {
-    bottom: -10px;
-    height: 7px;
+    margin-bottom: 4px;
   }
 
   .hero-subtitle {
     font-size: 0.72rem;
     letter-spacing: 1.5px;
-    margin-top: 24px;
-    margin-bottom: 28px;
+    margin-top: 4px;
+    margin-bottom: 18px;
     word-break: break-word;
     hyphens: auto;
   }
@@ -828,7 +811,7 @@ body::after {
     <div class="hero-title">XEONCIPHER<sup class="hero-tm">&#x2122;</sup></div>
     <div class="hero-subtitle">CIPHER BASED CRYPTOGRAPHY I.E GEMATRIA</div>
     <div class="cta-wrap">
-      <a class="cta-btn" href="terminal">
+      <a class="cta-btn" href="xeoncipher.html">
         <span class="cta-inner"></span>
         <span class="cta-txt">
         ENTER TERMINAL</span>
@@ -880,11 +863,20 @@ body::after {
           <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
           <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
           <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
-          <line x1="17" y1="17" x2="21" y2="21" stroke-width="2"/>
-          <polyline points="15,19 17,17 19,19" stroke-width="1.5"/>
+          <polyline points="15,17 17,19 21,15" stroke-width="1.8"/>
         </svg>
       </span>
-      <span class="stat-label">RANKED MATCH DATABASE</span>
+      <span class="stat-label">LIVE BACKEND DATABASE</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" style="line-height:0;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#00ff4c" stroke-width="1.5" width="1.4rem" height="1.4rem" style="filter:drop-shadow(0 0 8px rgba(0,255,76,0.35));display:block;">
+          <rect x="3" y="11" width="18" height="11"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          <circle cx="12" cy="16.5" r="1.2" fill="#00ff4c" stroke="none"/>
+        </svg>
+      </span>
+      <span class="stat-label">VAULT — CLEANED DB</span>
     </div>
   </div>
 
@@ -902,7 +894,7 @@ body::after {
         <div class="write-banner-title">&#x25C8; WANT TO PUBLISH YOUR OWN DECODE?</div>
         <div class="write-banner-sub">THE BLOG IS LIVE. EXPLORE COMMUNITY DECODES, CREATE A FREE ACCOUNT AND SUBMIT YOUR OWN.</div>
       </div>
-      <a href="blog" class="cta-btn" style="width:320px;height:64px;text-decoration:none;">
+      <a href="blog.html" class="cta-btn" style="width:320px;height:64px;text-decoration:none;">
         <span class="cta-inner"></span>
         <span class="cta-txt">BLOG SECTION</span>
       </a>
@@ -940,6 +932,12 @@ body::after {
 </div>
 
 <script src="js/rain.js"></script>
+<script>
+  // Accordion: all .db-note and .feature-card elements
+  document.querySelectorAll('.db-note, .feature-card').forEach(el => {
+    el.addEventListener('click', () => el.classList.toggle('open'));
+  });
+</script>
 
 </body>
 </html>
