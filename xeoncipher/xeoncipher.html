@@ -1701,6 +1701,126 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
 }
 #divider { width:1px; background-color:var(--g-date-divider); flex-shrink:0; }
 
+/* ── DATE OFFSET CALCULATOR ── */
+#dateOffsetTrigger {
+  margin-top:32px; display:flex; align-items:center; justify-content:center;
+  gap:16px; cursor:pointer; user-select:none;
+  padding:18px 32px;
+  border:1px solid var(--g-date-input-border);
+  color:var(--g-date-label-text); font-family:var(--font-date);
+  text-transform:uppercase; letter-spacing:3px; font-size:var(--sz-date-sec-lbl-font);
+  transition:border-color 0.25s, color 0.25s, background 0.25s;
+  background:transparent;
+}
+#dateOffsetTrigger:hover {
+  border-color:var(--g-date-result-text);
+  color:var(--g-date-result-text);
+  background:rgba(68,202,111,0.04);
+}
+#dateOffsetTrigger.offset-open {
+  border-color:var(--g-date-result-text);
+  color:var(--g-date-result-text);
+  background:rgba(68,202,111,0.04);
+}
+#dateOffsetTriggerArrow, #dateOffsetTriggerArrow2 {
+  font-size:0.7em; opacity:0.5; transition:transform 0.3s;
+}
+#dateOffsetTrigger.offset-open #dateOffsetTriggerArrow  { transform:rotate(180deg); }
+#dateOffsetTrigger.offset-open #dateOffsetTriggerArrow2 { transform:rotate(180deg); }
+
+#dateOffsetPanel {
+  display:none; flex-direction:column; gap:0;
+  margin-top:28px; padding-top:28px;
+  border-top:1px solid var(--g-date-divider);
+}
+#dateOffsetPanel.offset-visible { display:flex; }
+
+/* Each row in the offset panel is a fully independent centered block */
+.off-row {
+  display:flex; justify-content:center; align-items:center;
+  flex-wrap:wrap; width:100%;
+  padding:28px 0;
+  border-bottom:1px solid var(--g-date-divider);
+}
+.off-row:last-child { border-bottom:none; }
+.off-row-inner {
+  display:flex; flex-direction:column; align-items:center; gap:var(--sz-date-group-gap);
+}
+
+/* Unit input groups */
+.offset-unit-inputs { display:flex; gap:var(--sz-date-inputs-gap); flex-wrap:wrap; justify-content:center; }
+.offset-unit-group  { display:flex; flex-direction:column; align-items:center; gap:6px; }
+.offset-unit-group.offset-unit-hidden { display:none; }
+.offset-unit-label  {
+  font-size:var(--sz-date-grp-lbl-font); letter-spacing:var(--sz-date-grp-lbl-ls);
+  color:var(--g-date-label-text); text-transform:uppercase; opacity:0.7;
+}
+
+/* Direction toggle */
+.offset-toggle { display:flex; gap:0; }
+.offset-toggle-btn {
+  background:var(--g-date-input-bg); border:1px solid var(--g-date-input-border);
+  color:var(--g-date-label-text); font-family:var(--font-date);
+  font-size:1.5rem; width:72px; height:58px;
+  cursor:pointer; transition:background 0.2s,color 0.2s,border-color 0.2s;
+  opacity:0.35; line-height:1;
+}
+.offset-toggle-btn:first-child { border-right:none; }
+.offset-toggle-btn.offset-active {
+  background:rgba(68,202,111,0.07);
+  border-color:var(--g-date-result-text);
+  color:var(--g-date-result-text); opacity:1;
+}
+
+#dateOffsetResult {
+  padding:var(--sz-date-res-pad-v) var(--sz-date-res-pad-h);
+  width:fit-content; max-width:100%; margin:0 auto;
+  border:1px solid var(--g-date-result-border);
+  background:linear-gradient(135deg,#000508 0%,var(--g-date-result-bg) 40%,#000c05 100%);
+  position:relative; font-family:var(--font-date-result);
+  font-size:var(--sz-date-res-font); line-height:var(--sz-date-res-lh);
+  color:var(--g-date-result-text);
+  filter:drop-shadow(0 0 8px rgba(68,202,111,0.054)) drop-shadow(0 0 24px rgba(68,202,111,0.024));
+  display:none; overflow:visible;
+}
+#dateOffsetResult::before,#dateOffsetResult::after {
+  content:''; position:absolute; width:14px; height:14px; pointer-events:none;
+}
+#dateOffsetResult::before {
+  top:-1px; left:-1px;
+  border-top:1px solid var(--g-date-result-text);
+  border-left:1px solid var(--g-date-result-text); opacity:0.55;
+}
+#dateOffsetResult::after {
+  bottom:-1px; right:-1px;
+  border-bottom:1px solid var(--g-date-result-text);
+  border-right:1px solid var(--g-date-result-text); opacity:0.55;
+}
+
+#dateOffsetDetails {
+  display:none; max-width:480px; width:100%; margin:0 auto;
+  border:1px solid var(--g-date-result-border);
+  background:linear-gradient(135deg,#000508 0%,var(--g-date-result-bg) 40%,#000c05 100%);
+  position:relative; overflow:visible;
+}
+#dateOffsetDetails::before,#dateOffsetDetails::after {
+  content:''; position:absolute; width:14px; height:14px; pointer-events:none;
+}
+#dateOffsetDetails::before {
+  top:-1px; left:-1px;
+  border-top:1px solid var(--g-date-result-text);
+  border-left:1px solid var(--g-date-result-text); opacity:0.55;
+}
+#dateOffsetDetails::after {
+  bottom:-1px; right:-1px;
+  border-bottom:1px solid var(--g-date-result-text);
+  border-right:1px solid var(--g-date-result-text); opacity:0.55;
+}
+#dateOffsetDetails.offset-details-visible { display:block; }
+#offsetResultDetails {
+  text-align:left; padding:var(--sz-detail-panel-pad); color:var(--g-date-detail-text);
+}
+
 #dateSection div[style*="display:flex"] { text-align:center; }
 
 /* ─── MOBILE (≤ 600px) ─── */
@@ -2472,6 +2592,84 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
               <span class="detail-row-breakdown" id="endNum3Breakdown"></span>
             </div>
           </div>
+        </div>
+
+        <!-- ◈ Offset Calculator expand button -->
+        <div id="dateOffsetTrigger">
+          <span id="dateOffsetTriggerArrow">▼</span>
+          <span id="dateOffsetTriggerLabel">add / subtract dates</span>
+          <span id="dateOffsetTriggerArrow2">▼</span>
+        </div>
+        <div id="dateOffsetPanel">
+          <div class="date-section-label" style="margin-bottom:0;padding-bottom:28px;border-bottom:1px solid var(--g-date-divider);">◈ offset calculator</div>
+
+          <!-- Row 1: Base Date -->
+          <div class="off-row">
+            <div class="off-row-inner">
+              <div class="date-group-label">◈ Base Date</div>
+              <div class="date-inputs">
+                <input id="offsetDay"   type="number" placeholder="DD"   min="1" max="31">
+                <input id="offsetMonth" type="number" placeholder="MM"   min="1" max="12">
+                <input id="offsetYear"  type="number" placeholder="YYYY" min="1">
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 2: Duration Format checkboxes -->
+          <div class="off-row">
+            <div class="off-row-inner">
+              <div class="date-section-label" style="margin-bottom:0;">Duration Format</div>
+              <div class="duration-checkboxes">
+                <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="offCbYears"  value="years" ><div class="checkmark"><div class="inner-dot"></div></div><span>Years</span></label>
+                <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="offCbMonths" value="months"><div class="checkmark"><div class="inner-dot"></div></div><span>Months</span></label>
+                <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="offCbWeeks"  value="weeks" ><div class="checkmark"><div class="inner-dot"></div></div><span>Weeks</span></label>
+                <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="offCbDays"   value="days"  checked><div class="checkmark"><div class="inner-dot"></div></div><span>Days</span></label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 3: Offset Amount inputs -->
+          <div class="off-row">
+            <div class="off-row-inner">
+              <div class="date-group-label">◈ Offset Amount</div>
+              <div class="offset-unit-inputs">
+                <div class="offset-unit-group offset-unit-hidden" id="offGrpYears">
+                  <span class="offset-unit-label">Years</span>
+                  <input id="offsetYears"  type="number" min="0" placeholder="0">
+                </div>
+                <div class="offset-unit-group offset-unit-hidden" id="offGrpMonths">
+                  <span class="offset-unit-label">Months</span>
+                  <input id="offsetMonths" type="number" min="0" placeholder="0">
+                </div>
+                <div class="offset-unit-group offset-unit-hidden" id="offGrpWeeks">
+                  <span class="offset-unit-label">Weeks</span>
+                  <input id="offsetWeeks"  type="number" min="0" placeholder="0">
+                </div>
+                <div class="offset-unit-group" id="offGrpDays">
+                  <span class="offset-unit-label">Days</span>
+                  <input id="offsetDays"   type="number" min="0" placeholder="0">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Row 4: Direction toggle -->
+          <div class="off-row">
+            <div class="off-row-inner">
+              <div class="date-group-label">◈ Direction</div>
+              <div class="offset-toggle">
+                <button class="offset-toggle-btn offset-active" id="offsetAdd" type="button">+</button>
+                <button class="offset-toggle-btn" id="offsetSub" type="button">−</button>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-start;gap:var(--sz-date-opts-gap);">
+                <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="offsetIncludeEnd"><div class="checkmark"><div class="inner-dot"></div></div><span>Include End Date</span></label>
+                <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="offsetExcludeStart"><div class="checkmark"><div class="inner-dot"></div></div><span>Exclude Start Date</span></label>
+              </div>
+            </div>
+          </div>
+
+          <div id="dateOffsetResult"></div>
+          <div id="dateOffsetDetails"><div id="offsetResultDetails"></div></div>
         </div>
 
       </div>
@@ -4767,6 +4965,167 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
   input.addEventListener("input",calculateDateDifference);
   input.addEventListener("change",calculateDateDifference);
 });
+
+/* ══════════════════════════════════════════
+   DATE OFFSET CALCULATOR (hidden feature)
+   Trigger: click the ◈ ◈ ◈ glyph at the
+   bottom of the date section.
+   ══════════════════════════════════════════ */
+(function(){
+  const trigger      = document.getElementById('dateOffsetTrigger');
+  const panel        = document.getElementById('dateOffsetPanel');
+  const addBtn       = document.getElementById('offsetAdd');
+  const subBtn       = document.getElementById('offsetSub');
+  const resultEl     = document.getElementById('dateOffsetResult');
+  const detailsEl    = document.getElementById('dateOffsetDetails');
+  const detailsInner = document.getElementById('offsetResultDetails');
+
+  // Checkbox → input group pairs
+  const units = [
+    { cb: 'offCbYears',  grp: 'offGrpYears',  inp: 'offsetYears',  key: 'y'  },
+    { cb: 'offCbMonths', grp: 'offGrpMonths', inp: 'offsetMonths', key: 'mo' },
+    { cb: 'offCbWeeks',  grp: 'offGrpWeeks',  inp: 'offsetWeeks',  key: 'w'  },
+    { cb: 'offCbDays',   grp: 'offGrpDays',   inp: 'offsetDays',   key: 'd'  },
+  ];
+
+  let offsetMode = 'add';
+
+  // ── Trigger open/close ──
+  trigger.addEventListener('click', () => {
+    const open = panel.classList.toggle('offset-visible');
+    trigger.classList.toggle('offset-open', open);
+    if (!open) {
+      resultEl.style.display = 'none';
+      detailsEl.classList.remove('offset-details-visible');
+    }
+  });
+
+  // ── Direction toggle ──
+  addBtn.addEventListener('click', () => {
+    offsetMode = 'add';
+    addBtn.classList.add('offset-active');
+    subBtn.classList.remove('offset-active');
+    runOffsetCalc();
+  });
+  subBtn.addEventListener('click', () => {
+    offsetMode = 'sub';
+    subBtn.classList.add('offset-active');
+    addBtn.classList.remove('offset-active');
+    runOffsetCalc();
+  });
+
+  // ── Checkbox show/hide unit inputs ──
+  units.forEach(({ cb, grp }) => {
+    document.getElementById(cb).addEventListener('change', function() {
+      document.getElementById(grp).classList.toggle('offset-unit-hidden', !this.checked);
+      runOffsetCalc();
+    });
+  });
+
+  // ── Input listeners ──
+  ['offsetDay','offsetMonth','offsetYear'].forEach(id =>
+    document.getElementById(id).addEventListener('input', runOffsetCalc)
+  );
+  units.forEach(({ inp }) =>
+    document.getElementById(inp).addEventListener('input', runOffsetCalc)
+  );
+  document.getElementById('offsetIncludeEnd').addEventListener('change', function(){
+    if(this.checked) document.getElementById('offsetExcludeStart').checked = false;
+    runOffsetCalc();
+  });
+  document.getElementById('offsetExcludeStart').addEventListener('change', function(){
+    if(this.checked) document.getElementById('offsetIncludeEnd').checked = false;
+    runOffsetCalc();
+  });
+
+  function runOffsetCalc() {
+    const day   = parseInt(document.getElementById('offsetDay').value,   10);
+    const month = parseInt(document.getElementById('offsetMonth').value, 10);
+    const year  = parseInt(document.getElementById('offsetYear').value,  10);
+
+    if (!day||!month||!year||year<100||month<1||month>12||day<1||day>31) {
+      resultEl.style.display='none';
+      detailsEl.classList.remove('offset-details-visible');
+      return;
+    }
+
+    // Read only checked units
+    let y=0, mo=0, w=0, d=0;
+    units.forEach(({ cb, inp, key }) => {
+      if (document.getElementById(cb).checked) {
+        const v = parseInt(document.getElementById(inp).value, 10);
+        if (!isNaN(v) && v > 0) {
+          if (key==='y')  y  = v;
+          if (key==='mo') mo = v;
+          if (key==='w')  w  = v;
+          if (key==='d')  d  = v;
+        }
+      }
+    });
+
+    if (y===0&&mo===0&&w===0&&d===0) {
+      resultEl.style.display='none';
+      detailsEl.classList.remove('offset-details-visible');
+      return;
+    }
+
+    // Apply offset (UTC, same as rest of date section)
+    const sign = offsetMode === 'add' ? 1 : -1;
+    let base = new Date(Date.UTC(year, month-1, day));
+    if (document.getElementById('offsetExcludeStart').checked) base.setUTCDate(base.getUTCDate() + 1);
+    if (y  !== 0) base.setUTCFullYear(base.getUTCFullYear() + sign * y);
+    if (mo !== 0) base.setUTCMonth(base.getUTCMonth()       + sign * mo);
+    if (w  !== 0 || d !== 0) base.setUTCDate(base.getUTCDate() + sign * (w*7 + d));
+    if (document.getElementById('offsetIncludeEnd').checked) base.setUTCDate(base.getUTCDate() + 1);
+
+    const rd = base.getUTCDate();
+    const rm = base.getUTCMonth() + 1;
+    const ry = base.getUTCFullYear();
+    const DOW = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+    const dayName = DOW[base.getUTCDay()];
+
+    // Duration blocks — same style as main result
+    const parts = [];
+    if (y  > 0) parts.push({ val:y,  lbl:'YEARS'  });
+    if (mo > 0) parts.push({ val:mo, lbl:'MONTHS' });
+    if (w  > 0) parts.push({ val:w,  lbl:'WEEKS'  });
+    if (d  > 0) parts.push({ val:d,  lbl:'DAYS'   });
+
+    const blocksHTML = parts.map((b,i) => {
+      const sep = i < parts.length-1
+        ? `<span class="dur-sep" style="align-self:center;opacity:0.22;padding:0 20px;font-size:var(--sz-dur-result-font);line-height:1;color:var(--g-date-result-text);text-shadow:0 0 10px var(--g-date-result-text);">|</span>`
+        : '';
+      return `<span class="dur-block" style="display:inline-flex;flex-direction:column;align-items:center;gap:7px;">`
+           + `<span class="dur-val" style="font-size:var(--sz-dur-result-font);letter-spacing:3px;line-height:1;">${b.val}</span>`
+           + `<span class="dur-lbl" style="font-size:var(--sz-dur-header-font);letter-spacing:3.5px;opacity:0.55;text-transform:uppercase;">${b.lbl}</span>`
+           + `</span>${sep}`;
+    }).join('');
+
+    const opSign  = offsetMode === 'add' ? '+' : '−';
+    const baseFmt = `${day.toString().padStart(2,'0')}/${month.toString().padStart(2,'0')}/${year}`;
+    const resFmt  = `${rd.toString().padStart(2,'0')}/${rm.toString().padStart(2,'0')}/${ry}`;
+
+    resultEl.style.display = 'block';
+    resultEl.innerHTML =
+      `<div style="margin-bottom:20px;font-size:var(--sz-dur-header-font);letter-spacing:3px;opacity:0.65;text-transform:uppercase;">`
+    + `<strong>FROM</strong> ${baseFmt} &nbsp;${opSign}&nbsp; `
+    + `<span style="display:inline-flex;align-items:center;gap:0;">${blocksHTML}</span>`
+    + `</div>`
+    + `<div style="font-size:var(--sz-date-res-font);letter-spacing:4px;line-height:1.15;">${resFmt}</div>`
+    + `<div style="margin-top:14px;font-size:var(--sz-dur-header-font);letter-spacing:5px;opacity:0.45;">${dayName}</div>`;
+
+    // Numerology detail panel
+    const n = calculateDateNumerology(rd, rm, ry);
+    detailsInner.innerHTML =
+      `<div class="detail-heading" style="color:var(--g-date-detail-title);">${resFmt} &nbsp;·&nbsp; ${dayName}</div>`
+    + `<div class="detail-row"><span class="detail-row-label">Day of Year</span><span class="detail-row-value">${getDayOfYear(base)}</span></div>`
+    + `<div class="detail-row"><span class="detail-row-label">Days Left in Year</span><span class="detail-row-value">${getDaysLeftInYear(base)}</span></div>`
+    + `<div class="detail-row"><span class="detail-row-label">Numerology 1</span><span class="detail-row-value">${n.num1}</span><span class="detail-row-breakdown">${n.bd1}</span></div>`
+    + `<div class="detail-row"><span class="detail-row-label">Numerology 2</span><span class="detail-row-value">${n.num2}</span><span class="detail-row-breakdown">${n.bd2}</span></div>`
+    + `<div class="detail-row"><span class="detail-row-label">Numerology 3</span><span class="detail-row-value">${n.num3}</span><span class="detail-row-breakdown">${n.bd3}</span></div>`;
+    detailsEl.classList.add('offset-details-visible');
+  }
+})();
 
 /* =============================================
    SETTINGS SYSTEM
