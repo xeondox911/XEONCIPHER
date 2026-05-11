@@ -153,9 +153,9 @@
   --g-date-input-bg: #000000;
   --g-date-input-border: #292929;
   --g-date-input-text: #95e9b0;
-  --g-date-result-bg: #000305;
-  --g-date-result-border: #1c1c1c;
-  --g-date-result-text: #44ca6f;
+  --g-date-result-bg: #000000;
+  --g-date-result-border: #131313;
+  --g-date-result-text: #1e7a3c;
   --g-date-divider: #262626;
   --g-date-detail-title: #64b983;
   --g-date-detail-text: #4abf6f;
@@ -1417,6 +1417,7 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   max-width:var(--sz-hist-text-maxw); padding-right:var(--sz-hist-cell-pad-h);
   overflow:hidden;
   color:var(--g-history-text-col);
+  border-left: 1px solid #252525;
 }
 /* Inner block: gives text a real width so word-break actually fires.
    Without this, the raw text node is an anonymous flex item that sizes
@@ -1433,6 +1434,7 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   padding-bottom: calc(var(--sz-hist-cell-pad-v) * 0.5);
   font-weight:var(--fw-history-header); text-transform:var(--tt-history-header);
   align-items:center; text-align:center;
+  border-top: 1px solid #252525;
   border-bottom: 1px solid #252525;
 }
 
@@ -1491,8 +1493,12 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   padding: var(--sz-hist-cell-pad-v) calc(var(--sz-hist-cell-pad-h) * 0.5);
 }
 
-.value.hidden { opacity:0; pointer-events:auto; }
-.value { cursor:pointer; pointer-events:auto; }
+/* ── Alternating row shading — history, database, vault ── */
+.compare-row.row-alt .compare-cell,
+.db-result-row.row-alt .compare-cell,
+.local-db-result-row.row-alt .compare-cell {
+  background: #000000;
+}
 
 /* ─── EXPANDED HIT AREA: value fills entire cell ─── */
 /* Strip padding from data cells and move it into .value so the
@@ -1614,13 +1620,13 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   padding:var(--sz-date-res-pad-v) var(--sz-date-res-pad-h);
   width:fit-content; max-width:100%; margin:0 auto;
   border:1px solid var(--g-date-result-border);
-  background: linear-gradient(135deg, #000508 0%, var(--g-date-result-bg) 40%, #000c05 100%);
+  background: linear-gradient(135deg, #000000 0%, #000000 40%, #000000 100%);
   position: relative;
   font-family:var(--font-date-result);
   font-size:var(--sz-date-res-font); line-height:var(--sz-date-res-lh);
   font-weight:var(--fw-date-result); text-transform:var(--tt-date-result);
   color:var(--g-date-result-text);
-  filter: drop-shadow(0 0 8px rgba(68,202,111,0.054)) drop-shadow(0 0 24px rgba(68,202,111,0.024));
+  filter: none;
   display:none;
   overflow: visible;
 }
@@ -1648,7 +1654,7 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
 #dateDetails {
   display:flex; justify-content:stretch; align-items:stretch; gap:var(--pos-date-details-gap);
   border:1px solid var(--g-date-result-border);
-  background: linear-gradient(135deg, #000508 0%, var(--g-date-result-bg) 40%, #000c05 100%);
+  background: #000000;
   position: relative;
   overflow: visible;
 }
@@ -1702,25 +1708,12 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
 #divider { width:1px; background-color:var(--g-date-divider); flex-shrink:0; }
 
 /* ── DATE OFFSET CALCULATOR ── */
+/* #dateOffsetTrigger inherits .tab neon button style; just override geometry */
 #dateOffsetTrigger {
-  margin-top:32px; display:flex; align-items:center; justify-content:center;
-  gap:16px; cursor:pointer; user-select:none;
-  padding:18px 32px;
-  border:1px solid var(--g-date-input-border);
-  color:var(--g-date-label-text); font-family:var(--font-date);
-  text-transform:uppercase; letter-spacing:3px; font-size:var(--sz-date-sec-lbl-font);
-  transition:border-color 0.25s, color 0.25s, background 0.25s;
-  background:transparent;
-}
-#dateOffsetTrigger:hover {
-  border-color:var(--g-date-result-text);
-  color:var(--g-date-result-text);
-  background:rgba(68,202,111,0.04);
-}
-#dateOffsetTrigger.offset-open {
-  border-color:var(--g-date-result-text);
-  color:var(--g-date-result-text);
-  background:rgba(68,202,111,0.04);
+  margin-top: 32px;
+  width: auto;
+  min-width: var(--sz-btn-w);
+  padding: 0 48px;
 }
 #dateOffsetTriggerArrow, #dateOffsetTriggerArrow2 {
   font-size:0.7em; opacity:0.5; transition:transform 0.3s;
@@ -1731,7 +1724,6 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
 #dateOffsetPanel {
   display:none; flex-direction:column; gap:0;
   margin-top:28px; padding-top:28px;
-  border-top:1px solid var(--g-date-divider);
 }
 #dateOffsetPanel.offset-visible { display:flex; }
 
@@ -1756,31 +1748,41 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   color:var(--g-date-label-text); text-transform:uppercase; opacity:0.7;
 }
 
-/* Direction toggle */
-.offset-toggle { display:flex; gap:0; }
-.offset-toggle-btn {
-  background:var(--g-date-input-bg); border:1px solid var(--g-date-input-border);
-  color:var(--g-date-label-text); font-family:var(--font-date);
-  font-size:1.5rem; width:72px; height:58px;
-  cursor:pointer; transition:background 0.2s,color 0.2s,border-color 0.2s;
-  opacity:0.35; line-height:1;
+/* Direction toggle — uses same chk-container/checkmark/inner-dot as duration format */
+.offset-toggle {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sz-date-dur-gap);
+  justify-content: center;
 }
-.offset-toggle-btn:first-child { border-right:none; }
-.offset-toggle-btn.offset-active {
-  background:rgba(68,202,111,0.07);
-  border-color:var(--g-date-result-text);
-  color:var(--g-date-result-text); opacity:1;
+.offset-dir-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: var(--sz-chk-font);
+  color: var(--g-chk-label);
+  user-select: none;
+  position: relative;
+}
+.offset-dir-label input[type="radio"] {
+  position: absolute; opacity: 0; cursor: pointer; height: 0; width: 0;
+}
+.offset-dir-label input[type="radio"]:checked ~ .checkmark .inner-dot {
+  background-color: var(--g-chk-active);
+  box-shadow: 0 0 6px 2px var(--g-chk-active), 0 0 14px 4px rgba(98,191,128,0.5);
 }
 
 #dateOffsetResult {
   padding:var(--sz-date-res-pad-v) var(--sz-date-res-pad-h);
   width:fit-content; max-width:100%; margin:0 auto;
   border:1px solid var(--g-date-result-border);
-  background:linear-gradient(135deg,#000508 0%,var(--g-date-result-bg) 40%,#000c05 100%);
+  background:#000000;
   position:relative; font-family:var(--font-date-result);
   font-size:var(--sz-date-res-font); line-height:var(--sz-date-res-lh);
+  font-weight:var(--fw-date-result); text-transform:var(--tt-date-result);
   color:var(--g-date-result-text);
-  filter:drop-shadow(0 0 8px rgba(68,202,111,0.054)) drop-shadow(0 0 24px rgba(68,202,111,0.024));
+  filter:none;
   display:none; overflow:visible;
 }
 #dateOffsetResult::before,#dateOffsetResult::after {
@@ -1798,9 +1800,9 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
 }
 
 #dateOffsetDetails {
-  display:none; max-width:480px; width:100%; margin:0 auto;
+  display:none; max-width:480px; width:100%; margin:28px auto 0 auto;
   border:1px solid var(--g-date-result-border);
-  background:linear-gradient(135deg,#000508 0%,var(--g-date-result-bg) 40%,#000c05 100%);
+  background:#000000;
   position:relative; overflow:visible;
 }
 #dateOffsetDetails::before,#dateOffsetDetails::after {
@@ -2369,7 +2371,7 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
 
 .db-no-results { color: #2a5a3a; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; text-align: center; padding: 10px 0; width: 100%; display: block; }
 </style>
-<script>window.__BAKED_SETTINGS__ = {"--cipher-ordinal":"#00ff4c","--cipher-revOrdinal":"#00ff88","--cipher-reduction":"#00aeff","--cipher-revReduction":"#00f7ff","--cipher-sumerian":"#c4fa92","--cipher-revSumerian":"#fff09b","--cipher-satanic":"#ff0d00","--cipher-revSatanic":"#ff6868","--cipher-jewish":"#9a38d8","--cipher-chaldean":"#88bf93","--bd-ordinal-title":"#00ff4c","--bd-ordinal-underline":"#00882a","--bd-ordinal-letter":"#00ff4c","--bd-ordinal-value":"#00cc3d","--bd-revOrdinal-title":"#00ff88","--bd-revOrdinal-underline":"#008844","--bd-revOrdinal-letter":"#00ff88","--bd-revOrdinal-value":"#00b35c","--bd-reduction-title":"#00aeff","--bd-reduction-underline":"#005f99","--bd-reduction-letter":"#00aeff","--bd-reduction-value":"#0088cc","--bd-revReduction-title":"#00f7ff","--bd-revReduction-underline":"#008899","--bd-revReduction-letter":"#00f7ff","--bd-revReduction-value":"#00c4cc","--bd-sumerian-title":"#c4fa92","--bd-sumerian-underline":"#6a9944","--bd-sumerian-letter":"#c4fa92","--bd-sumerian-value":"#9acc70","--bd-revSumerian-title":"#fff09b","--bd-revSumerian-underline":"#998844","--bd-revSumerian-letter":"#fff09b","--bd-revSumerian-value":"#ccbe7a","--bd-satanic-title":"#ff160a","--bd-satanic-underline":"#880800","--bd-satanic-letter":"#ff2a1f","--bd-satanic-value":"#ff0d00","--bd-revSatanic-title":"#ff6868","--bd-revSatanic-underline":"#883030","--bd-revSatanic-letter":"#ff6868","--bd-revSatanic-value":"#cc5252","--bd-jewish-title":"#7c2ed4","--bd-jewish-underline":"#6a2480","--bd-jewish-letter":"#8e3bc4","--bd-jewish-value":"#8530a0","--bd-chaldean-title":"#6c9973","--bd-chaldean-underline":"#567b59","--bd-chaldean-letter":"#83b57d","--bd-chaldean-value":"#899d7b","--g-btn-neon-1":"#003d07","--g-btn-neon-2":"#084200","--g-btn-inner-bg":"#060b0f","--g-btn-text":"#c8f0da","--g-menu-bg":"#007bff","--g-menu-border":"#2d5a3d","--g-menu-text":"#62bf80","--g-menu-hover":"#0d1f12","--g-menu-item-text":"#8ed4a8","--g-chk-bg":"#000000","--g-chk-border":"#2c4b58","--g-chk-active":"#8aff8c","--g-chk-label":"#e0e0e0","--g-search-bg":"#000a0f","--g-search-border":"#000000","--g-search-border-focus":"#001f0d","--g-search-text":"#25ad50","--g-search-placeholder":"#12973c","--g-search-icon":"#008a30","--g-search-icon-focus":"#62bf80","--g-search-btn-bg":"#050e10","--g-search-btn-icon":"#00a334","--g-search-topline":"#000000","--g-search-label":"#008028","--g-search-status":"#008028","--g-search-corner":"#00c73f","--g-search-spore":"#000000","--g-totals-left-poly":"#000000","--g-totals-right-poly":"#000b19","--g-totals-stroke":"#62bf80","--g-totals-name-text":"#d4ede0","--g-totals-val-text":"#62bf80","--g-totals-divider":"#1e4a2c","--g-totals-orb":"#4a9e6b","--g-totals-row-hover":"#8ed4a8","--bd-bg":"#000919","--bd-title-text":"#62bf80","--bd-title-line":"#2d5a3d","--bd-space-color":"#1e4a2c","--g-history-outer-border":"#00142e","--g-history-inner-bg":"#050505","--g-history-header-text":"#ffffff","--g-history-text-col":"#d4ede0","--g-history-header-border":"#1e4a2c","--g-date-wrap-border":"#1c1c1c","--g-date-section-bg":"#000000","--g-date-label-text":"#dedede","--g-date-input-bg":"#000000","--g-date-input-border":"#292929","--g-date-input-text":"#95e9b0","--g-date-result-bg":"#000305","--g-date-result-border":"#1c1c1c","--g-date-result-text":"#44ca6f","--g-date-divider":"#262626","--g-date-detail-title":"#64b983","--g-date-detail-text":"#4abf6f","--g-popup-bg":"#00030a","--g-popup-border":"#62bf80","--g-popup-text":"#c8fed7","--g-popup-label":"#c8fed7","--g-popup-shadow":"#62bf80","--s-overlay-bg":"#000000","--s-panel-bg":"#02080f","--s-panel-border":"#1a3a2a","--s-header-bg":"#010508","--s-header-border":"#1a3a2a","--s-title-text":"#6dbf9e","--s-close-bg":"#010508","--s-close-border":"#1a3a2a","--s-close-text":"#4a9e6b","--s-close-hover-bg":"#1a3a2a","--s-close-hover-text":"#6dbf9e","--s-body-bg":"#02080f","--s-scrollbar-thumb":"#1a3a2a","--s-group-label-text":"#2a6a4a","--s-group-label-border":"#1a3a2a","--s-row-label-text":"#4a9e6b","--s-footer-bg":"#010508","--s-footer-border":"#1a3a2a","--s-reset-bg":"#010508","--s-reset-border":"#1a3a2a","--s-reset-text":"#4a9e6b","--s-reset-hover-bg":"#1a3a2a","--s-reset-hover-text":"#6dbf9e","--s-save-bg":"#1a3a2a","--s-save-border":"#2a5a3a","--s-save-text":"#6dbf9e","--s-save-hover-bg":"#2a5a3a","--s-saved-bg":"#4a9e6b","--s-saved-text":"#010508","--sz-btn-font":"1.35em","--sz-btn-w":"232px","--sz-btn-h":"74.4px","--sz-btn-ls":"4.3px","--sz-search-height":"80.4px","--sz-search-font":"1.66rem","--sz-input-font":"0.85rem","--sz-totals-name-font":"32.2px","--sz-totals-val-font":"41.8px","--sz-bd-title-font":"27.6px","--sz-bd-letter-font":"26px","--sz-bd-value-font":"14.8px","--sz-history-font":"29.2px","--sz-date-input-w":"139.6px","--sz-date-label-font":"0.5rem","--sz-detail-label-font":"1.11rem","--sz-detail-val-font":"1.63rem","--sz-popup-w":"327px","--sz-popup-font":"25px","--sz-popup-label-font":"0.98em","--sz-co-tile-w":"679px","--sz-co-tile-h":"95.6px","--sz-co-tile-font":"1.46rem","--sz-settings-w":"380px","--sz-header-font":"0.7rem","--pos-app-margin-top":"56px","--pos-app-width":"101%","--pos-header-mb":"52px","--pos-search-mb":"36.8px","--pos-totals-mb":"54.8px","--pos-breakdown-mb":"64.8px","--pos-section-padding":"69.2px","--pos-date-max-w":"962px","--pos-bd-section-pad-h":"52px","--pos-co-overlay-pt":"35px","--pos-bd-underline-bottom":"12.6px","--sz-menu-pad":"24px","--sz-menu-w":"300px","--sz-menu-item-font":"20px","--sz-menu-item-pad":"12px","--sz-co-panel-gap":"14px","--sz-co-title-font":"0.48rem","--sz-co-title-ls":"7px","--sz-co-hint-font":"0.42rem","--sz-co-grid-gap":"23.2px","--sz-co-tile-clip":"20px","--sz-co-bar-w":"-43.8px","--sz-co-content-pl":"91.4px","--sz-co-content-pr":"65.8px","--sz-co-tile-ls":"2.5px","--sz-co-pip-size":"11.2px","--sz-chk-size":"44.4px","--sz-chk-dot":"19.2px","--sz-chk-font":"20px","--sz-search-pad-top":"24px","--sz-search-pad-bot":"21.6px","--sz-search-max-w":"960px","--sz-search-border":"0.8px","--sz-search-icon-sz":"25.4px","--sz-search-btn-icon":"33.4px","--sz-search-input-pad":"19px","--sz-search-input-ls":"2.8px","--sz-search-label-font":"0.8rem","--sz-search-label-ls":"2px","--sz-search-status-font":"0.59rem","--sz-search-status-ls":"1px","--sz-search-corner-sz":"13.6px","--sz-search-corner-pos":"20px","--sz-spore-1":"5.8px","--sz-spore-2":"4px","--sz-spore-3":"7px","--sz-totals-max-w":"960px","--sz-totals-td-pad-v":"7px","--sz-totals-td-pad-h":"6.2px","--sz-totals-row-h":"92px","--sz-totals-row-minw":"320px","--sz-totals-name-pt":"6.8px","--sz-totals-name-pl":"10px","--sz-totals-name-ls":"1px","--sz-totals-val-pt":"-80.2px","--sz-totals-val-pr":"12.8px","--sz-totals-val-ls":"1.1px","--sz-bd-clip":"22px","--sz-bd-pad-top":"4.4px","--sz-bd-pad-bot":"7.6px","--sz-bd-min-w":"440px","--sz-bd-max-w":"1010px","--sz-bd-title-mb":"-6px","--sz-bd-container-gap":"18.4px","--sz-bd-word-gap":"1.6px","--sz-bd-val-mt":"0.2px","--sz-hist-clip-out":"25px","--sz-hist-clip-in":"22px","--sz-hist-outer-pad":"2.2px","--sz-hist-inner-pad-v":"22.4px","--sz-hist-inner-pad-h":"35.6px","--sz-hist-cell-pad-v":"13px","--sz-hist-cell-pad-h":"14px","--sz-hist-header-font":"20.4px","--sz-hist-text-maxw":"378px","--sz-popup-h":"214px","--sz-popup-pad-v":"12px","--sz-popup-pad-h":"20px","--pos-popup-offset-y":"8px","--sz-date-clip":"24px","--sz-date-row-gap":"57.6px","--sz-date-group-gap":"34.4px","--sz-date-grp-lbl-font":"0.86rem","--sz-date-grp-lbl-ls":"14.9px","--sz-date-inputs-gap":"58.4px","--sz-date-input-pad-v":"11.8px","--sz-date-input-pad-h":"8px","--sz-date-input-font":"1.81rem","--sz-date-input-ls":"1px","--sz-date-sec-lbl-font":"1.04rem","--sz-date-sec-lbl-ls":"2.9px","--sz-date-sec-lbl-mb":"31px","--sz-date-opts-gap":"21.2px","--sz-date-dur-gap":"56.4px","--sz-date-res-font":"53.2px","--sz-date-res-lh":"-7.06px","--sz-date-res-pad-v":"37.2px","--sz-date-res-pad-h":"46px","--sz-detail-head-font":"1.57rem","--sz-detail-head-ls":"3.9px","--sz-detail-head-mb":"15px","--sz-detail-head-pb":"18.6px","--sz-detail-panel-pad":"23.6px","--sz-detail-row-mb":"38.4px","--sz-detail-lbl-ls":"2.1px","--sz-detail-lbl-mb":"10.2px","--sz-detail-val-ls":"1px","--sz-detail-bd-font":"0.91rem","--sz-detail-bd-mt":"4px","--pos-app-mb":"50px","--pos-header-max-w":"960px","--pos-date-margin-v":"40px","--pos-date-pad-h":"51.6px","--g-black":"#060f09","--g-deeper":"#1e4a2c","--g-deep":"#132e19","--g-dark":"#2d5a3d","--g-hover":"#3a7a52","--g-mid":"#62bf80","--g-bright":"#8ed4a8","--matrix-color":"#62bf80","--matrix-bg":"#000000","--bd-shadow-light":"rgba(20,50,30,0.7)","--bd-shadow-dark":"rgba(0,0,0,1)","--bd-clip-border":"#2d5a3d","--bd-title-text-glow":"rgba(98,191,128,0.3)","--g-history-cell-bg":"transparent","--g-history-row-hover":"rgba(45,90,61,0.12)","--g-date-outer-bg":"#060f09","--s-panel-shadow":"rgba(0,0,0,0.8)","--s-row-divider":"rgba(30,74,44,0.2)","--co-overlay-bg":"rgba(0,0,0,0.82)","--co-tile-bg":"#000000","--co-tile-active-bg":"#000000","--co-tile-name-off":"#2a2a2a","--co-tile-border-off":"rgba(255,255,255,0.055)","--co-color-ordinal":"#00992e","--co-color-revOrdinal":"#00a87e","--co-color-reduction":"#0076ad","--co-color-revReduction":"#00adb3","--co-color-sumerian":"#84a465","--co-color-revSumerian":"#a19863","--co-color-satanic":"#b31800","--co-color-revSatanic":"#a84343","--co-color-jewish":"#9a38d8","--co-color-chaldean":"#88bf93","--sz-bd-letter-ls":"0px","--sz-bd-word-val-font":"23px","--sz-bd-word-val-ls":"-0.2px","--sz-bd-word-wrap-gap":"10.2px","--sz-bd-total-font":"44.6px","--sz-bd-total-ls":"4.9px","--sz-bd-total-mt":"3.6px","--bd-word-val-color":"#aaffcc","--bd-total-color":"#00ff4c","--font-body":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-buttons":"\"AEB\", \"Consolas\", \"Courier New\", monospace","--font-search-input":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-search-meta":"\"77\", \"Consolas\", \"Courier New\", monospace","--font-search-status":"\"77\", \"Consolas\", \"Courier New\", monospace","--font-totals":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-totals-name":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-totals-value":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-title":"\"GOS\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-letters":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-values":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-bd-word-total":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-bd-grand-total":"\"AEB\", \"Consolas\", \"Courier New\", monospace","--font-history":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-history-header":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-date":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-date-input":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-date-result":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-popup":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-cipher-overlay":"\"GOS\", \"Consolas\", \"Courier New\", monospace","--font-settings":"\"AESR\", \"Consolas\", \"Courier New\", monospace","--fw-buttons":"bold","--fw-search-input":"600","--fw-search-label":"900","--fw-search-status":"900","--fw-totals-name":"bold","--fw-totals-value":"bold","--fw-bd-title":"bold","--fw-bd-letters":"normal","--fw-bd-values":"normal","--fw-bd-word-total":"normal","--fw-bd-grand-total":"normal","--fw-history-cell":"normal","--fw-history-header":"normal","--fw-date-label":"normal","--fw-date-input":"normal","--fw-date-result":"normal","--fw-popup":"normal","--fw-overlay-tile":"bold","--fw-settings":"normal","--tt-buttons":"uppercase","--tt-search-input":"uppercase","--tt-search-label":"uppercase","--tt-search-status":"uppercase","--tt-totals-name":"uppercase","--tt-totals-value":"none","--tt-bd-title":"none","--tt-bd-letters":"uppercase","--tt-bd-values":"none","--tt-history-header":"none","--tt-date-label":"uppercase","--tt-date-input":"none","--tt-date-result":"none","--tt-popup":"none","--tt-overlay-tile":"uppercase","--sz-hist-row-gap":"-0px"};</script>
+<script>window.__BAKED_SETTINGS__ = {"--cipher-ordinal":"#00ff4c","--cipher-revOrdinal":"#00ff88","--cipher-reduction":"#00aeff","--cipher-revReduction":"#00f7ff","--cipher-sumerian":"#c4fa92","--cipher-revSumerian":"#fff09b","--cipher-satanic":"#ff0d00","--cipher-revSatanic":"#ff6868","--cipher-jewish":"#9a38d8","--cipher-chaldean":"#88bf93","--bd-ordinal-title":"#00ff4c","--bd-ordinal-underline":"#00882a","--bd-ordinal-letter":"#00ff4c","--bd-ordinal-value":"#00cc3d","--bd-revOrdinal-title":"#00ff88","--bd-revOrdinal-underline":"#008844","--bd-revOrdinal-letter":"#00ff88","--bd-revOrdinal-value":"#00b35c","--bd-reduction-title":"#00aeff","--bd-reduction-underline":"#005f99","--bd-reduction-letter":"#00aeff","--bd-reduction-value":"#0088cc","--bd-revReduction-title":"#00f7ff","--bd-revReduction-underline":"#008899","--bd-revReduction-letter":"#00f7ff","--bd-revReduction-value":"#00c4cc","--bd-sumerian-title":"#c4fa92","--bd-sumerian-underline":"#6a9944","--bd-sumerian-letter":"#c4fa92","--bd-sumerian-value":"#9acc70","--bd-revSumerian-title":"#fff09b","--bd-revSumerian-underline":"#998844","--bd-revSumerian-letter":"#fff09b","--bd-revSumerian-value":"#ccbe7a","--bd-satanic-title":"#ff160a","--bd-satanic-underline":"#880800","--bd-satanic-letter":"#ff2a1f","--bd-satanic-value":"#ff0d00","--bd-revSatanic-title":"#ff6868","--bd-revSatanic-underline":"#883030","--bd-revSatanic-letter":"#ff6868","--bd-revSatanic-value":"#cc5252","--bd-jewish-title":"#7c2ed4","--bd-jewish-underline":"#6a2480","--bd-jewish-letter":"#8e3bc4","--bd-jewish-value":"#8530a0","--bd-chaldean-title":"#6c9973","--bd-chaldean-underline":"#567b59","--bd-chaldean-letter":"#83b57d","--bd-chaldean-value":"#899d7b","--g-btn-neon-1":"#003d07","--g-btn-neon-2":"#084200","--g-btn-inner-bg":"#060b0f","--g-btn-text":"#c8f0da","--g-menu-bg":"#007bff","--g-menu-border":"#2d5a3d","--g-menu-text":"#62bf80","--g-menu-hover":"#0d1f12","--g-menu-item-text":"#8ed4a8","--g-chk-bg":"#000000","--g-chk-border":"#2c4b58","--g-chk-active":"#8aff8c","--g-chk-label":"#e0e0e0","--g-search-bg":"#000a0f","--g-search-border":"#000000","--g-search-border-focus":"#001f0d","--g-search-text":"#25ad50","--g-search-placeholder":"#12973c","--g-search-icon":"#008a30","--g-search-icon-focus":"#62bf80","--g-search-btn-bg":"#050e10","--g-search-btn-icon":"#00a334","--g-search-topline":"#000000","--g-search-label":"#008028","--g-search-status":"#008028","--g-search-corner":"#00c73f","--g-search-spore":"#000000","--g-totals-left-poly":"#000000","--g-totals-right-poly":"#000b19","--g-totals-stroke":"#62bf80","--g-totals-name-text":"#d4ede0","--g-totals-val-text":"#62bf80","--g-totals-divider":"#1e4a2c","--g-totals-orb":"#4a9e6b","--g-totals-row-hover":"#8ed4a8","--bd-bg":"#000919","--bd-title-text":"#62bf80","--bd-title-line":"#2d5a3d","--bd-space-color":"#1e4a2c","--g-history-outer-border":"#00142e","--g-history-inner-bg":"#050505","--g-history-header-text":"#ffffff","--g-history-text-col":"#d4ede0","--g-history-header-border":"#1e4a2c","--g-date-wrap-border":"#1c1c1c","--g-date-section-bg":"#000000","--g-date-label-text":"#dedede","--g-date-input-bg":"#000000","--g-date-input-border":"#292929","--g-date-input-text":"#95e9b0","--g-date-result-bg":"#000000","--g-date-result-border":"#131313","--g-date-result-text":"#1e7a3c","--g-date-divider":"#262626","--g-date-detail-title":"#64b983","--g-date-detail-text":"#4abf6f","--g-popup-bg":"#00030a","--g-popup-border":"#62bf80","--g-popup-text":"#c8fed7","--g-popup-label":"#c8fed7","--g-popup-shadow":"#62bf80","--s-overlay-bg":"#000000","--s-panel-bg":"#02080f","--s-panel-border":"#1a3a2a","--s-header-bg":"#010508","--s-header-border":"#1a3a2a","--s-title-text":"#6dbf9e","--s-close-bg":"#010508","--s-close-border":"#1a3a2a","--s-close-text":"#4a9e6b","--s-close-hover-bg":"#1a3a2a","--s-close-hover-text":"#6dbf9e","--s-body-bg":"#02080f","--s-scrollbar-thumb":"#1a3a2a","--s-group-label-text":"#2a6a4a","--s-group-label-border":"#1a3a2a","--s-row-label-text":"#4a9e6b","--s-footer-bg":"#010508","--s-footer-border":"#1a3a2a","--s-reset-bg":"#010508","--s-reset-border":"#1a3a2a","--s-reset-text":"#4a9e6b","--s-reset-hover-bg":"#1a3a2a","--s-reset-hover-text":"#6dbf9e","--s-save-bg":"#1a3a2a","--s-save-border":"#2a5a3a","--s-save-text":"#6dbf9e","--s-save-hover-bg":"#2a5a3a","--s-saved-bg":"#4a9e6b","--s-saved-text":"#010508","--sz-btn-font":"1.35em","--sz-btn-w":"232px","--sz-btn-h":"74.4px","--sz-btn-ls":"4.3px","--sz-search-height":"80.4px","--sz-search-font":"1.66rem","--sz-input-font":"0.85rem","--sz-totals-name-font":"32.2px","--sz-totals-val-font":"41.8px","--sz-bd-title-font":"27.6px","--sz-bd-letter-font":"26px","--sz-bd-value-font":"14.8px","--sz-history-font":"29.2px","--sz-date-input-w":"139.6px","--sz-date-label-font":"0.5rem","--sz-detail-label-font":"1.11rem","--sz-detail-val-font":"1.63rem","--sz-popup-w":"327px","--sz-popup-font":"25px","--sz-popup-label-font":"0.98em","--sz-co-tile-w":"679px","--sz-co-tile-h":"95.6px","--sz-co-tile-font":"1.46rem","--sz-settings-w":"380px","--sz-header-font":"0.7rem","--pos-app-margin-top":"56px","--pos-app-width":"101%","--pos-header-mb":"52px","--pos-search-mb":"36.8px","--pos-totals-mb":"54.8px","--pos-breakdown-mb":"64.8px","--pos-section-padding":"69.2px","--pos-date-max-w":"962px","--pos-bd-section-pad-h":"52px","--pos-co-overlay-pt":"35px","--pos-bd-underline-bottom":"12.6px","--sz-menu-pad":"24px","--sz-menu-w":"300px","--sz-menu-item-font":"20px","--sz-menu-item-pad":"12px","--sz-co-panel-gap":"14px","--sz-co-title-font":"0.48rem","--sz-co-title-ls":"7px","--sz-co-hint-font":"0.42rem","--sz-co-grid-gap":"23.2px","--sz-co-tile-clip":"20px","--sz-co-bar-w":"-43.8px","--sz-co-content-pl":"91.4px","--sz-co-content-pr":"65.8px","--sz-co-tile-ls":"2.5px","--sz-co-pip-size":"11.2px","--sz-chk-size":"44.4px","--sz-chk-dot":"19.2px","--sz-chk-font":"20px","--sz-search-pad-top":"24px","--sz-search-pad-bot":"21.6px","--sz-search-max-w":"960px","--sz-search-border":"0.8px","--sz-search-icon-sz":"25.4px","--sz-search-btn-icon":"33.4px","--sz-search-input-pad":"19px","--sz-search-input-ls":"2.8px","--sz-search-label-font":"0.8rem","--sz-search-label-ls":"2px","--sz-search-status-font":"0.59rem","--sz-search-status-ls":"1px","--sz-search-corner-sz":"13.6px","--sz-search-corner-pos":"20px","--sz-spore-1":"5.8px","--sz-spore-2":"4px","--sz-spore-3":"7px","--sz-totals-max-w":"960px","--sz-totals-td-pad-v":"7px","--sz-totals-td-pad-h":"6.2px","--sz-totals-row-h":"92px","--sz-totals-row-minw":"320px","--sz-totals-name-pt":"6.8px","--sz-totals-name-pl":"10px","--sz-totals-name-ls":"1px","--sz-totals-val-pt":"-80.2px","--sz-totals-val-pr":"12.8px","--sz-totals-val-ls":"1.1px","--sz-bd-clip":"22px","--sz-bd-pad-top":"4.4px","--sz-bd-pad-bot":"7.6px","--sz-bd-min-w":"440px","--sz-bd-max-w":"1010px","--sz-bd-title-mb":"-6px","--sz-bd-container-gap":"18.4px","--sz-bd-word-gap":"1.6px","--sz-bd-val-mt":"0.2px","--sz-hist-clip-out":"25px","--sz-hist-clip-in":"22px","--sz-hist-outer-pad":"2.2px","--sz-hist-inner-pad-v":"22.4px","--sz-hist-inner-pad-h":"35.6px","--sz-hist-cell-pad-v":"13px","--sz-hist-cell-pad-h":"14px","--sz-hist-header-font":"20.4px","--sz-hist-text-maxw":"378px","--sz-popup-h":"214px","--sz-popup-pad-v":"12px","--sz-popup-pad-h":"20px","--pos-popup-offset-y":"8px","--sz-date-clip":"24px","--sz-date-row-gap":"57.6px","--sz-date-group-gap":"34.4px","--sz-date-grp-lbl-font":"0.86rem","--sz-date-grp-lbl-ls":"14.9px","--sz-date-inputs-gap":"58.4px","--sz-date-input-pad-v":"11.8px","--sz-date-input-pad-h":"8px","--sz-date-input-font":"1.81rem","--sz-date-input-ls":"1px","--sz-date-sec-lbl-font":"1.04rem","--sz-date-sec-lbl-ls":"2.9px","--sz-date-sec-lbl-mb":"31px","--sz-date-opts-gap":"21.2px","--sz-date-dur-gap":"56.4px","--sz-date-res-font":"53.2px","--sz-date-res-lh":"-7.06px","--sz-date-res-pad-v":"37.2px","--sz-date-res-pad-h":"46px","--sz-detail-head-font":"1.57rem","--sz-detail-head-ls":"3.9px","--sz-detail-head-mb":"15px","--sz-detail-head-pb":"18.6px","--sz-detail-panel-pad":"23.6px","--sz-detail-row-mb":"38.4px","--sz-detail-lbl-ls":"2.1px","--sz-detail-lbl-mb":"10.2px","--sz-detail-val-ls":"1px","--sz-detail-bd-font":"0.91rem","--sz-detail-bd-mt":"4px","--pos-app-mb":"50px","--pos-header-max-w":"960px","--pos-date-margin-v":"40px","--pos-date-pad-h":"51.6px","--g-black":"#060f09","--g-deeper":"#1e4a2c","--g-deep":"#132e19","--g-dark":"#2d5a3d","--g-hover":"#3a7a52","--g-mid":"#62bf80","--g-bright":"#8ed4a8","--matrix-color":"#62bf80","--matrix-bg":"#000000","--bd-shadow-light":"rgba(20,50,30,0.7)","--bd-shadow-dark":"rgba(0,0,0,1)","--bd-clip-border":"#2d5a3d","--bd-title-text-glow":"rgba(98,191,128,0.3)","--g-history-cell-bg":"transparent","--g-history-row-hover":"rgba(45,90,61,0.12)","--g-date-outer-bg":"#060f09","--s-panel-shadow":"rgba(0,0,0,0.8)","--s-row-divider":"rgba(30,74,44,0.2)","--co-overlay-bg":"rgba(0,0,0,0.82)","--co-tile-bg":"#000000","--co-tile-active-bg":"#000000","--co-tile-name-off":"#2a2a2a","--co-tile-border-off":"rgba(255,255,255,0.055)","--co-color-ordinal":"#00992e","--co-color-revOrdinal":"#00a87e","--co-color-reduction":"#0076ad","--co-color-revReduction":"#00adb3","--co-color-sumerian":"#84a465","--co-color-revSumerian":"#a19863","--co-color-satanic":"#b31800","--co-color-revSatanic":"#a84343","--co-color-jewish":"#9a38d8","--co-color-chaldean":"#88bf93","--sz-bd-letter-ls":"0px","--sz-bd-word-val-font":"23px","--sz-bd-word-val-ls":"-0.2px","--sz-bd-word-wrap-gap":"10.2px","--sz-bd-total-font":"44.6px","--sz-bd-total-ls":"4.9px","--sz-bd-total-mt":"3.6px","--bd-word-val-color":"#aaffcc","--bd-total-color":"#00ff4c","--font-body":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-buttons":"\"AEB\", \"Consolas\", \"Courier New\", monospace","--font-search-input":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-search-meta":"\"77\", \"Consolas\", \"Courier New\", monospace","--font-search-status":"\"77\", \"Consolas\", \"Courier New\", monospace","--font-totals":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-totals-name":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-totals-value":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-title":"\"GOS\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-letters":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-values":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-bd-word-total":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-bd-grand-total":"\"AEB\", \"Consolas\", \"Courier New\", monospace","--font-history":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-history-header":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-date":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-date-input":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-date-result":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-popup":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-cipher-overlay":"\"GOS\", \"Consolas\", \"Courier New\", monospace","--font-settings":"\"AESR\", \"Consolas\", \"Courier New\", monospace","--fw-buttons":"bold","--fw-search-input":"600","--fw-search-label":"900","--fw-search-status":"900","--fw-totals-name":"bold","--fw-totals-value":"bold","--fw-bd-title":"bold","--fw-bd-letters":"normal","--fw-bd-values":"normal","--fw-bd-word-total":"normal","--fw-bd-grand-total":"normal","--fw-history-cell":"normal","--fw-history-header":"normal","--fw-date-label":"normal","--fw-date-input":"normal","--fw-date-result":"normal","--fw-popup":"normal","--fw-overlay-tile":"bold","--fw-settings":"normal","--tt-buttons":"uppercase","--tt-search-input":"uppercase","--tt-search-label":"uppercase","--tt-search-status":"uppercase","--tt-totals-name":"uppercase","--tt-totals-value":"none","--tt-bd-title":"none","--tt-bd-letters":"uppercase","--tt-bd-values":"none","--tt-history-header":"none","--tt-date-label":"uppercase","--tt-date-input":"none","--tt-date-result":"none","--tt-popup":"none","--tt-overlay-tile":"uppercase","--sz-hist-row-gap":"-0px"};</script>
 </head>
 <body>
 
@@ -2542,6 +2544,10 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
           <div id="startDetails">
             <div class="detail-heading" id="startDetailHeading">Start Date Details</div>
             <div class="detail-row">
+              <span class="detail-row-label">Day of Week</span>
+              <span class="detail-row-value" id="startDayOfWeek">—</span>
+            </div>
+            <div class="detail-row">
               <span class="detail-row-label">Day of Year</span>
               <span class="detail-row-value" id="startDayOfYear">—</span>
             </div>
@@ -2569,6 +2575,10 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
           <div id="endDetails">
             <div class="detail-heading" id="endDetailHeading">End Date Details</div>
             <div class="detail-row">
+              <span class="detail-row-label">Day of Week</span>
+              <span class="detail-row-value" id="endDayOfWeek">—</span>
+            </div>
+            <div class="detail-row">
               <span class="detail-row-label">Day of Year</span>
               <span class="detail-row-value" id="endDayOfYear">—</span>
             </div>
@@ -2595,13 +2605,14 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
         </div>
 
         <!-- ◈ Offset Calculator expand button -->
-        <div id="dateOffsetTrigger">
-          <span id="dateOffsetTriggerArrow">▼</span>
-          <span id="dateOffsetTriggerLabel">add / subtract dates</span>
-          <span id="dateOffsetTriggerArrow2">▼</span>
-        </div>
+        <button id="dateOffsetTrigger" class="tab" type="button">
+          <span class="tab-inner"></span>
+          <span class="tab-txt">
+            <span id="dateOffsetTriggerArrow" style="font-size:0.55em;opacity:0.5;margin-right:12px;display:inline-block;">▼</span>± DATES<span id="dateOffsetTriggerArrow2" style="font-size:0.55em;opacity:0.5;margin-left:12px;display:inline-block;">▼</span>
+          </span>
+        </button>
         <div id="dateOffsetPanel">
-          <div class="date-section-label" style="margin-bottom:0;padding-bottom:28px;border-bottom:1px solid var(--g-date-divider);">◈ offset calculator</div>
+          <div class="date-section-label" style="margin-bottom:0;padding-bottom:28px;">◈ offset calculator</div>
 
           <!-- Row 1: Base Date -->
           <div class="off-row">
@@ -2653,14 +2664,31 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
             </div>
           </div>
 
-          <!-- Row 4: Direction toggle -->
-          <div class="off-row">
+          <!-- Row 4: Direction toggle only -->
+          <div class="off-row" style="border-bottom:none;">
             <div class="off-row-inner">
               <div class="date-group-label">◈ Direction</div>
               <div class="offset-toggle">
-                <button class="offset-toggle-btn offset-active" id="offsetAdd" type="button">+</button>
-                <button class="offset-toggle-btn" id="offsetSub" type="button">−</button>
+                <label class="offset-dir-label">
+                  <input type="radio" name="offsetDir" id="offsetAdd" value="add" checked>
+                  <div class="checkmark"><div class="inner-dot"></div></div>
+                  <span>Forward</span>
+                </label>
+                <label class="offset-dir-label">
+                  <input type="radio" name="offsetDir" id="offsetSub" value="sub">
+                  <div class="checkmark"><div class="inner-dot"></div></div>
+                  <span>Backward</span>
+                </label>
               </div>
+            </div>
+          </div>
+
+          <!-- Result box: between direction and include/exclude -->
+          <div id="dateOffsetResult"></div>
+
+          <!-- Row 5: Include / Exclude options -->
+          <div class="off-row" style="border-bottom:none;">
+            <div class="off-row-inner">
               <div style="display:flex;flex-direction:column;align-items:flex-start;gap:var(--sz-date-opts-gap);">
                 <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="offsetIncludeEnd"><div class="checkmark"><div class="inner-dot"></div></div><span>Include End Date</span></label>
                 <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" id="offsetExcludeStart"><div class="checkmark"><div class="inner-dot"></div></div><span>Exclude Start Date</span></label>
@@ -2668,7 +2696,6 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
             </div>
           </div>
 
-          <div id="dateOffsetResult"></div>
           <div id="dateOffsetDetails"><div id="offsetResultDetails"></div></div>
         </div>
 
@@ -3449,8 +3476,8 @@ async function searchDatabase() {
       header.innerHTML = headerHTML;
 
       // Data rows — phrase text + value for matched ciphers, blank for unmatched enabled ciphers
-      results.forEach(r => {
-        let rowHTML = `<div class="db-result-row">`;
+      results.forEach((r, rowIdx) => {
+        let rowHTML = `<div class="db-result-row${rowIdx%2===1?' row-alt':''}">`;
         rowHTML += `<div class="compare-cell compare-text"><span class="compare-text-inner">${r.text}</span></div>`;
         enabledCiphers.forEach(cipher => {
           if (r.matchSet.has(cipher)) {
@@ -3816,8 +3843,8 @@ function rebuildCompare() {
   });
   const body=document.getElementById("compareBody");
   body.innerHTML="";
-  historyData.forEach(entry=>{
-    let rowHTML=`<div class="compare-row">`;
+  historyData.forEach((entry, rowIdx)=>{
+    let rowHTML=`<div class="compare-row${rowIdx%2===1?' row-alt':''}">`;
     // Wrap text in a block span so word-break fires correctly inside the flex container
     rowHTML+=`<div class="compare-cell compare-text"><span class="compare-text-inner">${entry.text}</span></div>`;
     activeCipherKeys.forEach(cipher=>{
@@ -3944,8 +3971,8 @@ async function searchLocalDatabase() {
       });
       header.innerHTML = headerHTML;
 
-      results.forEach(r => {
-        let rowHTML = `<div class="local-db-result-row">`;
+      results.forEach((r, rowIdx) => {
+        let rowHTML = `<div class="local-db-result-row${rowIdx%2===1?' row-alt':''}">`;
         rowHTML += `<div class="compare-cell compare-text"><span class="compare-text-inner">${r.text}</span></div>`;
         enabledCiphers.forEach(cipher => {
           if (r.matchSet.has(cipher)) {
@@ -4051,7 +4078,16 @@ dateBtn.addEventListener("click",()=>{
   const hidden=document.getElementById("dateSection").style.display==="none";
   document.getElementById("dateSection").style.display=hidden?"block":"none";
   wrapper.style.display=hidden?"block":"none";
-  if(hidden)setTimeout(()=>wrapper.scrollIntoView({behavior:"smooth",block:"start"}),50);
+  if(hidden){
+    const scrollWhenReady=()=>{
+      if(wrapper.offsetHeight>10){
+        wrapper.scrollIntoView({behavior:"smooth",block:"start"});
+      } else {
+        requestAnimationFrame(scrollWhenReady);
+      }
+    };
+    requestAnimationFrame(scrollWhenReady);
+  }
 });
 
 /* ── DOWNLOAD MENU ── */
@@ -4314,17 +4350,27 @@ function downloadHistoryCanvas() {
   const cipherColors = {};
   activeCipherKeys.forEach(k => { cipherColors[k] = cs(`--cipher-${k}`) || textCol; });
 
-  // ── DOM rects (viewport-relative; subtract wrapRect for canvas coords) ──
-  const wrapRect = wrapper.getBoundingClientRect();
-  const gridRect = grid.getBoundingClientRect();
+  // ── DOM rects — compute tight bounding box across all cells, strip grid padding ──
+  const allCells = [
+    ...Array.from(document.querySelectorAll('#historyHeader .compare-cell')),
+    ...Array.from(document.querySelectorAll('#compareBody .compare-cell')),
+  ];
+  if (!allCells.length) return;
+
+  const cellRects = allCells.map(c => c.getBoundingClientRect());
+  const minLeft   = Math.min(...cellRects.map(r => r.left));
+  const minTop    = Math.min(...cellRects.map(r => r.top));
+  const maxRight  = Math.max(...cellRects.map(r => r.right));
+  const maxBottom = Math.max(...cellRects.map(r => r.bottom));
 
   const headerCells = Array.from(document.querySelectorAll('#historyHeader .compare-cell'));
   const dataRows    = Array.from(document.querySelectorAll('#compareBody .compare-row'))
                        .map(row => Array.from(row.querySelectorAll('.compare-cell')));
 
   const DPR     = window.devicePixelRatio || 1;
-  const canvasW = Math.ceil(wrapRect.width);
-  const canvasH = Math.ceil(wrapRect.height);
+  const PAD     = 6;
+  const canvasW = Math.ceil(maxRight  - minLeft) + PAD * 2;
+  const canvasH = Math.ceil(maxBottom - minTop)  + PAD * 2;
 
   const canvas  = document.createElement('canvas');
   canvas.width  = canvasW * DPR;
@@ -4332,12 +4378,12 @@ function downloadHistoryCanvas() {
   const ctx = canvas.getContext('2d');
   ctx.scale(DPR, DPR);
 
-  // Cell rect in canvas coords
+  // Cell rect relative to tight bounding box origin + padding offset
   function rel(el) {
     const r = el.getBoundingClientRect();
     return {
-      x: Math.round(r.left - wrapRect.left),
-      y: Math.round(r.top  - wrapRect.top),
+      x: Math.round(r.left  - minLeft) + PAD,
+      y: Math.round(r.top   - minTop)  + PAD,
       w: Math.round(r.width),
       h: Math.round(r.height),
     };
@@ -4376,42 +4422,58 @@ function downloadHistoryCanvas() {
     return lines.length ? lines : [text];
   }
 
-  // ── 1. Outer frame (plain rectangle — no bevels) ──
-  ctx.fillStyle = bgOuter;
+  // ── 1. Inner grid background — plain rect, no outer wrapper ──
+  ctx.fillStyle = bgInner;
   ctx.fillRect(0, 0, canvasW, canvasH);
 
-  // ── 2. Inner grid background ──
-  const gr = rel(grid);
-  ctx.fillStyle = bgInner;
-  ctx.fillRect(gr.x, gr.y, gr.w, gr.h);
+  // Thin outer boundary
+  ctx.strokeStyle = bgOuter;
+  ctx.lineWidth   = 1;
+  ctx.strokeRect(0.5, 0.5, canvasW - 1, canvasH - 1);
 
-  // ── 3. Draw all cells ──
-  function drawCell(cell) {
-    const r    = rel(cell);
+  // ── 2. Draw all cells — three separate passes so fills never bury grid lines ──
+  const allDrawCells = [...headerCells, ...dataRows.flat()];
+
+  // Pass A: alt-row background fills
+  allDrawCells.forEach(cell => {
+    const parentRow = cell.closest('.compare-row');
+    if (parentRow && parentRow.classList.contains('row-alt')) {
+      const r = rel(cell);
+      ctx.fillStyle = '#000000';
+      ctx.fillRect(r.x, r.y, r.w, r.h);
+    }
+  });
+
+  // Pass B: grid lines (drawn over fills so they're never buried)
+  ctx.strokeStyle = gridLine;
+  ctx.lineWidth   = 1;
+  allDrawCells.forEach(cell => {
+    const r         = rel(cell);
+    const isHdr      = cell.classList.contains('header-cell');
+    const isTextCell = cell.classList.contains('compare-text');
+    ctx.beginPath(); ctx.moveTo(r.x + r.w + 0.5, r.y); ctx.lineTo(r.x + r.w + 0.5, r.y + r.h); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(r.x, r.y + r.h - 0.5); ctx.lineTo(r.x + r.w, r.y + r.h - 0.5); ctx.stroke();
+    if (isHdr)      { ctx.beginPath(); ctx.moveTo(r.x, r.y + 0.5); ctx.lineTo(r.x + r.w, r.y + 0.5); ctx.stroke(); }
+    if (isTextCell) { ctx.beginPath(); ctx.moveTo(r.x + 0.5, r.y); ctx.lineTo(r.x + 0.5, r.y + r.h); ctx.stroke(); }
+  });
+
+  // Pass C: text content
+  function drawCellText(cell) {
+    const r         = rel(cell);
     const isHdr      = cell.classList.contains('header-cell');
     const isTextCell = cell.classList.contains('compare-text');
     const cipherKey  = cell.dataset.cipher;
 
-    // Grid lines: right border + bottom border
-    ctx.strokeStyle = gridLine;
-    ctx.lineWidth   = 1;
-    ctx.beginPath(); ctx.moveTo(r.x + r.w + 0.5, r.y); ctx.lineTo(r.x + r.w + 0.5, r.y + r.h); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(r.x, r.y + r.h - 0.5); ctx.lineTo(r.x + r.w, r.y + r.h - 0.5); ctx.stroke();
-
-    // Blank corner cell (header + text col) — borders only
     if (isHdr && isTextCell) return;
 
     const { size, weight, family } = elFont(cell);
     ctx.save();
 
     if (isHdr) {
-      // Header cipher label — cipher-colored
       const color = cipherColors[cipherKey] || cs('--g-history-header-text') || '#fff';
       ctx.fillStyle = color;
       ctx.textBaseline = 'middle';
-
       if (isVertical) {
-        // Rotated text (matches CSS writing-mode:vertical-rl + rotate(180deg) → reads bottom→top)
         const label = CIPHER_LABELS[cipherKey] || cipherMeta[cipherKey].label;
         ctx.font = `${weight} ${size}px ${family}`;
         ctx.textAlign = 'center';
@@ -4419,7 +4481,6 @@ function downloadHistoryCanvas() {
         ctx.rotate(-Math.PI / 2);
         ctx.fillText(label, 0, 0);
       } else {
-        // Stacked lines (normal mode)
         const spans = cell.querySelectorAll('.cipher-stack span');
         const lines = spans.length ? Array.from(spans).map(s => s.textContent.trim()) : [cell.textContent.trim()];
         ctx.font = `${weight} ${size}px ${family}`;
@@ -4429,9 +4490,7 @@ function downloadHistoryCanvas() {
         const startY = r.y + r.h / 2 - totalH / 2 + lineH / 2;
         lines.forEach((line, i) => ctx.fillText(line, r.x + r.w / 2, startY + i * lineH));
       }
-
     } else if (isTextCell) {
-      // Text (phrase) column — right-aligned, wrapped
       const innerSpan = cell.querySelector('.compare-text-inner') || cell;
       const text  = innerSpan.textContent.trim();
       const padH  = parseFloat(cs('--sz-hist-cell-pad-h')) || 14;
@@ -4446,9 +4505,7 @@ function downloadHistoryCanvas() {
       ctx.textBaseline = 'middle';
       ctx.beginPath(); ctx.rect(r.x, r.y, r.w, r.h); ctx.clip();
       lines.forEach((line, i) => ctx.fillText(line, r.x + r.w - padH, startY + i * lineH));
-
     } else {
-      // Cipher value cell — centered, cipher-colored
       const valSpan = cell.querySelector('.value') || cell;
       const text  = valSpan.textContent.trim();
       const color = cipherColors[cipherKey] || textCol;
@@ -4462,10 +4519,9 @@ function downloadHistoryCanvas() {
     ctx.restore();
   }
 
-  headerCells.forEach(drawCell);
-  dataRows.forEach(row => row.forEach(drawCell));
+  allDrawCells.forEach(drawCellText);
 
-  // ── 4. Download ──
+  // ── 3. Download ──
   const link = document.createElement('a');
   link.download = 'history-table.png';
   link.href = canvas.toDataURL('image/png');
@@ -4532,10 +4588,17 @@ function downloadBreakdownCanvas() {
   const ctx = cvs.getContext('2d');
   ctx.scale(DPR, DPR);
 
-  // Background — no bevels (sharp corners on all sides)
+  // Background — bevelled polygon matching CSS clip-path on #breakdownSection
+  // clip-path: polygon(clip 0%, 100% 0%, 100% H-clip, W-clip H, 0 H, 0 clip)
   ctx.save();
   ctx.beginPath();
-  ctx.rect(0, 0, W, H);
+  ctx.moveTo(clip, 0);
+  ctx.lineTo(W,    0);
+  ctx.lineTo(W,    H - clip);
+  ctx.lineTo(W - clip, H);
+  ctx.lineTo(0,    H);
+  ctx.lineTo(0,    clip);
+  ctx.closePath();
   ctx.fillStyle = bgColor;
   ctx.fill();
   ctx.clip();
@@ -4872,7 +4935,7 @@ function setDetailField(idVal, idBd, val, bd) {
   if(elBd) elBd.textContent = bd||"";
 }
 function clearDetails(prefix){
-  ["DayOfYear","DaysLeft","Num1","Num2","Num3"].forEach(k=>{
+  ["DayOfWeek","DayOfYear","DaysLeft","Num1","Num2","Num3"].forEach(k=>{
     const el=document.getElementById(prefix+k);
     if(el)el.textContent="—";
   });
@@ -4895,7 +4958,9 @@ function calculateDateDifference(){
   const endDate=(!ed||!em||!ey)?null:new Date(Date.UTC(ey,em-1,ed));
 
   if(startDate){
+    const DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const n=calculateDateNumerology(sd,sm,sy);
+    setDetailField("startDayOfWeek",    null,              DOW[startDate.getUTCDay()]);
     setDetailField("startDayOfYear",   null,              getDayOfYear(startDate));
     setDetailField("startDaysLeft",    null,              getDaysLeftInYear(startDate));
     setDetailField("startNum1",        "startNum1Breakdown", n.num1, n.bd1);
@@ -4910,7 +4975,9 @@ function calculateDateDifference(){
   }
 
   if(endDate){
+    const DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const n=calculateDateNumerology(ed,em,ey);
+    setDetailField("endDayOfWeek",   null,            DOW[endDate.getUTCDay()]);
     setDetailField("endDayOfYear",   null,            getDayOfYear(endDate));
     setDetailField("endDaysLeft",    null,            getDaysLeftInYear(endDate));
     setDetailField("endNum1",        "endNum1Breakdown", n.num1, n.bd1);
@@ -5000,19 +5067,9 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
     }
   });
 
-  // ── Direction toggle ──
-  addBtn.addEventListener('click', () => {
-    offsetMode = 'add';
-    addBtn.classList.add('offset-active');
-    subBtn.classList.remove('offset-active');
-    runOffsetCalc();
-  });
-  subBtn.addEventListener('click', () => {
-    offsetMode = 'sub';
-    subBtn.classList.add('offset-active');
-    addBtn.classList.remove('offset-active');
-    runOffsetCalc();
-  });
+  // ── Direction toggle (radio buttons) ──
+  addBtn.addEventListener('change', () => { offsetMode = 'add'; runOffsetCalc(); });
+  subBtn.addEventListener('change', () => { offsetMode = 'sub'; runOffsetCalc(); });
 
   // ── Checkbox show/hide unit inputs ──
   units.forEach(({ cb, grp }) => {
@@ -5072,11 +5129,12 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
     // Apply offset (UTC, same as rest of date section)
     const sign = offsetMode === 'add' ? 1 : -1;
     let base = new Date(Date.UTC(year, month-1, day));
-    if (document.getElementById('offsetExcludeStart').checked) base.setUTCDate(base.getUTCDate() + 1);
     if (y  !== 0) base.setUTCFullYear(base.getUTCFullYear() + sign * y);
     if (mo !== 0) base.setUTCMonth(base.getUTCMonth()       + sign * mo);
     if (w  !== 0 || d !== 0) base.setUTCDate(base.getUTCDate() + sign * (w*7 + d));
-    if (document.getElementById('offsetIncludeEnd').checked) base.setUTCDate(base.getUTCDate() + 1);
+    // Apply after offset so the two are truly opposite in effect
+    if (document.getElementById('offsetExcludeStart').checked) base.setUTCDate(base.getUTCDate() - 1);
+    if (document.getElementById('offsetIncludeEnd').checked)   base.setUTCDate(base.getUTCDate() + 1);
 
     const rd = base.getUTCDate();
     const rm = base.getUTCMonth() + 1;
