@@ -526,10 +526,10 @@
   transition: transform .12s ease, filter .12s ease;
 }
 
-/* Matching value highlight — font-size bump on click */
+/* Matching value highlight — subtle glow, no scaling */
 #compareGrid .value.val-match {
-  font-size: 1.15em;
-  transition: font-size 0.15s ease;
+  text-shadow: 0 0 8px currentColor;
+  transition: text-shadow 0.15s ease;
 }
 
 #compareGrid .value {
@@ -1516,6 +1516,7 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   box-sizing: border-box;
   line-height: 1;
 }
+.value.hidden { opacity: 0; pointer-events: auto; }
 
 @keyframes popupIn {
   0%   { opacity:0; transform: scale(0.92) translateY(-6px); }
@@ -3484,7 +3485,7 @@ async function searchDatabase() {
             const val = r.totals[cipher] !== undefined ? r.totals[cipher] : myTotals[cipher];
             rowHTML += `<div class="compare-cell" data-cipher="${cipher}"><span class="value" style="color:var(--cipher-${cipher})">${val}</span></div>`;
           } else {
-            rowHTML += `<div class="compare-cell" data-cipher="${cipher}"><span class="value hidden">—</span></div>`;
+            rowHTML += `<div class="compare-cell" data-cipher="${cipher}"><span class="value hidden"></span></div>`;
           }
         });
         rowHTML += `</div>`;
@@ -3979,7 +3980,7 @@ async function searchLocalDatabase() {
             const val = r.totals[cipher] !== undefined ? r.totals[cipher] : myTotals[cipher];
             rowHTML += `<div class="compare-cell" data-cipher="${cipher}"><span class="value" style="color:var(--cipher-${cipher})">${val}</span></div>`;
           } else {
-            rowHTML += `<div class="compare-cell" data-cipher="${cipher}"><span class="value hidden">—</span></div>`;
+            rowHTML += `<div class="compare-cell" data-cipher="${cipher}"><span class="value hidden"></span></div>`;
           }
         });
         rowHTML += `</div>`;
