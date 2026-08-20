@@ -3798,6 +3798,42 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   opacity: 0.6;
 }
 /* ══════════════════════════════════════════════════════════════════════
+   PERFORMANCE — phones
+   ----------------------------------------------------------------------
+   Several decorative animations loop forever whether or not anything is
+   happening: the status pip blink, the search icon and spore pulses, the
+   focus-line glow, and the two 300px rotating conic-gradient rings behind
+   the ± DATES trigger. Each one keeps a compositing layer alive and the
+   phone's GPU busy at all times, which is felt as general sluggishness
+   rather than as any single slow action.
+
+   Desktop keeps all of it. On phones they are switched off, and the
+   heavier backdrop blurs are stepped down — a blur radius is roughly
+   quadratic in cost and mobile GPUs feel it far more than desktop ones.
+   ══════════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .search-status::before,
+  .search-wrapper:focus-within .search-icon svg,
+  .search-wrapper:focus-within::before,
+  .spore,
+  #dateOffsetTrigger::before,
+  #dateOffsetTrigger::after {
+    animation: none !important;
+  }
+  /* the rings are purely decorative — drop the layers entirely */
+  #dateOffsetTrigger::before,
+  #dateOffsetTrigger::after { content: none !important; }
+
+  #cipherOverlay,
+  #settingsPanel,
+  #cipherCustomisePanel,
+  .co-nav-btn {
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
    PERFORMANCE — flatten the page-level glass
    The <canvas id="matrix"> element is never drawn into (nothing in the
    file ever calls getContext on it), so every backdrop-filter that sits
@@ -4340,7 +4376,7 @@ html.xc-anim-ready #dbBtnRow button.xc-in {
 
 /* ── swapping cipher re-titles the panel: quick re-set of the header ── */
 .breakdown-title.xc-bd-retitle {
-  animation: xcBdRetitle 0.5s ease-out both;
+  animation: xcBdRetitle 0.22s ease-out both;
 }
 @keyframes xcBdRetitle {
   0%   { opacity: 0.1; transform: translateY(-7px); letter-spacing: 11px; }
@@ -7076,6 +7112,7 @@ function hexToRgba(hex, alpha) {
    UI UPDATES
    ============================================= */
 let lastSubmittedText = "";
+let _bdFrame = null;   // pending coalesced breakdown rebuild (see scheduleBreakdown)
 
 function updateTotalsVisibility() {
   document.querySelectorAll("#totalsTable td[data-cipher]").forEach(cell=>{
@@ -7124,40 +7161,66 @@ function updateTotalsVisibility() {
 
 // Shrink-to-fit: only long cipher names get a smaller font, short ones stay
 // at the normal size. Runs after layout so scrollHeight is accurate.
+const _fitCache = new Map();
 function fitTotalsNames() {
   requestAnimationFrame(() => {
     const baseSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sz-totals-name-font')) || 13.5;
     const minSize = 9;
     const range = document.createRange();
-    document.querySelectorAll('#totalsTable .total-row span:first-child').forEach(span => {
-      span.style.fontSize = '';
+    const spans = document.querySelectorAll('#totalsTable .total-row span:first-child');
+
+    /* Phase 1 — pure reads. Measuring every span up front keeps the browser
+       from being forced into a fresh layout on each one, which is what made
+       this loop so expensive with ~90 rows on a phone. */
+    const jobs = [];
+    spans.forEach(span => {
       if (!span.firstChild) return;
-
-      // The span is a centered flex box, so overflowing text spills equally
-      // above and below its edges. scrollHeight does not report overflow past
-      // the TOP edge, so it stays equal to clientHeight and never signals the
-      // overflow — that is why names used to bleed out of the tile. Measure
-      // the rendered text directly with a Range instead.
       const cs = getComputedStyle(span);
-      const availH = span.clientHeight
-                   - parseFloat(cs.paddingTop)  - parseFloat(cs.paddingBottom);
-      const availW = span.clientWidth
-                   - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const availH = span.clientHeight - parseFloat(cs.paddingTop)  - parseFloat(cs.paddingBottom);
+      const availW = span.clientWidth  - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
       if (availH <= 0 || availW <= 0) return;
+      jobs.push({ span, availH, availW, key: span.textContent + '|' + Math.round(availW) + '|' + Math.round(availH) + '|' + baseSize });
+    });
 
-      const overflows = () => {
-        range.selectNodeContents(span);
-        const r = range.getBoundingClientRect();
-        return r.height > availH + 0.5 || r.width > availW + 0.5;
-      };
+    /* Phase 2 — anything already solved at this width is applied from cache
+       with no measuring at all (the common case on re-render and on resize
+       back to a width already seen). */
+    const todo = [];
+    jobs.forEach(j => {
+      const hit = _fitCache.get(j.key);
+      if (hit !== undefined) { j.span.style.fontSize = hit ? hit + 'px' : ''; }
+      else { j.span.style.fontSize = ''; todo.push(j); }
+    });
+    if (!todo.length) return;
 
-      let size = baseSize;
+    /* Phase 3 — measure once at full size, then jump straight to a
+       proportional estimate rather than stepping down 0.5px at a time.
+       A couple of correction steps settle any wrapping non-linearity, so
+       this is ~3 measurements per span instead of up to 60. */
+    todo.forEach(j => {
+      range.selectNodeContents(j.span);
+      let r = range.getBoundingClientRect();
+      if (r.height <= j.availH + 0.5 && r.width <= j.availW + 0.5) {
+        _fitCache.set(j.key, 0);          // fits at base size
+        return;
+      }
+      let size = Math.min(baseSize,
+                          baseSize * Math.min(j.availW / Math.max(r.width, 1),
+                                              j.availH / Math.max(r.height, 1)));
+      size = Math.max(minSize, Math.floor(size * 2) / 2);
+      j.span.style.fontSize = size + 'px';
+
       let guard = 0;
-      while (overflows() && size > minSize && guard < 60) {
-        size -= 0.5;
-        span.style.fontSize = size + 'px';
+      while (guard < 8) {
+        range.selectNodeContents(j.span);
+        r = range.getBoundingClientRect();
+        if (r.height <= j.availH + 0.5 && r.width <= j.availW + 0.5) break;
+        if (size <= minSize) break;
+        size = Math.max(minSize, size - 0.5);
+        j.span.style.fontSize = size + 'px';
         guard++;
       }
+      _fitCache.set(j.key, size);
     });
   });
 }
@@ -7168,6 +7231,12 @@ window.addEventListener('resize', () => {
 });
 
 function renderBreakdown(text) {
+  /* A direct call supersedes any keystroke rebuild still queued for the next
+     frame, so the two paths can never double-render. */
+  if (typeof _bdFrame !== 'undefined' && _bdFrame !== null) {
+    cancelAnimationFrame(_bdFrame);
+    _bdFrame = null;
+  }
   const breakdownWrapper=document.querySelector(".breakdown-wrapper");
   const breakdownSection=document.getElementById("breakdownSection");
   const totalEls={
@@ -7454,9 +7523,22 @@ function renderBreakdown(text) {
     activeCiphers[activeBreakdownCipher]?String(totals[activeBreakdownCipher]):"";
 }
 
+/* Typing used to rebuild the entire breakdown on every keystroke: ~75 cipher
+   passes over every character, a full innerHTML teardown/rebuild, and a
+   relayout of the whole totals table. On a phone that lands well past one
+   frame per key. Coalesce to one rebuild per animation frame instead — the
+   result is identical, it just stops doing the work N times for N keys held
+   or autocorrected in quick succession. */
+function scheduleBreakdown(text){
+  lastSubmittedText = text;
+  if (_bdFrame !== null) return;
+  _bdFrame = requestAnimationFrame(()=>{
+    _bdFrame = null;
+    renderBreakdown(lastSubmittedText);
+  });
+}
 document.getElementById("textInput").addEventListener("input",e=>{
-  lastSubmittedText=e.target.value;
-  renderBreakdown(e.target.value);
+  scheduleBreakdown(e.target.value);
 });
 
 function rebuildCompare() {
@@ -10770,13 +10852,20 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
 
     // Safety net for the (unlikely) case the observer never delivers:
     // anything sitting in the viewport but still hidden gets shown.
-    setInterval(function () {
+    /* This polls ~90 tiles with getBoundingClientRect, forcing a layout every
+       time. It only exists to catch tiles the observer never delivered, so it
+       stops as soon as none are left waiting instead of running for the life
+       of the page. */
+    var sweep = setInterval(function () {
       var vh = window.innerHeight || root.clientHeight;
+      var pending = 0;
       tiles.forEach(function (t) {
         if (t.classList.contains('xc-shown') || t.classList.contains('xc-in')) return;
+        pending++;
         var r = t.getBoundingClientRect();
         if (r.bottom > -40 && r.top < vh + 40 && r.height > 0) fire(t, 0);
       });
+      if (!pending) clearInterval(sweep);
     }, 2500);
   }
 
@@ -10830,20 +10919,22 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
     }
 
     /* ── letter columns ── */
-    function playItems(items, base, step, cap) {
+    function playItems(items, base, step, cap, cls, life) {
+      cls  = cls  || 'xc-bd-item';
+      life = life || 900;
       items.forEach(function (it, i) {
         it.style.setProperty('--xc-d', (base + Math.min(i * step, cap)) + 'ms');
-        it.classList.add('xc-bd-item');
+        it.classList.add(cls);
         var settled = false;
         function done() {
           if (settled) return;
           settled = true;
-          it.classList.remove('xc-bd-item');
+          it.classList.remove(cls);
           it.style.removeProperty('--xc-d');
           it.removeEventListener('animationend', done);
         }
         it.addEventListener('animationend', done);
-        setTimeout(done, base + cap + 900);
+        setTimeout(done, base + cap + life);
       });
     }
 
@@ -10881,7 +10972,7 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
         titleEl.classList.remove('xc-bd-retitle');
         void titleEl.offsetWidth;
         titleEl.classList.add('xc-bd-retitle');
-        setTimeout(function () { titleEl.classList.remove('xc-bd-retitle'); }, 900);
+        setTimeout(function () { titleEl.classList.remove('xc-bd-retitle'); }, 320);
       }).observe(titleEl, { childList: true, characterData: true, subtree: true });
     }
   }
