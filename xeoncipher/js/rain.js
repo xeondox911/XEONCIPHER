@@ -23,6 +23,19 @@
 //     never drawn.
 // ══════════════════════════════════════════════════════════════════════
 
+// ══════════════════════════════════════════════════════════════════════
+//  LOW-POWER MODE
+//  Touch devices (and low-core machines) run the same scene at a lower
+//  frame rate, at 1x pixel density instead of 2x, with a capped number of
+//  terminal lines and a slower typing clock. The look is unchanged; the
+//  per-frame cost drops by roughly an order of magnitude.
+//  Force it on/off from the page with window.__RAIN_LOW__ = true / false.
+// ══════════════════════════════════════════════════════════════════════
+const LOW = (typeof window.__RAIN_LOW__ === "boolean")
+  ? window.__RAIN_LOW__
+  : ((window.matchMedia && window.matchMedia("(hover: none), (pointer: coarse)").matches) ||
+     (navigator.hardwareConcurrency || 8) <= 4);
+
 const canvas = document.getElementById("matrix");
 const ctx = canvas.getContext("2d", { alpha: false });
 
@@ -109,7 +122,7 @@ let staticLayer = null;    // offscreen: scanlines + vignette
 let wellGradient = null;   // centre darkening, drawn over the text
 
 function resize() {
-  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  DPR = LOW ? 1 : Math.min(window.devicePixelRatio || 1, 2);
 
   const w = window.innerWidth;
   const h = window.innerHeight;
@@ -200,8 +213,8 @@ const FONT = `${FONT_SIZE}px "Courier New", Courier, monospace`;
 // throughput keeps scaling linearly with SPEED no matter how high it
 // goes. Tiers stay proportionally distinct rather than all flattening
 // into the same wall.
-const SPEED = 12;
-const MIN_DELAY = 4;
+const SPEED = LOW ? 5 : 12;
+const MIN_DELAY = LOW ? 16 : 4;
 
 const SPEED_TIERS = [
   { min: 1,  max: 3  },
@@ -305,7 +318,12 @@ let MAX_LINES     = 7;
 let typeTimer     = null;
 
 function computeMaxLines() {
-  MAX_LINES = Math.max(1, Math.floor((window.innerHeight - MARGIN_Y * 2) / LINE_HEIGHT));
+  // Every line here is a fillText of a ~200-character string, redrawn every
+  // frame. This page has no viewport meta tag, so a phone reports a tall CSS
+  // viewport and this was resolving to ~50 lines — i.e. ~50 long text draws
+  // per frame. Capped hard on low power.
+  const fit = Math.floor((window.innerHeight - MARGIN_Y * 2) / LINE_HEIGHT);
+  MAX_LINES = Math.max(1, Math.min(fit, LOW ? 10 : 40));
 }
 
 function getLeftX() { return window.innerWidth * MARGIN_X_RATIO; }
@@ -373,6 +391,8 @@ function typeNextChar() {
 // ----------------------
 // Main Loop
 // ----------------------
+let _cursorFor = null;
+let _cursorW = 0;
 let blinkOn = true;
 const BLINK_MS = 530 / SPEED;
 let blinkTimer = setInterval(() => { blinkOn = !blinkOn; }, BLINK_MS);
@@ -380,9 +400,18 @@ let blinkTimer = setInterval(() => { blinkOn = !blinkOn; }, BLINK_MS);
 let running = true;
 let rafId = null;
 
-function loop() {
+// Frame budget. The scene is a slow terminal crawl — it does not need 60fps,
+// and every frame costs a full-screen blit, N text draws and a full-screen
+// gradient fill. Skipping frames is the single biggest saving available.
+const FRAME_MS = LOW ? 1000 / 20 : 1000 / 40;
+let lastFrame = 0;
+
+function loop(now) {
   rafId = requestAnimationFrame(loop);
   if (!running) return;
+  if (now === undefined) now = performance.now();
+  if (now - lastFrame < FRAME_MS) return;   // skip this frame
+  lastFrame = now;
 
   const W = window.innerWidth;
   const H = window.innerHeight;
@@ -413,7 +442,10 @@ function loop() {
   ctx.fillText(currentText, LEFT_X, activeY);
 
   if (blinkOn) {
-    const cursorX = LEFT_X + ctx.measureText(currentText).width;
+    // measureText on a ~200-char string is not free; the string only changes
+    // when a character is typed, so cache it rather than re-measuring per frame.
+    if (currentText !== _cursorFor) { _cursorFor = currentText; _cursorW = ctx.measureText(currentText).width; }
+    const cursorX = LEFT_X + _cursorW;
     ctx.fillStyle = textRgba(0.32);
     ctx.fillRect(cursorX + 2, activeY, 8, FONT_SIZE + 1);
   }
