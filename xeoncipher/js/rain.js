@@ -96,7 +96,14 @@ function readPalette() {
   const rim    = get("--gloss-rim-color");
 
   // --matrix-color wins unless it's still the stock green
-  const chosen = (matrix && matrix.toLowerCase() !== "#62bf80") ? matrix : (rim || matrix);
+  // --matrix-color wins only if it has been changed from the stock green.
+  // Otherwise use the rim tint; and if the page defines no rim (this build
+  // does not), fall back to the CRT blue rather than to the green, which is
+  // what this background is meant to be.
+  const RIM_FALLBACK = "#00558a";
+  const chosen = (matrix && matrix.toLowerCase() !== "#62bf80")
+    ? matrix
+    : (rim || RIM_FALLBACK);
 
   const base = hexToRgb(chosen) || { r: 0, g: 85, b: 138 };
   LINE_RGB = floorLuma(base, 0.10);
@@ -109,7 +116,7 @@ const lineRgba = (a) => `rgba(${LINE_RGB.r}, ${LINE_RGB.g}, ${LINE_RGB.b}, ${a})
 const textRgba = (a) => `rgba(${TEXT_RGB.r}, ${TEXT_RGB.g}, ${TEXT_RGB.b}, ${a})`;
 
 // Expose a refresh so the settings panel can re-tint the background live
-window.rainRefresh = () => { readPalette(); buildStaticLayer(); };
+window.rainRefresh = () => { readPalette(); buildStaticLayer(); linesDirty = true; };
 
 // ----------------------
 // Geometry
@@ -119,6 +126,8 @@ const CONTENT_W = 1180;    // widest the app column gets
 
 let DPR = 1;
 let staticLayer = null;    // offscreen: scanlines + vignette
+let linesLayer  = null;    // offscreen: the settled terminal lines
+let linesDirty  = true;    // rebuild linesLayer on the next frame
 let wellGradient = null;   // centre darkening, drawn over the text
 
 function resize() {
@@ -135,6 +144,7 @@ function resize() {
 
   buildStaticLayer();
   computeMaxLines();
+  linesDirty = true;
 }
 
 window.addEventListener("resize", resize);
@@ -322,8 +332,9 @@ function computeMaxLines() {
   // frame. This page has no viewport meta tag, so a phone reports a tall CSS
   // viewport and this was resolving to ~50 lines — i.e. ~50 long text draws
   // per frame. Capped hard on low power.
-  const fit = Math.floor((window.innerHeight - MARGIN_Y * 2) / LINE_HEIGHT);
-  MAX_LINES = Math.max(1, Math.min(fit, LOW ? 10 : 40));
+  // Fill the screen on every device. Settled lines are cached in linesLayer
+  // (see below), so the number of them no longer costs anything per frame.
+  MAX_LINES = Math.max(1, Math.floor((window.innerHeight - MARGIN_Y * 2) / LINE_HEIGHT));
 }
 
 function getLeftX() { return window.innerWidth * MARGIN_X_RATIO; }
@@ -362,6 +373,7 @@ function typeNextChar() {
     const alpha = Math.random() < 0.12 ? 0.18 : Math.random() < 0.4 ? 0.08 : 0.13;
     displayedLines.push({ text: currentText, alpha });
     if (displayedLines.length > MAX_LINES) displayedLines.shift();
+    linesDirty = true;
     currentText = "";
     typeTimer = setTimeout(pickNextLine, (80 + Math.random() * 300) / SPEED);
     return;
@@ -389,6 +401,36 @@ function typeNextChar() {
 }
 
 // ----------------------
+// Settled-line layer
+//
+// displayedLines only changes when a line finishes typing, but it used to be
+// re-drawn with one fillText per line on EVERY frame. On a tall viewport that
+// was ~50 long text draws per frame. Rendering them once into an offscreen
+// canvas and blitting it costs one draw call instead.
+// ----------------------
+function buildLinesLayer() {
+  const w = window.innerWidth, h = window.innerHeight;
+  if (!w || !h) return;
+  if (!linesLayer) linesLayer = document.createElement("canvas");
+  if (linesLayer.width !== Math.floor(w * DPR) || linesLayer.height !== Math.floor(h * DPR)) {
+    linesLayer.width  = Math.floor(w * DPR);
+    linesLayer.height = Math.floor(h * DPR);
+  }
+  const c = linesLayer.getContext("2d");
+  c.setTransform(DPR, 0, 0, DPR, 0, 0);
+  c.clearRect(0, 0, w, h);
+  c.font = FONT;
+  c.textBaseline = "top";
+  const LEFT_X = getLeftX();
+  for (let i = 0; i < displayedLines.length; i++) {
+    const line = displayedLines[i];
+    c.fillStyle = textRgba(line.alpha);
+    c.fillText(line.text, LEFT_X, MARGIN_Y + i * LINE_HEIGHT);
+  }
+  linesDirty = false;
+}
+
+// ----------------------
 // Main Loop
 // ----------------------
 let _cursorFor = null;
@@ -403,7 +445,7 @@ let rafId = null;
 // Frame budget. The scene is a slow terminal crawl — it does not need 60fps,
 // and every frame costs a full-screen blit, N text draws and a full-screen
 // gradient fill. Skipping frames is the single biggest saving available.
-const FRAME_MS = LOW ? 1000 / 20 : 1000 / 40;
+const FRAME_MS = LOW ? 1000 / 30 : 1000 / 60;
 let lastFrame = 0;
 
 function loop(now) {
@@ -431,11 +473,8 @@ function loop(now) {
   const LEFT_X = getLeftX();
   const topY   = MARGIN_Y;
 
-  for (let i = 0; i < displayedLines.length; i++) {
-    const line = displayedLines[i];
-    ctx.fillStyle = textRgba(line.alpha);
-    ctx.fillText(line.text, LEFT_X, topY + i * LINE_HEIGHT);
-  }
+  if (linesDirty) buildLinesLayer();
+  if (linesLayer) ctx.drawImage(linesLayer, 0, 0, W, H);
 
   const activeY = topY + displayedLines.length * LINE_HEIGHT;
   ctx.fillStyle = textRgba(0.30);
