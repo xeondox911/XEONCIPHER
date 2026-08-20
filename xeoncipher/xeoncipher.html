@@ -2,11 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Without this a phone renders the page at a ~980px virtual width and
+     scales the result down: everything is laid out and painted at desktop
+     size, and none of the max-width:768px mobile rules ever match. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>XEONCIPHER</title>
 <link rel="icon" type="image/png" href="assets/icon.png">
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<!-- deferred: these are ~400KB of compat SDK and nothing on first paint needs
+     them. Both DB call sites already no-op while `db` is still null. -->
+<script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script defer src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
 :root {
   /* ── CIPHER COLUMN COLORS (history grid) ── */
@@ -6246,14 +6251,23 @@ const FIREBASE_CONFIG = {
 };
 
 let db = null;
-try {
-  if (typeof firebase !== 'undefined') {
-    firebase.initializeApp(FIREBASE_CONFIG);
-    db = firebase.firestore();
-  } else {
-    console.warn("[XEONCIPHER] Firebase SDK not loaded — database features disabled.");
-  }
-} catch(e) { console.error("[XEONCIPHER] Firebase init error:", e); }
+/* The SDK scripts are deferred, so they finish after this inline script runs
+   but before DOMContentLoaded — initialise there instead of inline. */
+function initFirebase() {
+  try {
+    if (typeof firebase !== 'undefined') {
+      firebase.initializeApp(FIREBASE_CONFIG);
+      db = firebase.firestore();
+    } else {
+      console.warn("[XEONCIPHER] Firebase SDK not loaded — database features disabled.");
+    }
+  } catch(e) { console.error("[XEONCIPHER] Firebase init error:", e); }
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initFirebase, { once: true });
+} else {
+  initFirebase();
+}
 
 async function saveEntryToFirestore(entry) {
   if (!db) return;
