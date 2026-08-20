@@ -3070,6 +3070,13 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   pointer-events:none; /* allows scroll/interaction on page behind panel */
 }
 
+/* The settings panel holds ~2,700 elements — 700+ range sliders among them —
+   and is by far the largest subtree on the page. It is only parked off-screen
+   rather than hidden, so while closed the browser was still laying out and
+   painting every one of those widgets, behind a full-height backdrop blur,
+   forever. content-visibility:hidden skips rendering the subtree entirely
+   while it is closed and keeps its state, so opening is still instant. The
+   slide-in and the panel's looks are unchanged. */
 #settingsPanel {
   position:fixed;
   top:0; right:calc(-1 * var(--sz-settings-w) - 40px);
@@ -3077,16 +3084,21 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   height:100vh;
   height:100dvh; /* respects mobile browser UI chrome — URL bar, nav bar */
   background:rgba(2,8,15,0.4) !important;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
   border-left:1px solid var(--s-panel-border);
   z-index:999;
   transition:right 0.35s cubic-bezier(0.16,1,0.3,1);
   display:flex; flex-direction:column;
   font-family:var(--font-settings);
   box-shadow:-8px 0 40px var(--s-panel-shadow);
+  content-visibility: hidden;
+  contain-intrinsic-size: var(--sz-settings-w) 100dvh;
 }
-#settingsPanel.open { right:0; }
+#settingsPanel.open {
+  right:0;
+  content-visibility: visible;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
 
 /* ─── Settings panel resize dragger ─── */
 #settingsDragger {
