@@ -3828,42 +3828,6 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
    removes always-on GPU work.
    ══════════════════════════════════════════════════════════════════════ */
 /* ══════════════════════════════════════════════════════════════════════
-   MOTION OFF ON TOUCH DEVICES
-   ----------------------------------------------------------------------
-   Every animation and transition is collapsed to ~0 on phones. Durations
-   are set to 0.001ms rather than `animation: none` on purpose: the
-   entrance choreography hides elements until their animation ENDS, and
-   with `none` no animationend ever fires, so things would sit invisible
-   until a JS fallback timer rescued them. A near-zero duration still
-   fires the event, so every element lands immediately and all the
-   existing cleanup code runs untouched.
-
-   To put the motion back, delete this one block. Nothing else depends
-   on it.
-   ══════════════════════════════════════════════════════════════════════ */
-@media (hover: none), (pointer: coarse) {
-  *, *::before, *::after {
-    animation-duration: 0.001ms !important;
-    animation-delay: 0ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-    transition-delay: 0ms !important;
-  }
-  /* belt and braces: land the reveal targets outright, exactly as the
-     reduced-motion block already does */
-  html.xc-anim-ready .header .tab,
-  html.xc-anim-ready .search-container,
-  html.xc-anim-ready .search-container .search-corner,
-  html.xc-anim-ready .search-container .search-label,
-  html.xc-anim-ready .search-container .search-status,
-  html.xc-anim-ready #totalsTable .total-row,
-  html.xc-anim-ready #dbBtnRow button {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-}
-
-/* ══════════════════════════════════════════════════════════════════════
    PERFORMANCE — touch devices: strip paint cost, keep the layout
    ----------------------------------------------------------------------
    Nothing below moves, resizes or repositions anything. It only removes
@@ -3891,28 +3855,34 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
     --mat-scan: none;
   }
 
-  /* The previous build carried 11 backdrop-filters and was smooth on phones;
-     the glass pass took it to 61. Clear every one of them on touch rather
-     than chasing individual selectors — the opaque fills below cover what
-     the blur was providing. */
+  /* Clear the blurs that sit on the page permanently. The cipher, download
+     and customiser overlays are deliberately NOT touched: they only exist
+     while open, so their blur is a one-off cost, not a per-frame one, and
+     the dark blurred backdrop is the whole look of them. */
   *, *::before, *::after {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
-
-  /* opaque fills to replace what the blur was providing */
-  #settingsPanel        { background: rgba(2,8,15,0.97) !important; }
-  #cipherOverlay.co-visible { background: rgba(0,0,0,0.94); }
-  #cipherCustomisePanel { background: rgba(0,0,0,0.96); }
+  #cipherOverlay.co-visible,
+  #downloadOverlay.co-visible {
+    backdrop-filter: blur(14px) brightness(0.38) saturate(0.5) !important;
+    -webkit-backdrop-filter: blur(14px) brightness(0.38) saturate(0.5) !important;
+  }
+  #cipherCustomisePanel {
+    backdrop-filter: blur(18px) brightness(0.28) saturate(0.4) !important;
+    -webkit-backdrop-filter: blur(18px) brightness(0.28) saturate(0.4) !important;
+  }
+  #settingsPanel.open {
+    backdrop-filter: blur(6px) !important;
+    -webkit-backdrop-filter: blur(6px) !important;
+  }
 
   /* blur passes over whole element boxes */
-  #dateSection,
-  .co-nav-btn        { filter: none !important; }
+  #dateSection       { filter: none !important; }
   .breakdown-section,
   #dateSection,
   #dbSearchBtn,
-  #localDbSearchBtn,
-  #settingsPanel     { box-shadow: none !important; }
+  #localDbSearchBtn  { box-shadow: none !important; }
 
   /* one blur pass per glyph, over a lot of glyphs */
   .total-row span:last-of-type,
@@ -3922,8 +3892,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   .breakdown-total,
   .breakdown-word-val,
   .breakdown-title,
-  .tab .tab-txt,
-  .co-nav-btn        { text-shadow: none !important; }
+  .tab .tab-txt      { text-shadow: none !important; }
 }
 
 @media (hover: none), (pointer: coarse) {
