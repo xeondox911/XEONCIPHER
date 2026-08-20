@@ -3711,23 +3711,17 @@ html.xc-anim-ready #dbBtnRow button.xc-in {
 <canvas id="matrix"></canvas>
 <script>
 /* ── MATRIX RAIN LOADER ───────────────────────────────────────────────
-   js/rain.js drives the full-screen <canvas id="matrix"> behind the whole
-   page. It is an external file, so none of the tuning done inside this
-   HTML has ever touched it — yet a full-viewport canvas repainting every
-   frame is the single most expensive thing a phone here has to do, and it
-   runs constantly whether or not you are interacting.
+   js/rain.js drives the full-screen <canvas id="matrix"> behind the page.
+   It now has a built-in LOW-POWER mode that it selects automatically on
+   touch devices: 20fps instead of 40, 1x pixel density instead of 2x, at
+   most 10 terminal lines instead of ~50, and a slower typing clock. The
+   scene looks the same, it just costs a fraction of what it did.
 
-   It is therefore skipped on touch devices. The canvas stays in the DOM
-   (nothing else changes, the background is simply the flat --matrix-bg
-   colour), so layout and every other feature are identical.
-
-   TO RE-ENABLE IT ON PHONES: delete the isTouch test below.
+   Override the automatic choice by setting window.__RAIN_LOW__ to true or
+   false BEFORE this runs. Set it to true on desktop to see exactly what a
+   phone gets; set it to false on a phone to force the full-fat version.
    ─────────────────────────────────────────────────────────────────────── */
 (function () {
-  var mm = window.matchMedia;
-  var isTouch = mm && mm('(hover: none), (pointer: coarse)').matches;
-  var isCalm  = mm && mm('(prefers-reduced-motion: reduce)').matches;
-  if (isTouch || isCalm) return;
   var t = document.createElement('script');
   t.src = 'js/rain.js';
   t.defer = true;
