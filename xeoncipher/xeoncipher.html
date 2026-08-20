@@ -3821,15 +3821,81 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
    phone's GPU busy at all times, which is felt as general sluggishness
    rather than as any single slow action.
 
-   Desktop keeps all of it. On phones they are switched off, and the
-   heavier backdrop blurs are stepped down — a blur radius is roughly
-   quadratic in cost and mobile GPUs feel it far more than desktop ones.
+   Desktop keeps all of it. On phones they are switched off. (The backdrop
+   blurs are handled in the block above, which removes them outright.)
 
    Keyed off touch input, NOT viewport width: the page has no viewport meta
    tag by design, so a phone reports a ~980px virtual width and every
    max-width:768px query stays dead. Layout is untouched — this block only
    removes always-on GPU work.
    ══════════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════
+   PERFORMANCE — touch devices: strip paint cost, keep the layout
+   ----------------------------------------------------------------------
+   Nothing below moves, resizes or repositions anything. It only removes
+   the properties that force the GPU to re-composite large areas on every
+   frame, which is what makes the page feel heavy everywhere at once
+   rather than in one specific place:
+
+     • backdrop-filter — each one is a live read-back of everything behind
+       it, re-run whenever anything moves. --mat-blur feeds most of them,
+       so blanking that variable clears them in one go.
+     • --mat-scan — a repeating gradient tiled across the big panels; it
+       has to be re-rasterised over large areas.
+     • drop-shadow / large soft box-shadow — blur passes over the whole
+       element box.
+     • text-shadow — a blur per glyph. Across the totals column and every
+       breakdown letter that is thousands of blurred glyphs per repaint.
+
+   Backgrounds that relied on a blur behind them are made opaque here so
+   nothing turns see-through once the filter is gone. Desktop is entirely
+   unaffected.
+   ══════════════════════════════════════════════════════════════════════ */
+@media (hover: none), (pointer: coarse) {
+  :root {
+    --mat-blur: none;
+    --mat-scan: none;
+  }
+
+  #cipherOverlay.co-visible,
+  #cipherCustomisePanel,
+  #settingsPanel.open,
+  #downloadOverlay,
+  .co-nav-btn,
+  .tab-glow .tab-inner,
+  .search-wrapper,
+  .search-btn,
+  .total-row::before {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+
+  /* opaque fills to replace what the blur was providing */
+  #settingsPanel        { background: rgba(2,8,15,0.97) !important; }
+  #cipherOverlay.co-visible { background: rgba(0,0,0,0.94); }
+  #cipherCustomisePanel { background: rgba(0,0,0,0.96); }
+
+  /* blur passes over whole element boxes */
+  #dateSection,
+  .co-nav-btn        { filter: none !important; }
+  .breakdown-section,
+  #dateSection,
+  #dbSearchBtn,
+  #localDbSearchBtn,
+  #settingsPanel     { box-shadow: none !important; }
+
+  /* one blur pass per glyph, over a lot of glyphs */
+  .total-row span:last-of-type,
+  .total-row span:first-child,
+  .breakdown-item .letter,
+  .breakdown-item .value,
+  .breakdown-total,
+  .breakdown-word-val,
+  .breakdown-title,
+  .tab .tab-txt,
+  .co-nav-btn        { text-shadow: none !important; }
+}
+
 @media (hover: none), (pointer: coarse) {
   .search-status::before,
   .search-wrapper:focus-within .search-icon svg,
@@ -3842,14 +3908,6 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   /* the rings are purely decorative — drop the layers entirely */
   #dateOffsetTrigger::before,
   #dateOffsetTrigger::after { content: none !important; }
-
-  #cipherOverlay,
-  #settingsPanel,
-  #cipherCustomisePanel,
-  .co-nav-btn {
-    backdrop-filter: blur(4px) !important;
-    -webkit-backdrop-filter: blur(4px) !important;
-  }
 }
 
 /* ══════════════════════════════════════════════════════════════════════
