@@ -2,10 +2,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<!-- Without this a phone renders the page at a ~980px virtual width and
-     scales the result down: everything is laid out and painted at desktop
-     size, and none of the max-width:768px mobile rules ever match. -->
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>XEONCIPHER</title>
 <link rel="icon" type="image/png" href="assets/icon.png">
 <!-- deferred: these are ~400KB of compat SDK and nothing on first paint needs
@@ -2121,25 +2117,26 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   transition: filter 0.2s;
 }
 
-/* Fill — exact .tab-glow .tab-inner recipe */
+/* Fill — exact .tab-glow .tab-inner recipe.
+   No clip-path here: .total-row already carries one and a clip-path clips its
+   descendants, so repeating it per pseudo-element tripled the clipping work
+   on every row for a pixel-identical result. */
 .total-row::before {
   content: "";
   position: absolute;
   inset: 2px;
   z-index: 1;
-  clip-path: polygon(2.8% 0%, 98.8% 0%, 100% 4%, 96.7% 100%, 0% 100%);
   background: color-mix(in srgb, var(--g-btn-inner-bg) 85%, transparent);
   backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
   -webkit-backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
 }
 
-/* Gloss — exact .tab-glow .tab-gloss recipe */
+/* Gloss — exact .tab-glow .tab-gloss recipe (clip-path likewise inherited) */
 .total-row::after {
   content: "";
   position: absolute;
   inset: 2px;
   z-index: 1;
-  clip-path: polygon(2.8% 0%, 98.8% 0%, 100% 4%, 96.7% 100%, 0% 100%);
   opacity: 0.6;
   background:
     linear-gradient(to bottom,
@@ -3815,8 +3812,13 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
    Desktop keeps all of it. On phones they are switched off, and the
    heavier backdrop blurs are stepped down — a blur radius is roughly
    quadratic in cost and mobile GPUs feel it far more than desktop ones.
+
+   Keyed off touch input, NOT viewport width: the page has no viewport meta
+   tag by design, so a phone reports a ~980px virtual width and every
+   max-width:768px query stays dead. Layout is untouched — this block only
+   removes always-on GPU work.
    ══════════════════════════════════════════════════════════════════════ */
-@media (max-width: 768px) {
+@media (hover: none), (pointer: coarse) {
   .search-status::before,
   .search-wrapper:focus-within .search-icon svg,
   .search-wrapper:focus-within::before,
