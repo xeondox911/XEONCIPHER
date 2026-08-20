@@ -413,16 +413,16 @@
   /* ── SEARCH INPUT ── */
   --g-search-bg: #000a0f;
   --g-search-border: #000000;
-  --g-search-border-focus: #001f0d;
-  --g-search-text: #25ad50;
-  --g-search-placeholder: #12973c;
-  --g-search-icon: #008a30;
-  --g-search-icon-focus: #62bf80;
+  --g-search-border-focus: #c8f0da;
+  --g-search-text: #c8f0da;
+  --g-search-placeholder: #c8f0da;
+  --g-search-icon: #c8f0da;
+  --g-search-icon-focus: #c8f0da;
   --g-search-btn-bg: #050e10;
-  --g-search-btn-icon: #00a334;
-  --g-search-label: #008028;
-  --g-search-status: #008028;
-  --g-search-corner: #00c73f;
+  --g-search-btn-icon: #c8f0da;
+  --g-search-label: #c8f0da;
+  --g-search-status: #c8f0da;
+  --g-search-corner: #c8f0da;
   --g-search-spore: #000000;
   --g-search-topline: #000000;
 
@@ -537,8 +537,8 @@
   --sz-search-height: 80.4px;
   --sz-search-font: 1.66rem;
   --sz-input-font: 0.85rem;
-  --sz-totals-name-font: 32.2px;
-  --sz-totals-val-font: 41.8px;
+  --sz-totals-name-font: 24px;
+  --sz-totals-val-font: 24px;
   --sz-bd-title-font: 27.6px;
   --sz-bd-letter-font: 26px;
   --sz-bd-caps-letter-font: 26px;
@@ -582,6 +582,10 @@
 
   /* ── CIPHER OVERLAY DETAILS ── */
   --sz-co-panel-gap: 14px;
+  --sz-co-nav-w: 62px;
+  --sz-co-nav-h: 132px;
+  --sz-co-nav-font: 3rem;
+  --sz-co-nav-inset: 26px;
   --sz-co-title-font: 0.48rem;
   --sz-co-title-ls: 7px;
   --sz-co-hint-font: 0.42rem;
@@ -621,13 +625,13 @@
   --sz-totals-max-w: 960px;
   --sz-totals-td-pad-v: 7px;
   --sz-totals-td-pad-h: 6.2px;
-  --sz-totals-row-h: 92px;
+  --sz-totals-row-h: 46px;
   --sz-totals-row-minw: 320px;
-  --sz-totals-name-pt: 6.8px;
-  --sz-totals-name-pl: 10px;
+  --sz-totals-name-pt: 4px;
+  --sz-totals-name-pl: 16px;
   --sz-totals-name-ls: 1px;
-  --sz-totals-val-pt: -80.2px;
-  --sz-totals-val-pr: 12.8px;
+  --sz-totals-val-pt: 4px;
+  --sz-totals-val-pr: 8px;
   --sz-totals-val-ls: 1.1px;
 
   /* ── BREAKDOWN ── */
@@ -743,7 +747,7 @@
   --font-bd-grand-total: "AER", "Consolas", "Courier New", monospace;
   --font-history: "Orbitron", "Consolas", "Courier New", monospace;
   --font-history-header: "AESB", "Consolas", "Courier New", monospace;
-  --font-date: "AER", "Consolas", "Courier New", monospace;
+  --font-date: "AESB", "Consolas", "Courier New", monospace;
   --font-date-input: "AESB", "Consolas", "Courier New", monospace;
   --font-date-result: "AESB", "Consolas", "Courier New", monospace;
   --font-popup: "AER", "Consolas", "Courier New", monospace;
@@ -1325,6 +1329,74 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   100% { text-shadow: 2px 4px 1px var(--g-btn-neon-1), 2px 2px 1px var(--g-btn-neon-2), 0 0 20px rgba(255,255,255,0.6); }
 }
 
+/* ─── HEADER BUTTONS — GLOSSY SURFACE + ICONS ───
+   Keeps the original .tab shape/size/rotating neon rings completely
+   untouched — only adds a glass highlight layer and swaps the text
+   label for an icon. Scoped to .tab-gloss/.tab-icon so #dateOffsetTrigger
+   (which has neither) is unaffected. */
+.tab .tab-gloss {
+  position: absolute;
+  inset: 2px;
+  clip-path: polygon(6% 0, 93% 0, 100% 8%, 100% 86%, 90% 89%, 88% 100%, 5% 100%, 0% 85%);
+  background: linear-gradient(to bottom,
+    rgba(255,255,255,0.55) 0%,
+    rgba(255,255,255,0.16) 30%,
+    rgba(255,255,255,0.02) 55%,
+    rgba(255,255,255,0) 70%);
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.tab .tab-icon {
+  position: relative;
+  z-index: 2;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--g-btn-text);
+  filter: drop-shadow(0 0 3px var(--g-btn-neon-1)) drop-shadow(0 0 9px var(--g-btn-neon-2)) drop-shadow(0 1px 1px rgba(0,0,0,0.7));
+  transition: color 0.3s ease, filter 0.3s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+.tab .tab-icon svg { width: 100%; height: 100%; display: block; }
+
+.tab:hover .tab-icon {
+  color: #ffffff;
+  filter: drop-shadow(0 0 5px var(--g-btn-neon-1)) drop-shadow(0 0 16px rgba(255,255,255,0.6)) drop-shadow(0 1px 1px rgba(0,0,0,0.7));
+  transform: scale(1.08);
+}
+.tab:hover .tab-gloss { opacity: 1; }
+.tab:active .tab-gloss { opacity: 0.3; }
+.tab:active .tab-icon { transform: scale(0.94); }
+
+/* ─── Static green backlight + extra gloss/translucency (header icon buttons only) ───
+   Scoped to .tab-glow so #dateOffsetTrigger keeps its original spinning ring look. */
+.tab.tab-glow::before,
+.tab.tab-glow::after {
+  content: none; /* kill the rotating neon rings */
+}
+/* a touch see-through, so the matrix rain behind gently bleeds through — kept dark */
+.tab-glow .tab-inner {
+  background: color-mix(in srgb, var(--g-btn-inner-bg) 85%, transparent);
+  backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
+  -webkit-backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
+}
+/* glossier highlight — subtle sheen, not a bright wash */
+.tab-glow .tab-gloss {
+  opacity: 0.6;
+  background:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.30) 0%,
+      rgba(255,255,255,0.10) 26%,
+      rgba(255,255,255,0.03) 50%,
+      rgba(255,255,255,0) 68%),
+    radial-gradient(ellipse at 50% 118%, rgba(255,255,255,0.08), transparent 62%);
+}
+
 /* ─── CIPHER MENU ─── */
 .cipher-menu {
   display: none;
@@ -1395,6 +1467,15 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   font-size: var(--sz-co-title-font); letter-spacing: var(--sz-co-title-ls); text-transform: uppercase;
   color: #62bf80; opacity: 0.45; margin-bottom: 2px;
 }
+/* Cipher overlay heading — GOS via --font-cipher-overlay, sized up from the
+   small .co-title used on the Download panel so it reads as a real heading. */
+.co-title-ciphers {
+  font-size: calc(var(--sz-co-title-font) * 2.6);
+  letter-spacing: calc(var(--sz-co-title-ls) * 0.7);
+  opacity: 0.72;
+  margin-bottom: 14px;
+  text-shadow: 0 0 14px rgba(98,191,128,0.35);
+}
 .co-grid { display: grid; grid-template-columns: 1fr; gap: var(--sz-co-grid-gap); width: 100%; justify-items: center; }
 .co-close-hint {
   font-family: var(--font-cipher-overlay);
@@ -1411,33 +1492,76 @@ canvas { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
   transform: translateY(-50%);
   z-index: 910;
 }
-body.co-open #coNavLeft  { display: flex; left:  0; }
-body.co-open #coNavRight { display: flex; right: 0; }
+body.co-open #coNavLeft  { display: flex; left:  var(--sz-co-nav-inset); }
+body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
 
 .co-nav-btn {
   pointer-events: auto;
-  background: rgba(0,0,0,0.6);
-  border: 1px solid rgba(98,191,128,0.18);
-  color: rgba(98,191,128,0.45);
+  /* depth: dark glass body with a lit inner edge on the leading side */
+  background:
+    linear-gradient(180deg, rgba(98,191,128,0.10) 0%, rgba(98,191,128,0) 38%),
+    linear-gradient(180deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.92) 100%);
+  border: 1px solid rgba(98,191,128,0.28);
+  color: rgba(98,191,128,0.70);
   font-family: var(--font-cipher-overlay);
-  font-size: 2rem;
-  width: 38px;
-  height: 88px;
+  font-size: var(--sz-co-nav-font);
+  width: var(--sz-co-nav-w);
+  height: var(--sz-co-nav-h);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 0 10px rgba(98,191,128,0.55);
+  box-shadow: inset 0 0 18px rgba(98,191,128,0.07);
+  /* drop-shadow rather than box-shadow: it renders after clip-path, so the
+     glow follows the angled silhouette instead of being cut off square */
+  filter: drop-shadow(0 0 5px rgba(98,191,128,0.16));
+  transition: color 0.22s ease, border-color 0.22s ease, background 0.22s ease,
+              filter 0.22s ease, transform 0.22s cubic-bezier(0.16,1,0.30,1);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   flex-shrink: 0;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
-.co-nav-btn:hover { color: #62bf80; border-color: rgba(98,191,128,0.5); background: rgba(0,0,0,0.85); }
-.co-nav-btn:disabled { opacity: 0.15; cursor: default; pointer-events: none; }
-#coNavLeft  { clip-path: polygon(0% 0%, 100% 10%, 100% 90%, 0% 100%); border-left: none; border-right: 1px solid rgba(98,191,128,0.18); }
-#coNavRight { clip-path: polygon(0% 10%, 100% 0%, 100% 100%, 0% 90%); border-right: none; border-left: 1px solid rgba(98,191,128,0.18); }
+/* soft sheen sweeping the upper half, same idea as the tile gloss */
+.co-nav-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.02) 34%, transparent 62%);
+  opacity: 0.7;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+.co-nav-btn:hover {
+  color: #b6f0cb;
+  border-color: rgba(98,191,128,0.75);
+  background:
+    linear-gradient(180deg, rgba(98,191,128,0.20) 0%, rgba(98,191,128,0.02) 45%),
+    linear-gradient(180deg, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.90) 100%);
+  text-shadow: 0 0 16px rgba(142,212,168,0.95), 0 0 34px rgba(98,191,128,0.5);
+  filter: drop-shadow(0 0 13px rgba(98,191,128,0.5));
+}
+.co-nav-btn:hover::after { opacity: 1; }
+/* each arrow leans toward the direction it takes you */
+#coNavLeft:hover  { transform: translateY(-50%) translateX(-5px); }
+#coNavRight:hover { transform: translateY(-50%) translateX(5px); }
+#coNavLeft:active  { transform: translateY(-50%) translateX(-2px) scale(0.96); }
+#coNavRight:active { transform: translateY(-50%) translateX(2px) scale(0.96); }
+.co-nav-btn:disabled {
+  opacity: 0.12;
+  cursor: default;
+  pointer-events: none;
+  filter: none;
+  text-shadow: none;
+}
+/* They sit inset from the screen edge now rather than flush against it, so
+   both keep a full border instead of dropping the outer edge. */
+#coNavLeft  { clip-path: polygon(0% 0%, 100% 10%, 100% 90%, 0% 100%); }
+#coNavRight { clip-path: polygon(0% 10%, 100% 0%, 100% 100%, 0% 90%); }
 
 /* page indicator inside overlay */
 .co-page-indicator {
@@ -1451,29 +1575,23 @@ body.co-open #coNavRight { display: flex; right: 0; }
   min-height: 1em;
 }
 
-/* ── CUSTOMISE button (inside overlay, below grid) ── */
-#coCustomiseBtn {
-  background: transparent;
-  border: 1px solid #2d5a3d;
-  color: #62bf80;
-  font-family: var(--font-buttons);
-  font-size: 0.92rem;
-  font-weight: bold;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  padding: 13px 34px;
-  cursor: pointer;
-  margin-top: 14px;
-  clip-path: polygon(8px 0%, 100% 0%, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0% 100%, 0% 8px);
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+/* ── CUSTOMISE + DONE buttons (inside the cipher overlay / customiser) ──
+   Both use the .tab / .tab-glow header-button build, so they inherit the
+   clip shape, rotating neon rings, gloss and press states. Only geometry is
+   overridden here — same approach as the ± DATES trigger. Sized down from
+   the header buttons: these are secondary controls inside an overlay, so
+   they scale off --sz-btn-h / --sz-btn-font rather than matching them. */
+#coCustomiseBtn.tab,
+#cipherCustomiseDone.tab {
+  width: auto;
+  min-width: 0;
+  height: calc(var(--sz-btn-h) * 0.6);
+  padding: 0 32px;
+  font-size: calc(var(--sz-btn-font) * 0.56);
 }
-#coCustomiseBtn:hover {
-  color: #8ed4a8;
-  border-color: #62bf80;
-  background: rgba(98,191,128,0.08);
-}
+#coCustomiseBtn.tab .tab-txt,
+#cipherCustomiseDone.tab .tab-txt { letter-spacing: 2.6px; }
+#coCustomiseBtn.tab { margin-top: 14px; }
 
 /* ── CIPHER CUSTOMISER PANEL ── */
 #cipherCustomisePanel {
@@ -1556,16 +1674,8 @@ body.co-open #coNavRight { display: flex; right: 0; }
 }
 .ccp-divider:hover::after { color: rgba(98,191,128,0.7); }
 
-#cipherCustomiseDone {
-  margin-top: 20px;
-  background: rgba(98,191,128,0.12); border: 1px solid #62bf80; color: #8ed4a8;
-  font-family: var(--font-buttons); font-size: 0.95rem; font-weight: bold;
-  letter-spacing: 4px; text-transform: uppercase; padding: 14px 56px;
-  cursor: pointer; clip-path: polygon(10px 0%, 100% 0%, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0% 100%, 0% 10px);
-  transition: background 0.2s, color 0.2s, border-color 0.2s;
-  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
-}
-#cipherCustomiseDone:hover { background: rgba(98,191,128,0.22); color: #ffffff; border-color: #8ed4a8; }
+/* DONE — shares the sizing block above with #coCustomiseBtn */
+#cipherCustomiseDone.tab { margin-top: 20px; }
 
 
 /* ── NEW FRAME: wraps each tile and owns the 4-sided polygon border ── */
@@ -1790,12 +1900,29 @@ body.co-open #coNavRight { display: flex; right: 0; }
 .search-wrapper {
   position: relative;
   display: flex; align-items: center;
-  background: var(--g-search-bg);
+  background: color-mix(in srgb, var(--g-search-bg) 85%, transparent);
+  backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
+  -webkit-backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
   border: var(--sz-search-border) solid var(--g-search-border);
   padding: 0;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.8), 0 0 0 1px rgba(74,158,107,0.08), inset 0 2px 6px rgba(0,0,0,0.7);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.8), inset 0 2px 6px rgba(0,0,0,0.7);
   transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
   overflow: hidden;
+}
+/* same glossy sheen recipe as the header buttons */
+.search-gloss {
+  position: absolute;
+  inset: 2px;
+  opacity: 0.6;
+  background:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.30) 0%,
+      rgba(255,255,255,0.10) 26%,
+      rgba(255,255,255,0.03) 50%,
+      rgba(255,255,255,0) 68%),
+    radial-gradient(ellipse at 50% 118%, rgba(255,255,255,0.08), transparent 62%);
+  pointer-events: none;
+  z-index: 1;
 }
 .search-wrapper::before {
   content: "";
@@ -1811,19 +1938,16 @@ body.co-open #coNavRight { display: flex; right: 0; }
 .search-wrapper::after {
   content: "";
   position: absolute; inset: 0;
-  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(74,158,107,0.015) 3px, rgba(74,158,107,0.015) 6px);
+  background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(200,240,218,0.015) 3px, rgba(200,240,218,0.015) 6px);
   pointer-events: none;
 }
-.search-wrapper:focus-within {
-  border-color: var(--g-search-border-focus);
-  transform: translateY(-2px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.9), 0 0 30px rgba(74,158,107,0.12), 0 0 0 1px rgba(74,158,107,0.35), inset 0 2px 6px rgba(0,0,0,0.7);
-}
-.search-wrapper:hover { border-color: var(--g-hover); }
+.search-wrapper:focus-within .search-gloss { opacity: 1; }
+.search-wrapper:hover .search-gloss { opacity: 1; }
+.search-wrapper:active .search-gloss { opacity: 0.3; }
 
 .search-icon {
   display: flex; align-items: center; justify-content: center;
-  width: var(--sz-search-height); height: var(--sz-search-height); flex-shrink: 0; position: relative;
+  width: var(--sz-search-height); height: var(--sz-search-height); flex-shrink: 0; position: relative; z-index: 2;
 }
 .search-icon::after {
   content: ""; position: absolute; right: 0; top: 50%;
@@ -1833,18 +1957,19 @@ body.co-open #coNavRight { display: flex; right: 0; }
 .search-icon svg { width: var(--sz-search-icon-sz); height: var(--sz-search-icon-sz); color: var(--g-search-icon); transition: all 0.4s ease; }
 .search-wrapper:focus-within .search-icon svg {
   color: var(--g-search-icon-focus);
-  filter: drop-shadow(0 0 8px rgba(74,158,107,0.7));
+  filter: drop-shadow(0 0 8px rgba(200,240,218,0.7));
   animation: iconPulse 2s ease-in-out infinite;
 }
 @keyframes iconPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 
 .search-input {
+  position: relative; z-index: 2;
   flex: 1; background: transparent; border: none; outline: none;
   color: var(--g-search-text);
   font-size: var(--sz-search-font); font-family: var(--font-search-input);
   font-weight: var(--fw-search-input, 600); letter-spacing: var(--sz-search-input-ls);
   padding: var(--sz-search-input-pad) 10px; text-transform: var(--tt-search-input);
-  text-shadow: 0 0 8px rgba(74,158,107,0.4);
+  text-shadow: 0 0 8px rgba(200,240,218,0.4);
 }
 .search-input::placeholder { color: var(--g-search-placeholder); font-weight:500; text-transform:uppercase; letter-spacing:2px; }
 .search-input:focus::placeholder { color: var(--g-search-border); }
@@ -1852,9 +1977,9 @@ body.co-open #coNavRight { display: flex; right: 0; }
 .search-decoration {
   display: flex; align-items: center; gap: 5px;
   margin-right: 10px; padding: 6px 10px;
-  background: linear-gradient(135deg, rgba(74,158,107,0.1) 0%, rgba(74,158,107,0.04) 100%);
-  border: 1px solid rgba(74,158,107,0.2);
-  position: relative;
+  background: linear-gradient(135deg, rgba(200,240,218,0.09) 0%, rgba(200,240,218,0.03) 100%);
+  border: 1px solid rgba(200,240,218,0.2);
+  position: relative; z-index: 2;
 }
 .search-decoration::before {
   content: "CIPHER"; position: absolute; top: -7px; left: 6px;
@@ -1867,43 +1992,56 @@ body.co-open #coNavRight { display: flex; right: 0; }
   width: var(--sz-spore-1); height: var(--sz-spore-1);
   background: radial-gradient(circle, var(--g-search-spore) 0%, var(--g-search-border) 50%, var(--g-deep) 100%);
   border-radius: 50%;
-  box-shadow: 0 0 6px rgba(74,158,107,0.6), inset 0 -1px 3px rgba(0,0,0,0.4);
+  box-shadow: 0 0 6px rgba(200,240,218,0.6), inset 0 -1px 3px rgba(0,0,0,0.4);
   animation: sporePulse 2s ease-in-out infinite;
 }
 .spore:nth-child(2) { animation-delay:0.3s; width:var(--sz-spore-2); height:var(--sz-spore-2); }
 .spore:nth-child(3) { animation-delay:0.6s; width:var(--sz-spore-3); height:var(--sz-spore-3); }
 @keyframes sporePulse {
-  0%,100% { opacity:0.4; transform:scale(1); box-shadow:0 0 6px rgba(74,158,107,0.4); }
-  50% { opacity:1; transform:scale(1.3); box-shadow:0 0 12px rgba(74,158,107,1),0 0 22px rgba(74,158,107,0.4); }
+  0%,100% { opacity:0.4; transform:scale(1); box-shadow:0 0 6px rgba(200,240,218,0.4); }
+  50% { opacity:1; transform:scale(1.3); box-shadow:0 0 12px rgba(200,240,218,1),0 0 22px rgba(200,240,218,0.4); }
 }
 
 .search-btn {
   display: flex; align-items: center; justify-content: center;
   width: var(--sz-search-height); height: var(--sz-search-height);
-  background: var(--g-search-btn-bg);
+  background: color-mix(in srgb, var(--g-search-btn-bg) 85%, transparent);
+  backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
+  -webkit-backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
   border: none; border-left: 1px solid var(--g-search-border);
   cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
-  flex-shrink: 0; position: relative; overflow: hidden;
+  flex-shrink: 0; position: relative; z-index: 2; overflow: hidden;
   color: var(--g-search-btn-icon);
 }
+.search-btn-gloss {
+  position: absolute;
+  inset: 2px;
+  opacity: 0.6;
+  background:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.30) 0%,
+      rgba(255,255,255,0.10) 26%,
+      rgba(255,255,255,0.03) 50%,
+      rgba(255,255,255,0) 68%),
+    radial-gradient(ellipse at 50% 118%, rgba(255,255,255,0.08), transparent 62%);
+  pointer-events: none;
+  z-index: 1;
+}
+.search-btn:hover .search-btn-gloss { opacity: 1; }
+.search-btn:active .search-btn-gloss { opacity: 0.3; }
 .search-btn::before {
   content: ""; position: absolute; top:0; left:-100%; width:100%; height:100%;
-  background: linear-gradient(90deg, transparent, rgba(74,158,107,0.15), transparent);
+  background: linear-gradient(90deg, transparent, rgba(200,240,218,0.15), transparent);
   transition: left 0.5s ease;
 }
 .search-btn:hover::before { left:100%; }
 .search-btn svg { width:var(--sz-search-btn-icon); height:var(--sz-search-btn-icon); color:var(--g-search-btn-icon); transition:all 0.3s ease; position:relative; z-index:1; }
-.search-btn:hover svg { color:var(--g-search-btn-icon); transform:translateX(3px) scale(1.08); filter:drop-shadow(0 0 6px rgba(74,158,107,0.8)); }
+.search-btn:hover svg { color:var(--g-search-btn-icon); transform:translateX(3px) scale(1.08); filter:drop-shadow(0 0 6px rgba(200,240,218,0.8)); }
 .search-btn:active { transform:scale(0.96); }
 
 .search-glow {
-  position: absolute; bottom:-6px; left:50%;
-  transform: translateX(-50%);
-  width:85%; height:30px;
-  background: radial-gradient(ellipse, rgba(74,158,107,0.18) 0%, transparent 60%);
-  pointer-events:none; opacity:0; transition:opacity 0.5s ease; filter:blur(6px);
+  display: none;
 }
-.search-wrapper:focus-within + .search-glow { opacity:1; }
 
 .search-label {
   position:absolute; top:0; left:0;
@@ -1914,7 +2052,7 @@ body.co-open #coNavRight { display: flex; right: 0; }
 }
 .search-label::before { content:"◆"; font-size:0.45rem; color:var(--g-search-label); transition:color 0.4s ease; }
 .search-wrapper:focus-within ~ .search-label { color:var(--g-search-icon-focus); }
-.search-wrapper:focus-within ~ .search-label::before { color:var(--g-search-icon-focus); text-shadow:0 0 8px rgba(74,158,107,0.9); }
+.search-wrapper:focus-within ~ .search-label::before { color:var(--g-search-icon-focus); text-shadow:0 0 8px rgba(200,240,218,0.9); }
 
 .search-status {
   position:absolute; bottom:0; right:0;
@@ -1925,12 +2063,12 @@ body.co-open #coNavRight { display: flex; right: 0; }
 }
 .search-status::before {
   content:""; width:5px; height:5px; background:var(--g-search-status);
-  border-radius:50%; box-shadow:0 0 5px rgba(74,158,107,0.5);
+  border-radius:50%; box-shadow:0 0 5px rgba(200,240,218,0.5);
   animation:statusBlink 1.5s ease-in-out infinite;
 }
 @keyframes statusBlink {
-  0%,100%{opacity:0.3;box-shadow:0 0 4px rgba(74,158,107,0.3);}
-  50%{opacity:1;box-shadow:0 0 8px rgba(74,158,107,0.9);}
+  0%,100%{opacity:0.3;box-shadow:0 0 4px rgba(200,240,218,0.3);}
+  50%{opacity:1;box-shadow:0 0 8px rgba(200,240,218,0.9);}
 }
 
 .search-corner { position:absolute; width:var(--sz-search-corner-sz); height:var(--sz-search-corner-sz); border:1px solid var(--g-search-corner); pointer-events:none; }
@@ -1955,26 +2093,64 @@ body.co-open #coNavRight { display: flex; right: 0; }
   vertical-align: top;
 }
 
-/* ── Column tile: name row on top, value block below ── */
+/* ── Tile: literal copy of the header buttons' own texture (the
+   .tab-glow recipe) — same clip-path, same color-mix + backdrop-filter
+   glass fill, same gloss sheen gradient. No bespoke shape, no separate
+   bezel/divider math to keep in sync — it's the exact same three-layer
+   build as .tab / .tab-inner / .tab-gloss, just applied to .total-row
+   directly via ::before (fill) and ::after (gloss) since the row has
+   no extra child elements to hang them on. ── */
 .total-row {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  flex-direction: row;
+  align-items: stretch;
   justify-content: flex-start;
+  gap: 0;
   padding: 0;
   position: relative;
-  height: auto;
+  height: var(--sz-totals-row-h, 46px);
   min-width: 0;
-  /* Parallelogram tile using clip-path */
-  background: var(--g-totals-left-poly);
-  clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
-  filter: drop-shadow(0 0 5px var(--g-totals-stroke));
+  overflow: hidden;
+  clip-path: polygon(2.8% 0%, 98.8% 0%, 100% 4%, 96.7% 100%, 0% 100%);
+  background: transparent;
   transition: filter 0.2s;
 }
-.total-row::before, .total-row::after { display: none; }
 
-/* Name: single row, no wrapping, centred */
+/* Fill — exact .tab-glow .tab-inner recipe */
+.total-row::before {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: 1;
+  clip-path: polygon(2.8% 0%, 98.8% 0%, 100% 4%, 96.7% 100%, 0% 100%);
+  background: color-mix(in srgb, var(--g-btn-inner-bg) 85%, transparent);
+  backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
+  -webkit-backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
+}
+
+/* Gloss — exact .tab-glow .tab-gloss recipe */
+.total-row::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  z-index: 1;
+  clip-path: polygon(2.8% 0%, 98.8% 0%, 100% 4%, 96.7% 100%, 0% 100%);
+  opacity: 0.6;
+  background:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.30) 0%,
+      rgba(255,255,255,0.10) 26%,
+      rgba(255,255,255,0.03) 50%,
+      rgba(255,255,255,0) 68%),
+    radial-gradient(ellipse at 50% 118%, rgba(255,255,255,0.08), transparent 62%);
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.total-row:hover::after { opacity: 1; }
+
+/* Name column (left) */
 .total-row span:first-child {
+  box-sizing: border-box;
   position: relative; z-index: 2;
   pointer-events: none; transition: color 0.15s;
   font-family: var(--font-totals-name);
@@ -1983,16 +2159,23 @@ body.co-open #coNavRight { display: flex; right: 0; }
   letter-spacing: var(--sz-totals-name-ls);
   text-transform: var(--tt-totals-name);
   color: var(--g-totals-name-text);
-  padding: var(--sz-totals-name-pt) var(--sz-totals-name-pl) 4px var(--sz-totals-name-pl);
+  padding: var(--sz-totals-name-pt) var(--sz-totals-name-pl);
   text-align: center;
-  width: 100%;
-  white-space: nowrap;
+  flex: 1 1 60%;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: normal;
+  overflow-wrap: break-word;
+  line-height: 1.15;
   overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-/* Value: its own inner polygon block, width adapts to digit length */
+/* Value column (right) */
 .total-row span:last-of-type {
+  box-sizing: border-box;
   position: relative; z-index: 2;
   pointer-events: none; transition: color 0.15s;
   font-family: var(--font-totals-value);
@@ -2001,24 +2184,44 @@ body.co-open #coNavRight { display: flex; right: 0; }
   letter-spacing: var(--sz-totals-val-ls);
   text-transform: var(--tt-totals-value);
   color: var(--g-totals-val-text);
-  /* Inner polygon for the value area */
-  background: var(--g-totals-right-poly);
-  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
-  display: block;
-  width: 100%;
+  background: transparent;
+  flex: 0 0 40%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-  padding: 4px var(--sz-totals-val-pr) var(--sz-totals-val-pt) var(--sz-totals-val-pr);
+  padding: 4px var(--sz-totals-val-pr);
+  padding-left: calc(var(--sz-totals-val-pr) + 18px);
+  overflow: hidden;
+  text-shadow: 0 0 6px color-mix(in srgb, var(--g-totals-val-text) 55%, transparent);
+}
+/* Slanted separator at the name/value seam, angled to match the tile's
+   own diagonal lean (the row's right-edge sweep from 100%,4% to 96.7%,100%).
+   Computed in the value span's own coordinate space — the span is a fixed
+   40% of the row's width (flex: 0 0 40%), so that conversion factor holds
+   at any actual rendered size, keeping this parallel to the tile edge
+   regardless of viewport width. Low opacity so it reads as a soft seam,
+   not a hard line. */
+.total-row span:last-of-type::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  clip-path: polygon(24.7% 0%, 21.9% 0%, 13.3% 100%, 16.1% 100%);
+  background: rgba(255,255,255,0.07);
 }
 
-/* Click overlays — full-cell hit areas for the new column layout */
+
+
+/* Click overlays — left half (name) / right half (value), matching the 60/40 columns */
 .total-row-overlay {
   position: absolute; inset: 0; z-index: 3;
   cursor: pointer; background: transparent;
 }
-/* Top half triggers name/breakdown switch */
-.total-row-overlay-name  { clip-path: polygon(0% 0%, 100% 0%, 100% 55%, 0% 55%); }
-/* Bottom half triggers value popup */
-.total-row-overlay-value { clip-path: polygon(0% 55%, 100% 55%, 100% 100%, 0% 100%); }
+.total-row-overlay-name  { clip-path: polygon(0% 0%, 60% 0%, 60% 100%, 0% 100%); }
+.total-row-overlay-value { clip-path: polygon(60% 0%, 100% 0%, 100% 100%, 60% 100%); }
 .total-row:has(.total-row-overlay-name:hover)  span:first-child  { color: var(--g-totals-row-hover); }
 .total-row:has(.total-row-overlay-value:hover) span:last-of-type { color: var(--g-totals-row-hover); }
 
@@ -2060,9 +2263,34 @@ body.co-open #coNavRight { display: flex; right: 0; }
   padding:var(--sz-bd-pad-top) var(--pos-bd-section-pad-h) var(--sz-bd-pad-bot) var(--pos-bd-section-pad-h);
   margin:0; width:fit-content; min-width:var(--sz-bd-min-w); max-width:var(--sz-bd-max-w);
   position:relative;
-  background: var(--bd-bg);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--g-btn-inner-bg) 85%, transparent);
+  backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
+  -webkit-backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
   clip-path: polygon(var(--sz-bd-clip) 0%,100% 0%,100% calc(100% - var(--sz-bd-clip)),calc(100% - var(--sz-bd-clip)) 100%,0% 100%,0% var(--sz-bd-clip));
   filter: drop-shadow(6px 6px 10px var(--bd-shadow-dark)) drop-shadow(-5px -5px 10px var(--bd-shadow-light));
+}
+/* Gloss — exact .tab-glow .tab-gloss recipe, same as the totals tiles */
+.breakdown-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.6;
+  clip-path: polygon(var(--sz-bd-clip) 0%,100% 0%,100% calc(100% - var(--sz-bd-clip)),calc(100% - var(--sz-bd-clip)) 100%,0% 100%,0% var(--sz-bd-clip));
+  background:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.30) 0%,
+      rgba(255,255,255,0.10) 26%,
+      rgba(255,255,255,0.03) 50%,
+      rgba(255,255,255,0) 68%),
+    radial-gradient(ellipse at 50% 118%, rgba(255,255,255,0.08), transparent 62%);
+}
+/* Lift the actual content above the gloss layer */
+.breakdown-title, .breakdown-container, .breakdown-total {
+  position: relative;
+  z-index: 1;
 }
 
 .breakdown-title {
@@ -2495,6 +2723,9 @@ body.co-open #coNavRight { display: flex; right: 0; }
   flex:1; text-align:left; padding:var(--sz-detail-panel-pad) var(--sz-detail-panel-pad);
   color:var(--g-date-detail-text);
 }
+/* End column mirrors the start column — everything flushed right */
+#endDetails { text-align:right; }
+#endDetails .detail-row { align-items:flex-end; }
 .detail-heading {
   font-size:var(--sz-detail-head-font); letter-spacing:var(--sz-detail-head-ls); text-transform:uppercase;
   color:var(--g-date-detail-title); margin-bottom:var(--sz-detail-head-mb);
@@ -2654,13 +2885,13 @@ body.co-open #coNavRight { display: flex; right: 0; }
     --sz-search-height: 80.4px;
     --sz-totals-max-w: 960px;
     --sz-totals-row-minw: 320px;
-    --sz-totals-row-h: 92px;
-    --sz-totals-name-font: 32.2px;
-    --sz-totals-name-pt: 6.8px;
-    --sz-totals-name-pl: 10px;
-    --sz-totals-val-font: 41.8px;
-    --sz-totals-val-pt: -80.2px;
-    --sz-totals-val-pr: 12.8px;
+    --sz-totals-row-h: 40px;
+    --sz-totals-name-font: 20px;
+    --sz-totals-name-pt: 4px;
+    --sz-totals-name-pl: 12px;
+    --sz-totals-val-font: 20px;
+    --sz-totals-val-pt: 4px;
+    --sz-totals-val-pr: 6px;
     --sz-bd-min-w: 440px;
     --sz-bd-max-w: 1010px;
     --sz-bd-title-font: 27.6px;
@@ -2694,12 +2925,20 @@ body.co-open #coNavRight { display: flex; right: 0; }
   }
   .header { flex-wrap: wrap; justify-content: center; }
   .search-decoration { display: none; }
-  #compareGrid { font-size: 11px; padding: 4px 6px; }
+  #compareGrid { font-size: 11px; }
   .compare-cell { padding: 6px 8px; }
   #dateDetails { flex-direction: column; }
+  #endDetails { text-align:left; }
+  #endDetails .detail-row { align-items:flex-start; }
   #divider { width: 100%; height: 1px; margin: 0; }
   #settingsPanel { right: -100vw; width: min(90vw, 360px); }
   .co-panel { margin-left: 0; }
+  :root {
+    --sz-co-nav-w: 50px;
+    --sz-co-nav-h: 108px;
+    --sz-co-nav-font: 2.4rem;
+    --sz-co-nav-inset: 10px;
+  }
 }
 
 /* ══════════════════════════════════════════════
@@ -3241,8 +3480,1017 @@ body.co-open #coNavRight { display: flex; right: 0; }
 }
 
 .db-no-results { color: #2a5a3a; font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; text-align: center; padding: 10px 0; width: 100%; display: block; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   UNIFIED GLASS MATERIAL
+   One recipe, applied everywhere. It is the exact same three ingredients
+   the header buttons / search bar / totals tiles / breakdown already use:
+     1. a translucent dark fill  (color-mix with transparent)
+     2. backdrop-filter: blur + brightness(0.4) + saturate(1.1)
+     3. a top-weighted white sheen gradient + a soft bottom bounce
+   plus the search bar's faint scanline weave for surface grain.
+
+   The gloss alphas below are the originals pre-multiplied by the 0.6
+   layer opacity, so these can live in `background-image` on the element
+   itself — no extra pseudo-element, so text and grid children stay put.
+   ══════════════════════════════════════════════════════════════════════ */
+:root{
+  --mat-blur: blur(4px) brightness(0.4) saturate(1.1);
+
+  /* proportional sheen — for small/short surfaces (buttons, inputs) */
+  --mat-gloss:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.18) 0%,
+      rgba(255,255,255,0.06) 26%,
+      rgba(255,255,255,0.018) 50%,
+      rgba(255,255,255,0) 68%),
+    radial-gradient(ellipse at 50% 118%, rgba(255,255,255,0.048), transparent 62%);
+
+  --mat-gloss-hi:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.30) 0%,
+      rgba(255,255,255,0.10) 26%,
+      rgba(255,255,255,0.03) 50%,
+      rgba(255,255,255,0) 68%),
+    radial-gradient(ellipse at 50% 118%, rgba(255,255,255,0.08), transparent 62%);
+
+  /* fixed-height sheen — for tall panels, so a long table doesn't get a
+     giant white wash. Same visual thickness of highlight at any height. */
+  --mat-gloss-tall:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.19) 0px,
+      rgba(255,255,255,0.07) 22px,
+      rgba(255,255,255,0.022) 48px,
+      rgba(255,255,255,0) 88px),
+    radial-gradient(ellipse 130% 110px at 50% 100%, rgba(255,255,255,0.05), transparent 72%);
+
+  /* surface grain — lifted from .search-wrapper::after */
+  --mat-scan: repeating-linear-gradient(0deg,
+    transparent, transparent 3px,
+    rgba(200,240,218,0.015) 3px, rgba(200,240,218,0.015) 6px);
+
+  /* softened sheen — date section, where the panels are tall and the
+     full-strength highlight read as a bright wash across the top */
+  --mat-gloss-soft:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.065) 0%,
+      rgba(255,255,255,0.022) 26%,
+      rgba(255,255,255,0.007) 50%,
+      rgba(255,255,255,0) 68%),
+    radial-gradient(ellipse at 50% 118%, rgba(255,255,255,0.02), transparent 62%);
+
+  --mat-gloss-tall-soft:
+    linear-gradient(to bottom,
+      rgba(255,255,255,0.055) 0px,
+      rgba(255,255,255,0.022) 18px,
+      rgba(255,255,255,0.008) 40px,
+      rgba(255,255,255,0) 70px),
+    radial-gradient(ellipse 130% 90px at 50% 100%, rgba(255,255,255,0.018), transparent 72%);
+
+  --mat-hairline: rgba(255,255,255,0.075);
+  --mat-hairline-soft: rgba(255,255,255,0.045);
+  --mat-lip: inset 0 1px 0 rgba(255,255,255,0.07);
+  --mat-drop: 0 10px 30px rgba(0,0,0,0.75);
+}
+
+/* ── HISTORY / DATABASE / VAULT TABLES ───────────────────────────────
+   Frame removed entirely. Two things were making it: the wrapper's
+   2.2px bezel, and — the big one — the grid's own inner padding
+   (~35px sides / ~22px ends), which left a dark margin all round the
+   cells. Both are zeroed, and the corner clips go with them, so the
+   cells run flush to the edge of the glass. ── */
+#compareWrapper,
+#dbResultsWrapper,
+#localDbResultsWrapper {
+  background: transparent;
+  padding: 0;
+  clip-path: none;
+}
+
+#compareGrid,
+#dbResultsGrid,
+#localDbResultsGrid {
+  padding: 0;
+  clip-path: none;
+  background-color: color-mix(in srgb, var(--g-history-inner-bg) 55%, transparent);
+  background-image: var(--mat-gloss-tall), var(--mat-scan);
+  background-repeat: no-repeat, repeat;
+  backdrop-filter: var(--mat-blur);
+  -webkit-backdrop-filter: var(--mat-blur);
+}
+
+/* Cell rules become glass hairlines instead of flat #252525 slabs */
+.compare-cell               { border-right: 1px solid var(--mat-hairline-soft); }
+.compare-cell.compare-text  { border-left:  1px solid var(--mat-hairline-soft); }
+.compare-row .compare-cell,
+.db-result-row .compare-cell,
+.local-db-result-row .compare-cell { border-bottom: 1px solid var(--mat-hairline-soft); }
+
+/* Header band: its own brighter sheen so it reads as the lit top edge */
+.compare-cell.header-cell {
+  border-top: 1px solid var(--mat-hairline);
+  border-bottom: 1px solid var(--mat-hairline);
+  background-image: linear-gradient(to bottom,
+    rgba(255,255,255,0.055) 0%,
+    rgba(255,255,255,0.015) 55%,
+    rgba(255,255,255,0) 100%);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+}
+
+/* Alternating rows: a tinted pane, not an opaque black bar */
+.compare-row.row-alt .compare-cell,
+.db-result-row.row-alt .compare-cell,
+.local-db-result-row.row-alt .compare-cell {
+  background: rgba(0,0,0,0.34);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.022);
+}
+
+/* ── DATABASE / VAULT BUTTONS ────────────────────────────────────────
+   Same fill + backdrop + sheen as the header buttons, keeping each
+   button's own accent hue in the border, text and hover bloom. ── */
+#dbSearchBtn,
+#localDbSearchBtn {
+  position: relative;
+  background-color: color-mix(in srgb, var(--g-btn-inner-bg) 85%, transparent);
+  background-image: var(--mat-gloss);
+  backdrop-filter: var(--mat-blur);
+  -webkit-backdrop-filter: var(--mat-blur);
+  box-shadow: var(--mat-lip), 0 8px 22px rgba(0,0,0,0.7);
+  transition: color 0.25s, border-color 0.25s, background-image 0.25s,
+              box-shadow 0.25s, text-shadow 0.25s;
+}
+#dbSearchBtn        { border: 1px solid #1e4a33; text-shadow: 0 0 8px rgba(98,191,128,0.35); }
+#localDbSearchBtn   { border: 1px solid #12406f; text-shadow: 0 0 8px rgba(76,168,240,0.35); }
+
+#dbSearchBtn:hover {
+  color: #8ed4a8;
+  border-color: #3a8a5a;
+  background-image: var(--mat-gloss-hi);
+  box-shadow: var(--mat-lip), 0 8px 26px rgba(0,0,0,0.75), 0 0 22px rgba(98,191,128,0.22);
+  text-shadow: 0 0 12px rgba(142,212,168,0.7);
+}
+#localDbSearchBtn:hover {
+  color: #7cc4ff;
+  border-color: #2a72c0;
+  background-image: var(--mat-gloss-hi);
+  box-shadow: var(--mat-lip), 0 8px 26px rgba(0,0,0,0.75), 0 0 22px rgba(60,140,240,0.24);
+  text-shadow: 0 0 12px rgba(124,196,255,0.7);
+}
+#dbSearchBtn:active,
+#localDbSearchBtn:active {
+  background-image: linear-gradient(to bottom, rgba(255,255,255,0.06), rgba(255,255,255,0));
+  box-shadow: inset 0 3px 12px rgba(0,0,0,0.8);
+}
+#dbSearchBtn.db-loading,
+#localDbSearchBtn.db-loading { background-image: var(--mat-gloss); text-shadow: none; }
+
+/* ── DATABASE / VAULT BUTTONS — darker face, edge-only click glow ───
+   The sheen drops to the soft recipe and stays fixed through hover
+   and press, so the face never lights up. All the feedback moves to
+   the border: green for DATABASE, blue for VAULT, glowing on click. ── */
+#dbSearchBtn,
+#localDbSearchBtn {
+  background-color: color-mix(in srgb, var(--g-btn-inner-bg) 92%, transparent);
+  background-image: var(--mat-gloss-soft);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 8px 22px rgba(0,0,0,0.7);
+  transition: border-color 0.18s, box-shadow 0.18s, color 0.18s;
+}
+#dbSearchBtn      { text-shadow: none; }
+#localDbSearchBtn { text-shadow: none; }
+
+/* Hover: face stays put, edge just firms up */
+#dbSearchBtn:hover,
+#localDbSearchBtn:hover {
+  background-image: var(--mat-gloss-soft);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 8px 22px rgba(0,0,0,0.7);
+  text-shadow: none;
+}
+#dbSearchBtn:hover      { color: #4e9e6c; border-color: #2d6a45; }
+#localDbSearchBtn:hover { color: #2f80c8; border-color: #1b5590; }
+
+/* Click: the boundary alone fires */
+#dbSearchBtn:active,
+#localDbSearchBtn:active {
+  background-image: var(--mat-gloss-soft);
+}
+#dbSearchBtn:active {
+  border-color: #62bf80;
+  box-shadow: 0 0 10px rgba(98,191,128,0.75),
+              0 0 22px rgba(98,191,128,0.4),
+              inset 0 0 12px rgba(98,191,128,0.18);
+  animation: dbEdgePulse 0.4s ease-out;
+}
+#localDbSearchBtn:active {
+  border-color: #4ca8f0;
+  box-shadow: 0 0 10px rgba(76,168,240,0.75),
+              0 0 22px rgba(76,168,240,0.4),
+              inset 0 0 12px rgba(76,168,240,0.18);
+  animation: vaultEdgePulse 0.4s ease-out;
+}
+@keyframes dbEdgePulse {
+  0%   { box-shadow: 0 0 0 rgba(98,191,128,0), inset 0 0 0 rgba(98,191,128,0); }
+  35%  { box-shadow: 0 0 16px rgba(98,191,128,0.95), 0 0 34px rgba(98,191,128,0.55),
+                     inset 0 0 16px rgba(98,191,128,0.25); }
+  100% { box-shadow: 0 0 10px rgba(98,191,128,0.75), 0 0 22px rgba(98,191,128,0.4),
+                     inset 0 0 12px rgba(98,191,128,0.18); }
+}
+@keyframes vaultEdgePulse {
+  0%   { box-shadow: 0 0 0 rgba(76,168,240,0), inset 0 0 0 rgba(76,168,240,0); }
+  35%  { box-shadow: 0 0 16px rgba(76,168,240,0.95), 0 0 34px rgba(76,168,240,0.55),
+                     inset 0 0 16px rgba(76,168,240,0.25); }
+  100% { box-shadow: 0 0 10px rgba(76,168,240,0.75), 0 0 22px rgba(76,168,240,0.4),
+                     inset 0 0 12px rgba(76,168,240,0.18); }
+}
+
+/* ── DATE SECTION ────────────────────────────────────────────────────
+   The wrap keeps its role as the cut-corner frame but goes translucent;
+   the panel itself is the glass sheet. Everything nested inside gets
+   sheen + translucency only — no second backdrop-filter, so the blur
+   never compounds. ── */
+.date-border-wrap {
+  background: color-mix(in srgb, var(--g-date-wrap-border) 55%, transparent);
+}
+
+#dateSection {
+  background-color: color-mix(in srgb, var(--g-date-section-bg) 62%, transparent);
+  background-image: var(--mat-gloss-tall-soft), var(--mat-scan);
+  background-repeat: no-repeat, repeat;
+  backdrop-filter: var(--mat-blur);
+  -webkit-backdrop-filter: var(--mat-blur);
+  filter: drop-shadow(0 10px 26px rgba(0,0,0,0.85));
+}
+
+/* Number inputs — small recessed panes of the same material */
+#dateSection input[type="number"] {
+  background-color: color-mix(in srgb, var(--g-date-input-bg) 62%, transparent);
+  background-image: var(--mat-gloss-soft);
+  border: 1px solid var(--mat-hairline);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.035), inset 0 -6px 14px rgba(0,0,0,0.5);
+  clip-path: polygon(7px 0%, 100% 0%, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0% 100%, 0% 7px);
+  transition: border-color 0.2s, box-shadow 0.2s, background-image 0.2s;
+}
+#dateSection input[type="number"]:hover  { background-image: var(--mat-gloss); }
+#dateSection input[type="number"]:focus  {
+  border-color: rgba(200,240,218,0.35);
+  background-image: var(--mat-gloss);
+  box-shadow: var(--mat-lip), inset 0 -6px 14px rgba(0,0,0,0.5), 0 0 18px rgba(98,191,128,0.18);
+}
+
+/* Result + detail slabs */
+#dateResult,
+#dateOffsetResult,
+#dateDetails,
+#dateOffsetDetails {
+  background-color: rgba(0,0,0,0.52);
+  background-image: var(--mat-gloss-tall-soft), var(--mat-scan);
+  background-repeat: no-repeat, repeat;
+  border: 1px solid var(--mat-hairline);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.035), 0 8px 24px rgba(0,0,0,0.6);
+}
+
+/* Divider rules inside the date panel read as etched seams */
+.off-row            { border-bottom: 1px solid var(--mat-hairline-soft); }
+.off-row:last-child { border-bottom: none; }
+.detail-heading     { border-bottom: 1px solid var(--mat-hairline); }
+#divider {
+  background: linear-gradient(180deg, transparent, var(--mat-hairline) 18%, var(--mat-hairline) 82%, transparent);
+}
+@media (max-width:768px) {
+  #divider {
+    background: linear-gradient(90deg, transparent, var(--mat-hairline) 18%, var(--mat-hairline) 82%, transparent);
+  }
+}
+
+/* ── CIPHER OVERLAY — WIDER TILES ON PHONES ONLY ────────────────────
+   Desktop is untouched (panel 500px, tile --sz-co-tile-w). On narrow
+   screens the tile was losing ~44px to the panel's side padding on
+   top of the panel cap, so here the cap is lifted to the full
+   viewport and the gutters are trimmed to 6px — the tiles run
+   effectively edge to edge. ── */
+@media (max-width: 768px) {
+  .co-panel,
+  #cipherCustomiseInner {
+    max-width: 100%;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+  .co-tile-frame { max-width: 100%; }
+}
+
+/* ── BREAKDOWN — softened top sheen ─────────────────────────────────
+   Same treatment as the date section: swap the full-strength gloss
+   layer for the pre-multiplied soft one and drop the 0.6 wrapper
+   opacity (it's already baked into the alphas). ── */
+.breakdown-section::before {
+  opacity: 1;
+  background: var(--mat-gloss-tall-soft);
+}
+
+/* ── SEARCH INPUT — no brighten-on-interaction ──────────────────────
+   The gloss stays fixed at its resting level through hover, focus and
+   press, on both the field and the submit button, so the surface no
+   longer lights up when you touch it. ── */
+.search-wrapper:hover .search-gloss,
+.search-wrapper:focus-within .search-gloss,
+.search-wrapper:active .search-gloss,
+.search-btn:hover .search-btn-gloss,
+.search-btn:active .search-btn-gloss {
+  opacity: 0.6;
+}
+/* ══════════════════════════════════════════════════════════════════════
+   PERFORMANCE — flatten the page-level glass
+   The <canvas id="matrix"> element is never drawn into (nothing in the
+   file ever calls getContext on it), so every backdrop-filter that sits
+   directly on the page is sampling plain black. blur() of black is
+   black and brightness(0.4) of black is black — the filters cost a
+   compositing pass each and return a result identical to simply mixing
+   the fill toward #000.
+
+   That was cheap when it was a handful of elements. It stopped being
+   cheap once the same recipe went onto full-width tables, the date
+   panel, and one layer per totals row — a long cipher list means dozens
+   of live backdrop layers, all re-composited on scroll, which is the
+   micro-stutter.
+
+   Each rule below swaps `color-mix(X, transparent) + backdrop-filter`
+   for `color-mix(X, #000)`. Over a black page that is pixel-identical,
+   just without the GPU work.
+
+   The overlays are deliberately NOT touched — the cipher list, settings
+   panel and customise panel blur real page content behind them, so
+   their filters are doing genuine work and stay exactly as they were.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* Header icon buttons */
+.tab-glow .tab-inner {
+  background: color-mix(in srgb, var(--g-btn-inner-bg) 85%, #000);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Search field + submit button */
+.search-wrapper {
+  background: color-mix(in srgb, var(--g-search-bg) 85%, #000);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.search-btn {
+  background: color-mix(in srgb, var(--g-search-btn-bg) 85%, #000);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Totals tiles — one layer per row, so the biggest single win */
+.total-row::before {
+  background: color-mix(in srgb, var(--g-btn-inner-bg) 85%, #000);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Breakdown */
+.breakdown-section {
+  background: color-mix(in srgb, var(--g-btn-inner-bg) 85%, #000);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* History / database / vault grids */
+#compareGrid,
+#dbResultsGrid,
+#localDbResultsGrid {
+  background-color: color-mix(in srgb, var(--g-history-inner-bg) 55%, #000);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Date panel */
+#dateSection {
+  background-color: color-mix(in srgb, var(--g-date-section-bg) 62%, #000);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* Database / vault buttons */
+#dbSearchBtn,
+#localDbSearchBtn {
+  background-color: color-mix(in srgb, var(--g-btn-inner-bg) 92%, #000);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* The ± DATES trigger */
+#dateOffsetTrigger.tab .tab-inner {
+  background: color-mix(in srgb, var(--g-btn-inner-bg) 85%, #000);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background-image: var(--mat-gloss-soft);
+}
+
+/* Long tables: let the browser skip painting rows that are off-screen.
+   contain-intrinsic-size keeps the scrollbar from jumping while they're
+   skipped. */
+#compareGrid,
+#dbResultsGrid,
+#localDbResultsGrid {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
+/* Respect a system-level reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+/* ══════════════════════════════════════════════════════════════════════
+   XBOX-STYLE SPECULAR GLOSS — fully tunable
+   Every value below is driven by a CSS variable exposed in Settings →
+   Colors → "GLOSS & GLOW". Because the sliders always emit a unit,
+   strengths are expressed as PERCENTAGES fed through color-mix()
+   rather than raw rgba alphas — identical result, but sliderable,
+   exportable and bakeable like every other setting.
+   ══════════════════════════════════════════════════════════════════════ */
+:root{
+  /* — highlight — */
+  --gloss-top:        12.4%;    /* brightness at the very top edge   */
+  --gloss-mid:        0.7%;    /* brightness through the mid band   */
+  --gloss-cut:        35.6%;    /* where the highlight TERMINATES    */
+  --gloss-depth:      1%;    /* darkening toward the bottom       */
+  --gloss-lip:        17.1%;    /* the 1px lit line on the top edge  */
+
+  /* — tall-panel highlight (fixed px so it stays a band) — */
+  --gloss-band:       6.2px;   /* how far down the band reaches     */
+  --gloss-band-top:   0%;    /* its brightness                    */
+
+  /* — inner rim light — */
+  --gloss-rim-color:  #00558a;
+  --gloss-rim:        55%;    /* rim intensity                     */
+  --gloss-rim-spread: 26px;   /* how far it bleeds inward          */
+
+  /* — click glow on DATABASE / VAULT — */
+  --glow-db-color:    #62bf80;
+  --glow-vault-color: #4ca8f0;
+  --glow-size:        22px;
+  --glow-strength:    75%;
+
+  --spec-hi:
+    linear-gradient(to bottom,
+      color-mix(in srgb, #fff var(--gloss-top), transparent) 0%,
+      color-mix(in srgb, #fff var(--gloss-mid), transparent) calc(var(--gloss-cut) * 0.55),
+      color-mix(in srgb, #fff calc(var(--gloss-mid) * 0.3), transparent) calc(var(--gloss-cut) - 2%),
+      rgba(255,255,255,0) var(--gloss-cut),
+      color-mix(in srgb, #000 calc(var(--gloss-depth) * 0.5), transparent) 78%,
+      color-mix(in srgb, #000 var(--gloss-depth), transparent) 100%);
+
+  /* --gloss-band-top is clamped: color-mix() rejects a negative
+     percentage and would invalidate the entire gradient, so a negative
+     slider value reads as "off" rather than breaking the rule. */
+  --gloss-band-top-c: max(0%, var(--gloss-band-top));
+
+  --spec-hi-tall:
+    linear-gradient(to bottom,
+      color-mix(in srgb, #fff var(--gloss-band-top-c), transparent) 0px,
+      color-mix(in srgb, #fff calc(var(--gloss-band-top-c) * 0.55), transparent) calc(var(--gloss-band) * 0.45),
+      color-mix(in srgb, #fff calc(var(--gloss-band-top-c) * 0.2), transparent) calc(var(--gloss-band) * 0.85),
+      rgba(255,255,255,0) var(--gloss-band));
+
+  --spec-rim:
+    inset 0 1px 0 color-mix(in srgb, #fff var(--gloss-lip), transparent),
+    inset 0 calc(var(--gloss-rim-spread) * -0.7) var(--gloss-rim-spread) calc(var(--gloss-rim-spread) * -0.78)
+      color-mix(in srgb, var(--gloss-rim-color) var(--gloss-rim), transparent),
+    inset 0 0 0 1px color-mix(in srgb, #fff calc(var(--gloss-lip) * 0.27), transparent);
+
+  --spec-rim-soft:
+    inset 0 1px 0 color-mix(in srgb, #fff calc(var(--gloss-lip) * 0.45), transparent),
+    inset 0 calc(var(--gloss-rim-spread) * -0.8) calc(var(--gloss-rim-spread) * 1.15) calc(var(--gloss-rim-spread) * -1)
+      color-mix(in srgb, var(--gloss-rim-color) calc(var(--gloss-rim) * 0.72), transparent);
+}
+
+/* Header icon buttons */
+.tab-glow .tab-gloss { opacity: 1; background: var(--spec-hi); }
+.tab-glow .tab-inner { box-shadow: var(--spec-rim); }
+
+/* Search field + submit button */
+.search-gloss,
+.search-wrapper:hover .search-gloss,
+.search-wrapper:focus-within .search-gloss,
+.search-wrapper:active .search-gloss { opacity: 1; background: var(--spec-hi); }
+.search-wrapper { box-shadow: var(--spec-rim), 0 8px 30px rgba(0,0,0,0.8); }
+
+.search-btn-gloss,
+.search-btn:hover .search-btn-gloss,
+.search-btn:active .search-btn-gloss { opacity: 1; background: var(--spec-hi); }
+
+/* Totals tiles */
+.total-row::after       { opacity: 1; background: var(--spec-hi); }
+.total-row:hover::after { opacity: 1; }
+.total-row::before      { box-shadow: var(--spec-rim); }
+
+/* Breakdown */
+.breakdown-section::before { opacity: 1; background: var(--spec-hi-tall); }
+.breakdown-section         { box-shadow: var(--spec-rim-soft); }
+
+/* History / database / vault grids */
+#compareGrid,
+#dbResultsGrid,
+#localDbResultsGrid {
+  background-image: var(--spec-hi-tall), var(--mat-scan);
+  box-shadow: var(--spec-rim-soft);
+}
+
+/* Date panel */
+#dateSection {
+  background-image: var(--spec-hi-tall), var(--mat-scan);
+  box-shadow: var(--spec-rim-soft);
+}
+
+/* Date inputs */
+#dateSection input[type="number"] {
+  background-image: var(--spec-hi);
+  box-shadow: var(--spec-rim-soft), inset 0 -6px 14px rgba(0,0,0,0.5);
+}
+
+/* ── DATABASE / VAULT — resting, hover, and click glow ── */
+#dbSearchBtn,
+#localDbSearchBtn,
+#dbSearchBtn:hover,
+#localDbSearchBtn:hover { background-image: var(--spec-hi); }
+
+#dbSearchBtn {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff var(--gloss-lip), transparent),
+    inset 0 calc(var(--gloss-rim-spread) * -0.6) calc(var(--gloss-rim-spread) * 0.9) calc(var(--gloss-rim-spread) * -0.78)
+      color-mix(in srgb, var(--glow-db-color) var(--gloss-rim), transparent),
+    0 8px 22px rgba(0,0,0,0.7);
+}
+#localDbSearchBtn {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff var(--gloss-lip), transparent),
+    inset 0 calc(var(--gloss-rim-spread) * -0.6) calc(var(--gloss-rim-spread) * 0.9) calc(var(--gloss-rim-spread) * -0.78)
+      color-mix(in srgb, var(--glow-vault-color) var(--gloss-rim), transparent),
+    0 8px 22px rgba(0,0,0,0.7);
+}
+#dbSearchBtn:hover {
+  border-color: color-mix(in srgb, var(--glow-db-color) 55%, #000);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff var(--gloss-lip), transparent),
+    inset 0 calc(var(--gloss-rim-spread) * -0.6) calc(var(--gloss-rim-spread) * 0.9) calc(var(--gloss-rim-spread) * -0.7)
+      color-mix(in srgb, var(--glow-db-color) calc(var(--gloss-rim) * 1.4), transparent),
+    0 8px 22px rgba(0,0,0,0.7);
+}
+#localDbSearchBtn:hover {
+  border-color: color-mix(in srgb, var(--glow-vault-color) 55%, #000);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff var(--gloss-lip), transparent),
+    inset 0 calc(var(--gloss-rim-spread) * -0.6) calc(var(--gloss-rim-spread) * 0.9) calc(var(--gloss-rim-spread) * -0.7)
+      color-mix(in srgb, var(--glow-vault-color) calc(var(--gloss-rim) * 1.4), transparent),
+    0 8px 22px rgba(0,0,0,0.7);
+}
+#dbSearchBtn:active {
+  border-color: var(--glow-db-color);
+  box-shadow:
+    0 0 calc(var(--glow-size) * 0.45) color-mix(in srgb, var(--glow-db-color) var(--glow-strength), transparent),
+    0 0 var(--glow-size) color-mix(in srgb, var(--glow-db-color) calc(var(--glow-strength) * 0.5), transparent),
+    inset 0 0 calc(var(--glow-size) * 0.55) color-mix(in srgb, var(--glow-db-color) calc(var(--glow-strength) * 0.25), transparent);
+}
+#localDbSearchBtn:active {
+  border-color: var(--glow-vault-color);
+  box-shadow:
+    0 0 calc(var(--glow-size) * 0.45) color-mix(in srgb, var(--glow-vault-color) var(--glow-strength), transparent),
+    0 0 var(--glow-size) color-mix(in srgb, var(--glow-vault-color) calc(var(--glow-strength) * 0.5), transparent),
+    inset 0 0 calc(var(--glow-size) * 0.55) color-mix(in srgb, var(--glow-vault-color) calc(var(--glow-strength) * 0.25), transparent);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   SEE-THROUGH — restored on the hero elements only
+   Now that the background is confirmed to animate, these three get
+   their real glass back so the terminal reads through them. Three live
+   backdrop layers is cheap; it was dozens (one per totals row, plus
+   full-width tables) that caused the stutter, and those stay flat.
+
+   Blur drops 4px → 3px: at this scale the difference isn't visible but
+   the sample kernel is smaller, and these now recomposite on every
+   background frame.
+   ══════════════════════════════════════════════════════════════════════ */
+.tab-glow .tab-inner {
+  background: color-mix(in srgb, var(--g-btn-inner-bg) 78%, transparent);
+  backdrop-filter: blur(3px) brightness(0.45) saturate(1.1);
+  -webkit-backdrop-filter: blur(3px) brightness(0.45) saturate(1.1);
+}
+
+.search-wrapper {
+  background: color-mix(in srgb, var(--g-search-bg) 76%, transparent);
+  backdrop-filter: blur(3px) brightness(0.45) saturate(1.1);
+  -webkit-backdrop-filter: blur(3px) brightness(0.45) saturate(1.1);
+}
+
+.search-btn {
+  background: color-mix(in srgb, var(--g-search-btn-bg) 80%, transparent);
+  backdrop-filter: blur(3px) brightness(0.45) saturate(1.1);
+  -webkit-backdrop-filter: blur(3px) brightness(0.45) saturate(1.1);
+}
+
+/* The ± DATES trigger already inherits .tab; give it the same static
+   glass treatment as the other header icon buttons so it stops being
+   the odd one out in the date panel. */
+#dateOffsetTrigger.tab .tab-inner {
+  background: color-mix(in srgb, var(--g-btn-inner-bg) 85%, transparent);
+  backdrop-filter: var(--mat-blur);
+  -webkit-backdrop-filter: var(--mat-blur);
+  background-image: var(--mat-gloss-soft);
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   ENTRANCE CHOREOGRAPHY — page-load reveal
+   ----------------------------------------------------------------------
+   Header buttons fade in, the search bar glides in from the right, the
+   totals tiles float up into place and the DATABASE / VAULT buttons fade
+   up last.
+
+   Everything below is gated on <html class="xc-anim-ready">, which an
+   inline script sets just before <body> so the hidden state is in force
+   on the very first paint (no flash of un-animated content). The driver
+   script at the end of the body strips that class once every element has
+   landed, and a failsafe timer strips it regardless — so if JS is off or
+   errors out, the page renders exactly as it did before. Nothing can get
+   stranded invisible.
+
+   An element that has finished gets .xc-shown, which drops it out of the
+   hidden rules entirely, leaving hover / :active / the existing neon
+   effects completely untouched.
+   ══════════════════════════════════════════════════════════════════════ */
+:root {
+  --xc-ease-glide: cubic-bezier(0.16, 1, 0.30, 1);
+  --xc-ease-float: cubic-bezier(0.22, 0.92, 0.24, 1);
+}
+
+/* ── hidden-until-revealed states (first paint onwards) ─────────────── */
+html.xc-anim-ready .header .tab:not(.xc-shown) {
+  opacity: 0;
+  transform: translateY(-14px) scale(0.93);
+}
+html.xc-anim-ready .search-container:not(.xc-shown) {
+  opacity: 0;
+  transform: translateX(120px);
+}
+html.xc-anim-ready #totalsTable .total-row:not(.xc-shown) {
+  opacity: 0;
+  transform: translate3d(var(--xc-x, 0px), 34px, 0) scale(0.93);
+}
+html.xc-anim-ready #dbBtnRow button:not(.xc-shown) {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+html.xc-anim-ready .xc-in {
+  animation-delay: var(--xc-d, 0ms);
+  animation-fill-mode: both;
+  will-change: transform, opacity;
+}
+
+/* ── HEADER BUTTONS — fade in, settling down out of a soft blur ─────── */
+html.xc-anim-ready .header .tab.xc-in {
+  animation-name: xcHeaderIn;
+  animation-duration: 0.304s;
+  animation-timing-function: var(--xc-ease-glide);
+}
+@keyframes xcHeaderIn {
+  0%   { opacity: 0; transform: translateY(-14px) scale(0.90); }
+  55%  { opacity: 1; }
+  80%  { transform: translateY(2px) scale(1.012); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* the glyph inside blooms a beat after its button lands */
+html.xc-anim-ready .header .tab:not(.xc-shown) .tab-icon { opacity: 0; }
+html.xc-anim-ready .header .tab.xc-in .tab-icon {
+  animation: xcIconBloom 0.25s var(--xc-ease-glide) both;
+  animation-delay: calc(var(--xc-d, 0ms) + 93ms);
+}
+@keyframes xcIconBloom {
+  0%   { opacity: 0; transform: scale(0.55); }
+  65%  { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+/* ── SEARCH BAR — glides in from the right with a whisper of skew ───── */
+html.xc-anim-ready .search-container.xc-in {
+  animation-name: xcSearchSlideIn;
+  animation-duration: 0.376s;
+  animation-timing-function: var(--xc-ease-glide);
+}
+@keyframes xcSearchSlideIn {
+  0%   { opacity: 0; transform: translateX(120px) skewX(-3deg) scale(0.985); }
+  55%  { opacity: 1; }
+  80%  { transform: translateX(-7px) skewX(0.4deg) scale(1.004); }
+  100% { opacity: 1; transform: translateX(0) skewX(0deg) scale(1); }
+}
+/* corner ticks snap in, then the label + status breathe open */
+html.xc-anim-ready .search-container:not(.xc-shown) .search-corner,
+html.xc-anim-ready .search-container:not(.xc-shown) .search-label,
+html.xc-anim-ready .search-container:not(.xc-shown) .search-status { opacity: 0; }
+html.xc-anim-ready .search-container.xc-in .search-corner {
+  animation: xcCornerIn 0.233s ease-out both;
+  animation-delay: calc(var(--xc-d, 0ms) + 229ms);
+}
+html.xc-anim-ready .search-container.xc-in .search-label,
+html.xc-anim-ready .search-container.xc-in .search-status {
+  animation: xcMetaIn 0.286s ease-out both;
+  animation-delay: calc(var(--xc-d, 0ms) + 257ms);
+}
+@keyframes xcCornerIn {
+  0%   { opacity: 0; transform: scale(0.35); }
+  60%  { opacity: 1; transform: scale(1.18); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes xcMetaIn {
+  0%   { opacity: 0; letter-spacing: 10px; }
+  100% { opacity: 1; }
+}
+
+/* ── TOTALS TILES — float up into place, drifting in from their side ── */
+html.xc-anim-ready #totalsTable .total-row.xc-in {
+  animation-name: xcTileFloatIn;
+  animation-duration: 0.329s;
+  animation-timing-function: var(--xc-ease-float);
+}
+@keyframes xcTileFloatIn {
+  0%   { opacity: 0; transform: translate3d(var(--xc-x, 0px), 34px, 0) scale(0.93); }
+  55%  { opacity: 1; }
+  82%  { transform: translate3d(0, -4px, 0) scale(1.008); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+
+/* ── DATABASE / VAULT BUTTONS — fade up, last to arrive ─────────────── */
+html.xc-anim-ready #dbBtnRow button.xc-in {
+  animation-name: xcDbBtnIn;
+  animation-duration: 0.522s;
+  animation-timing-function: var(--xc-ease-glide);
+}
+@keyframes xcDbBtnIn {
+  0%   { opacity: 0; transform: translateY(16px) scale(0.97); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.xc-anim-ready .header .tab,
+  html.xc-anim-ready .search-container,
+  html.xc-anim-ready .search-container .search-corner,
+  html.xc-anim-ready .search-container .search-label,
+  html.xc-anim-ready .search-container .search-status,
+  html.xc-anim-ready #totalsTable .total-row,
+  html.xc-anim-ready #dbBtnRow button {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   BREAKDOWN REVEAL
+   ----------------------------------------------------------------------
+   Not gated on .xc-anim-ready: the breakdown panel is hidden by its own
+   inline display:none until there's text, so there is no flash risk and
+   nothing here can strand it. Classes are added by the driver script and
+   stripped when the animation finishes, so the panel's normal styling,
+   the export path and the cipher-colour swaps are untouched.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── the panel itself rises into place ── */
+.breakdown-wrapper.xc-bd-in {
+  animation: xcBdPanelIn 0.72s var(--xc-ease-glide, cubic-bezier(0.16,1,0.30,1)) both;
+}
+@keyframes xcBdPanelIn {
+  0%   { opacity: 0; transform: translateY(30px) scale(0.965); }
+  55%  { opacity: 1; }
+  84%  { transform: translateY(-4px) scale(1.004); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── a specular sweep travels across the glass as it lands ── */
+.breakdown-wrapper.xc-bd-in .breakdown-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(105deg,
+    transparent 34%,
+    rgba(255,255,255,0.07) 46%,
+    rgba(200,255,220,0.16) 51%,
+    rgba(255,255,255,0.07) 56%,
+    transparent 68%);
+  animation: xcBdSweep 1.1s ease-out 0.16s both;
+}
+@keyframes xcBdSweep {
+  0%   { transform: translateX(-130%); opacity: 0; }
+  12%  { opacity: 1; }
+  88%  { opacity: 1; }
+  100% { transform: translateX(130%); opacity: 0; }
+}
+
+/* ── title drops in from wide tracking, underline draws itself ── */
+.breakdown-wrapper.xc-bd-in .breakdown-title {
+  animation: xcBdTitleIn 0.7s var(--xc-ease-glide, cubic-bezier(0.16,1,0.30,1)) 0.10s both;
+}
+@keyframes xcBdTitleIn {
+  0%   { opacity: 0; transform: translateY(-9px); letter-spacing: 14px; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.breakdown-wrapper.xc-bd-in .breakdown-title::after {
+  transform-origin: left center;
+  animation: xcBdUnderline 0.8s var(--xc-ease-glide, cubic-bezier(0.16,1,0.30,1)) 0.20s both;
+}
+@keyframes xcBdUnderline {
+  0%   { transform: scaleX(0); opacity: 0; }
+  20%  { opacity: 1; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+
+/* ── each letter/value column pops up in sequence ── */
+.breakdown-item.xc-bd-item {
+  animation: xcBdItemIn 0.55s var(--xc-ease-float, cubic-bezier(0.22,0.92,0.24,1)) both;
+  animation-delay: var(--xc-d, 0ms);
+}
+@keyframes xcBdItemIn {
+  0%   { opacity: 0; transform: translateY(16px) scale(0.82); }
+  60%  { opacity: 1; }
+  85%  { transform: translateY(-2px) scale(1.03); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── per-word totals and the grand total settle in last ── */
+.breakdown-wrapper.xc-bd-in .breakdown-word-val {
+  animation: xcBdSoftIn 0.6s ease-out 0.5s both;
+}
+.breakdown-wrapper.xc-bd-in .breakdown-total {
+  animation: xcBdTotalIn 0.75s var(--xc-ease-glide, cubic-bezier(0.16,1,0.30,1)) 0.46s both;
+}
+@keyframes xcBdSoftIn {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 0.85; transform: translateY(0); }
+}
+@keyframes xcBdTotalIn {
+  0%   { opacity: 0; transform: translateY(14px) scale(0.88); }
+  70%  { opacity: 1; transform: translateY(0) scale(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── swapping cipher re-titles the panel: quick re-set of the header ── */
+.breakdown-title.xc-bd-retitle {
+  animation: xcBdRetitle 0.5s ease-out both;
+}
+@keyframes xcBdRetitle {
+  0%   { opacity: 0.1; transform: translateY(-7px); letter-spacing: 11px; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breakdown-wrapper.xc-bd-in,
+  .breakdown-wrapper.xc-bd-in .breakdown-section::after,
+  .breakdown-wrapper.xc-bd-in .breakdown-title,
+  .breakdown-wrapper.xc-bd-in .breakdown-title::after,
+  .breakdown-wrapper.xc-bd-in .breakdown-word-val,
+  .breakdown-wrapper.xc-bd-in .breakdown-total,
+  .breakdown-item.xc-bd-item,
+  .breakdown-title.xc-bd-retitle { animation: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   DATE SECTION REVEAL
+   ----------------------------------------------------------------------
+   Same pattern as the breakdown reveal: the panel is hidden by its own
+   inline display:none until the ◈ Date button opens it, so nothing here
+   can strand it. Classes are added by the driver script and stripped on
+   animationend, leaving the panel's material, clip-path and the export
+   path untouched.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── the framed panel unfolds upward ── */
+.date-border-wrap.xc-date-in {
+  animation: xcDatePanelIn 1.05s var(--xc-ease-glide, cubic-bezier(0.16,1,0.30,1)) both;
+}
+@keyframes xcDatePanelIn {
+  0%   { opacity: 0; transform: translateY(-26px) scale(0.972); }
+  55%  { opacity: 1; }
+  84%  { transform: translateY(4px) scale(1.004); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── each block inside rises in sequence ── */
+.xc-date-stage {
+  animation: xcDateStage 0.84s var(--xc-ease-float, cubic-bezier(0.22,0.92,0.24,1)) both;
+  animation-delay: var(--xc-d, 0ms);
+}
+@keyframes xcDateStage {
+  0%   { opacity: 0; transform: translateY(20px) scale(0.975); }
+  60%  { opacity: 1; }
+  86%  { transform: translateY(-3px) scale(1.003); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── a computed result snapping into existence ── */
+.xc-date-pop {
+  animation: xcDatePop 0.81s var(--xc-ease-glide, cubic-bezier(0.16,1,0.30,1)) both;
+}
+@keyframes xcDatePop {
+  0%   { opacity: 0; transform: translateY(12px) scale(0.9); }
+  65%  { opacity: 1; transform: translateY(0) scale(1.035); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── the ± DATES offset drawer swinging open ── */
+#dateOffsetPanel.xc-off-in {
+  animation: xcOffsetPanelIn 0.74s var(--xc-ease-glide, cubic-bezier(0.16,1,0.30,1)) both;
+  transform-origin: top center;
+}
+@keyframes xcOffsetPanelIn {
+  0%   { opacity: 0; transform: translateY(-14px) scaleY(0.94); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0) scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .date-border-wrap.xc-date-in,
+  .xc-date-stage,
+  .xc-date-pop,
+  #dateOffsetPanel.xc-off-in { animation: none !important; }
+}
+
+/* ══════════════════════════════════════════════════════════════════════
+   DATABASE / VAULT RESULTS REVEAL
+   ----------------------------------------------------------------------
+   Both panels are hidden until .db-visible is added, so nothing here can
+   strand them. The result rows use display:contents, which can't be
+   transformed — so the stagger is applied to each row's .compare-cell
+   children, all sharing that row's delay, which reads as the row moving
+   as one. Classes are stripped on animationend.
+   ══════════════════════════════════════════════════════════════════════ */
+
+/* ── the panel rises into place ── */
+#dbResultsPanel.xc-db-in,
+#localDbResultsPanel.xc-db-in {
+  animation: xcDbPanelIn 0.374s var(--xc-ease-glide, cubic-bezier(0.16,1,0.30,1)) both;
+}
+@keyframes xcDbPanelIn {
+  0%   { opacity: 0; transform: translateY(26px) scale(0.978); }
+  55%  { opacity: 1; }
+  85%  { transform: translateY(-3px) scale(1.003); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── MATCHES FROM … caption ── */
+.xc-db-title {
+  animation: xcDbTitleIn 0.33s ease-out 0.033s both;
+}
+@keyframes xcDbTitleIn {
+  0%   { opacity: 0; transform: translateY(-7px); letter-spacing: 11px; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── header cells drop in left to right ── */
+.compare-cell.xc-db-head {
+  animation: xcDbHeadIn 0.275s var(--xc-ease-glide, cubic-bezier(0.16,1,0.30,1)) both;
+  animation-delay: var(--xc-d, 0ms);
+}
+@keyframes xcDbHeadIn {
+  0%   { opacity: 0; transform: translateY(-10px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── result rows rise in sequence ── */
+.compare-cell.xc-db-cell {
+  animation: xcDbRowIn 0.303s var(--xc-ease-float, cubic-bezier(0.22,0.92,0.24,1)) both;
+  animation-delay: var(--xc-d, 0ms);
+}
+@keyframes xcDbRowIn {
+  0%   { opacity: 0; transform: translateY(14px); }
+  65%  { opacity: 1; }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* ── the empty / error state ── */
+.db-no-results.xc-db-empty {
+  animation: xcDbEmptyIn 0.303s var(--xc-ease-glide, cubic-bezier(0.16,1,0.30,1)) 0.077s both;
+}
+@keyframes xcDbEmptyIn {
+  0%   { opacity: 0; transform: scale(0.94); letter-spacing: 8px; }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #dbResultsPanel.xc-db-in,
+  #localDbResultsPanel.xc-db-in,
+  .xc-db-title,
+  .compare-cell.xc-db-head,
+  .compare-cell.xc-db-cell,
+  .db-no-results.xc-db-empty { animation: none !important; }
+}
 </style>
-<script>window.__BAKED_SETTINGS__ = {"--cipher-ordinal":"#00ff4c","--cipher-revOrdinal":"#00ff88","--cipher-reduction":"#00aeff","--cipher-revReduction":"#00f7ff","--cipher-sumerian":"#c4fa92","--cipher-revSumerian":"#fff09b","--cipher-satanic":"#ff0d00","--cipher-revSatanic":"#ff6868","--cipher-jewish":"#9a38d8","--cipher-chaldean":"#88bf93","--cipher-standard":"#c9a030","--cipher-standardAlt":"#c9a030","--cipher-archaicOrdinal":"#4dff55","--cipher-archaicReverse":"#4dff55","--cipher-baconKaye":"#e87868","--cipher-beatusOfLiebana":"#6699cc","--cipher-capitalsAdded":"#44ff44","--cipher-cipherX":"#f0a038","--cipher-fibonacci":"#c88860","--cipher-latinOrdinal":"#9966cc","--cipher-reverseCapsAdded":"#44ff44","--cipher-reverseCapsMixed":"#44ee44","--cipher-septenary":"#c9a030","--cipher-singleReduction":"#6699cc","--cipher-squares":"#c9a030","--cipher-alphanumericQabbala":"#b8b060","--cipher-capitalsMixed":"#5DBB58","--cipher-kvException":"#58B9E9","--cipher-skvException":"#5BB2EC","--cipher-revSingleReduction":"#64D8D0","--cipher-revStandard":"#DBCD95","--cipher-rStandardAlt":"#EEC868","--cipher-epException":"#62BCA5","--cipher-ehpException":"#71A285","--cipher-englishQaballa":"#E28065","--cipher-trigonal":"#C89D65","--cipher-primes":"#D4B768","--cipher-alphanumericSatanic":"#E0A25C","--cipher-alphanumericPrimes":"#DFBF96","--cipher-alphanumericSquares":"#89AEAB","--cipher-alphanumericTrigonal":"#9CB78F","--cipher-synx":"#82CECE","--cipher-qwerty":"#279027","--cipher-numericQwerty":"#5FD35F","--cipher-numericQwertyPrimes":"#D4B768","--cipher-keypad":"#FF80FF","--cipher-hex":"#C76682","--cipher-illuminatiNovice":"#F59E32","--cipher-illuminatiReverse":"#D1D16B","--cipher-reversePrimes":"#CBA672","--cipher-reverseSquares":"#AAA864","--cipher-reverseTrigonal":"#BB7B54","--cipher-archaicReduction":"#81DFDF","--cipher-archaicRReverse":"#5DAAEA","--cipher-modernKaye":"#E9A5AE","--cipher-elizabethan360":"#FAAB00","--cipher-elizabethanAlphanumeric":"#E3B072","--cipher-kabbalisticSepharial":"#87CB76","--cipher-falseKabbalah":"#8CC0BF","--cipher-primeQabalah":"#B4E085","--cipher-williamGGray":"#52E099","--cipher-zeroingKey":"#88A8D7","--cipher-mirroringKey":"#85C19D","--cipher-alphanumericHalves":"#A8A87A","--cipher-trigrammatonQabalah":"#7ACBE6","--cipher-elevenfoldQabalah":"#8FCE82","--cipher-toavoteaKey":"#D9B28C","--cipher-latinReduction":"#9F63C5","--cipher-beatusOrdinal":"#A0C3F8","--cipher-beatusReduction":"#82A5D9","--cipher-cabalaSimplex":"#70DBDB","--cipher-romanNumerals":"#66CC99","--bd-standard-title":"#c9a030","--bd-standard-underline":"#806618","--bd-standard-letter":"#c9a030","--bd-standard-value":"#a07c22","--bd-standardAlt-title":"#c9a030","--bd-standardAlt-underline":"#806618","--bd-standardAlt-letter":"#c9a030","--bd-standardAlt-value":"#a07c22","--bd-archaicOrdinal-title":"#4dff55","--bd-archaicOrdinal-underline":"#228822","--bd-archaicOrdinal-letter":"#4dff55","--bd-archaicOrdinal-value":"#33cc33","--bd-archaicReverse-title":"#4dff55","--bd-archaicReverse-underline":"#228822","--bd-archaicReverse-letter":"#4dff55","--bd-archaicReverse-value":"#33cc33","--bd-baconKaye-title":"#e87868","--bd-baconKaye-underline":"#883030","--bd-baconKaye-letter":"#e87868","--bd-baconKaye-value":"#bb5050","--bd-beatusOfLiebana-title":"#6699cc","--bd-beatusOfLiebana-underline":"#335588","--bd-beatusOfLiebana-letter":"#6699cc","--bd-beatusOfLiebana-value":"#4477aa","--bd-capitalsAdded-title":"#44ff44","--bd-capitalsAdded-underline":"#228822","--bd-capitalsAdded-letter":"#44ff44","--bd-capitalsAdded-value":"#33cc33","--bd-cipherX-title":"#f0a038","--bd-cipherX-underline":"#885510","--bd-cipherX-letter":"#f0a038","--bd-cipherX-value":"#c07828","--bd-fibonacci-title":"#c88860","--bd-fibonacci-underline":"#785030","--bd-fibonacci-letter":"#c88860","--bd-fibonacci-value":"#a06848","--bd-latinOrdinal-title":"#9966cc","--bd-latinOrdinal-underline":"#553388","--bd-latinOrdinal-letter":"#9966cc","--bd-latinOrdinal-value":"#7744aa","--bd-reverseCapsAdded-title":"#44ff44","--bd-reverseCapsAdded-underline":"#228822","--bd-reverseCapsAdded-letter":"#44ff44","--bd-reverseCapsAdded-value":"#33cc33","--bd-reverseCapsMixed-title":"#44ee44","--bd-reverseCapsMixed-underline":"#228822","--bd-reverseCapsMixed-letter":"#44ee44","--bd-reverseCapsMixed-value":"#33bb33","--bd-septenary-title":"#c9a030","--bd-septenary-underline":"#806618","--bd-septenary-letter":"#c9a030","--bd-septenary-value":"#a07c22","--bd-singleReduction-title":"#6699cc","--bd-singleReduction-underline":"#335588","--bd-singleReduction-letter":"#6699cc","--bd-singleReduction-value":"#4477aa","--bd-squares-title":"#c9a030","--bd-squares-underline":"#806618","--bd-squares-letter":"#c9a030","--bd-squares-value":"#a07c22","--bd-alphanumericQabbala-title":"#b8b060","--bd-alphanumericQabbala-underline":"#706830","--bd-alphanumericQabbala-letter":"#b8b060","--bd-alphanumericQabbala-value":"#908840","--bd-capitalsMixed-title":"#5DBB58","--bd-capitalsMixed-underline":"#2E5E2C","--bd-capitalsMixed-letter":"#5DBB58","--bd-capitalsMixed-value":"#4A9646","--bd-kvException-title":"#58B9E9","--bd-kvException-underline":"#2C5C74","--bd-kvException-letter":"#58B9E9","--bd-kvException-value":"#4694BA","--bd-skvException-title":"#5BB2EC","--bd-skvException-underline":"#2E5976","--bd-skvException-letter":"#5BB2EC","--bd-skvException-value":"#498EBD","--bd-revSingleReduction-title":"#64D8D0","--bd-revSingleReduction-underline":"#326C68","--bd-revSingleReduction-letter":"#64D8D0","--bd-revSingleReduction-value":"#50ADA6","--bd-revStandard-title":"#DBCD95","--bd-revStandard-underline":"#6E664A","--bd-revStandard-letter":"#DBCD95","--bd-revStandard-value":"#AFA477","--bd-rStandardAlt-title":"#EEC868","--bd-rStandardAlt-underline":"#776434","--bd-rStandardAlt-letter":"#EEC868","--bd-rStandardAlt-value":"#BEA053","--bd-epException-title":"#62BCA5","--bd-epException-underline":"#315E52","--bd-epException-letter":"#62BCA5","--bd-epException-value":"#4E9684","--bd-ehpException-title":"#71A285","--bd-ehpException-underline":"#385142","--bd-ehpException-letter":"#71A285","--bd-ehpException-value":"#5A826A","--bd-englishQaballa-title":"#E28065","--bd-englishQaballa-underline":"#714032","--bd-englishQaballa-letter":"#E28065","--bd-englishQaballa-value":"#B56651","--bd-trigonal-title":"#C89D65","--bd-trigonal-underline":"#644E32","--bd-trigonal-letter":"#C89D65","--bd-trigonal-value":"#A07E51","--bd-primes-title":"#D4B768","--bd-primes-underline":"#6A5C34","--bd-primes-letter":"#D4B768","--bd-primes-value":"#AA9253","--bd-alphanumericSatanic-title":"#E0A25C","--bd-alphanumericSatanic-underline":"#70512E","--bd-alphanumericSatanic-letter":"#E0A25C","--bd-alphanumericSatanic-value":"#B3824A","--bd-alphanumericPrimes-title":"#DFBF96","--bd-alphanumericPrimes-underline":"#70604B","--bd-alphanumericPrimes-letter":"#DFBF96","--bd-alphanumericPrimes-value":"#B29978","--bd-alphanumericSquares-title":"#89AEAB","--bd-alphanumericSquares-underline":"#445756","--bd-alphanumericSquares-letter":"#89AEAB","--bd-alphanumericSquares-value":"#6E8B89","--bd-alphanumericTrigonal-title":"#9CB78F","--bd-alphanumericTrigonal-underline":"#4E5C48","--bd-alphanumericTrigonal-letter":"#9CB78F","--bd-alphanumericTrigonal-value":"#7D9272","--bd-synx-title":"#82CECE","--bd-synx-underline":"#416767","--bd-synx-letter":"#82CECE","--bd-synx-value":"#68A5A5","--bd-qwerty-title":"#279027","--bd-qwerty-underline":"#144814","--bd-qwerty-letter":"#279027","--bd-qwerty-value":"#1F731F","--bd-numericQwerty-title":"#5FD35F","--bd-numericQwerty-underline":"#306A30","--bd-numericQwerty-letter":"#5FD35F","--bd-numericQwerty-value":"#4CA94C","--bd-numericQwertyPrimes-title":"#D4B768","--bd-numericQwertyPrimes-underline":"#6A5C34","--bd-numericQwertyPrimes-letter":"#D4B768","--bd-numericQwertyPrimes-value":"#AA9253","--bd-keypad-title":"#FF80FF","--bd-keypad-underline":"#804080","--bd-keypad-letter":"#FF80FF","--bd-keypad-value":"#CC66CC","--bd-hex-title":"#C76682","--bd-hex-underline":"#643341","--bd-hex-letter":"#C76682","--bd-hex-value":"#9F5268","--bd-illuminatiNovice-title":"#F59E32","--bd-illuminatiNovice-underline":"#7A4F19","--bd-illuminatiNovice-letter":"#F59E32","--bd-illuminatiNovice-value":"#C47E28","--bd-illuminatiReverse-title":"#D1D16B","--bd-illuminatiReverse-underline":"#686836","--bd-illuminatiReverse-letter":"#D1D16B","--bd-illuminatiReverse-value":"#A7A756","--bd-reversePrimes-title":"#CBA672","--bd-reversePrimes-underline":"#665339","--bd-reversePrimes-letter":"#CBA672","--bd-reversePrimes-value":"#A2855B","--bd-reverseSquares-title":"#AAA864","--bd-reverseSquares-underline":"#555432","--bd-reverseSquares-letter":"#AAA864","--bd-reverseSquares-value":"#888650","--bd-reverseTrigonal-title":"#BB7B54","--bd-reverseTrigonal-underline":"#5E3E2A","--bd-reverseTrigonal-letter":"#BB7B54","--bd-reverseTrigonal-value":"#966243","--bd-archaicReduction-title":"#81DFDF","--bd-archaicReduction-underline":"#407070","--bd-archaicReduction-letter":"#81DFDF","--bd-archaicReduction-value":"#67B2B2","--bd-archaicRReverse-title":"#5DAAEA","--bd-archaicRReverse-underline":"#2E5575","--bd-archaicRReverse-letter":"#5DAAEA","--bd-archaicRReverse-value":"#4A88BB","--bd-modernKaye-title":"#E9A5AE","--bd-modernKaye-underline":"#745257","--bd-modernKaye-letter":"#E9A5AE","--bd-modernKaye-value":"#BA848B","--bd-elizabethan360-title":"#FAAB00","--bd-elizabethan360-underline":"#7D5600","--bd-elizabethan360-letter":"#FAAB00","--bd-elizabethan360-value":"#C88900","--bd-elizabethanAlphanumeric-title":"#E3B072","--bd-elizabethanAlphanumeric-underline":"#725839","--bd-elizabethanAlphanumeric-letter":"#E3B072","--bd-elizabethanAlphanumeric-value":"#B68D5B","--bd-kabbalisticSepharial-title":"#87CB76","--bd-kabbalisticSepharial-underline":"#44663B","--bd-kabbalisticSepharial-letter":"#87CB76","--bd-kabbalisticSepharial-value":"#6CA25E","--bd-falseKabbalah-title":"#8CC0BF","--bd-falseKabbalah-underline":"#466060","--bd-falseKabbalah-letter":"#8CC0BF","--bd-falseKabbalah-value":"#709A99","--bd-primeQabalah-title":"#B4E085","--bd-primeQabalah-underline":"#5A7042","--bd-primeQabalah-letter":"#B4E085","--bd-primeQabalah-value":"#90B36A","--bd-williamGGray-title":"#52E099","--bd-williamGGray-underline":"#29704C","--bd-williamGGray-letter":"#52E099","--bd-williamGGray-value":"#42B37A","--bd-zeroingKey-title":"#88A8D7","--bd-zeroingKey-underline":"#44546C","--bd-zeroingKey-letter":"#88A8D7","--bd-zeroingKey-value":"#6D86AC","--bd-mirroringKey-title":"#85C19D","--bd-mirroringKey-underline":"#42604E","--bd-mirroringKey-letter":"#85C19D","--bd-mirroringKey-value":"#6A9A7E","--bd-alphanumericHalves-title":"#A8A87A","--bd-alphanumericHalves-underline":"#54543D","--bd-alphanumericHalves-letter":"#A8A87A","--bd-alphanumericHalves-value":"#868662","--bd-trigrammatonQabalah-title":"#7ACBE6","--bd-trigrammatonQabalah-underline":"#3D6673","--bd-trigrammatonQabalah-letter":"#7ACBE6","--bd-trigrammatonQabalah-value":"#62A2B8","--bd-elevenfoldQabalah-title":"#8FCE82","--bd-elevenfoldQabalah-underline":"#486741","--bd-elevenfoldQabalah-letter":"#8FCE82","--bd-elevenfoldQabalah-value":"#72A568","--bd-toavoteaKey-title":"#D9B28C","--bd-toavoteaKey-underline":"#6C5946","--bd-toavoteaKey-letter":"#D9B28C","--bd-toavoteaKey-value":"#AE8E70","--bd-latinReduction-title":"#9F63C5","--bd-latinReduction-underline":"#503262","--bd-latinReduction-letter":"#9F63C5","--bd-latinReduction-value":"#7F4F9E","--bd-beatusOrdinal-title":"#A0C3F8","--bd-beatusOrdinal-underline":"#50627C","--bd-beatusOrdinal-letter":"#A0C3F8","--bd-beatusOrdinal-value":"#809CC6","--bd-beatusReduction-title":"#82A5D9","--bd-beatusReduction-underline":"#41526C","--bd-beatusReduction-letter":"#82A5D9","--bd-beatusReduction-value":"#6884AE","--bd-cabalaSimplex-title":"#70DBDB","--bd-cabalaSimplex-underline":"#386E6E","--bd-cabalaSimplex-letter":"#70DBDB","--bd-cabalaSimplex-value":"#5AAFAF","--bd-romanNumerals-title":"#66CC99","--bd-romanNumerals-underline":"#33664C","--bd-romanNumerals-letter":"#66CC99","--bd-romanNumerals-value":"#52A37A","--bd-ordinal-title":"#00ff4c","--bd-ordinal-underline":"#00882a","--bd-ordinal-letter":"#00ff4c","--bd-ordinal-value":"#00cc3d","--bd-revOrdinal-title":"#00ff88","--bd-revOrdinal-underline":"#008844","--bd-revOrdinal-letter":"#00ff88","--bd-revOrdinal-value":"#00b35c","--bd-reduction-title":"#00aeff","--bd-reduction-underline":"#005f99","--bd-reduction-letter":"#00aeff","--bd-reduction-value":"#0088cc","--bd-revReduction-title":"#00f7ff","--bd-revReduction-underline":"#008899","--bd-revReduction-letter":"#00f7ff","--bd-revReduction-value":"#00c4cc","--bd-sumerian-title":"#c4fa92","--bd-sumerian-underline":"#6a9944","--bd-sumerian-letter":"#c4fa92","--bd-sumerian-value":"#9acc70","--bd-revSumerian-title":"#fff09b","--bd-revSumerian-underline":"#998844","--bd-revSumerian-letter":"#fff09b","--bd-revSumerian-value":"#ccbe7a","--bd-satanic-title":"#ff160a","--bd-satanic-underline":"#880800","--bd-satanic-letter":"#ff2a1f","--bd-satanic-value":"#ff0d00","--bd-revSatanic-title":"#ff6868","--bd-revSatanic-underline":"#883030","--bd-revSatanic-letter":"#ff6868","--bd-revSatanic-value":"#cc5252","--bd-jewish-title":"#7c2ed4","--bd-jewish-underline":"#6a2480","--bd-jewish-letter":"#8e3bc4","--bd-jewish-value":"#8530a0","--bd-chaldean-title":"#6c9973","--bd-chaldean-underline":"#567b59","--bd-chaldean-letter":"#83b57d","--bd-chaldean-value":"#899d7b","--g-btn-neon-1":"#003d07","--g-btn-neon-2":"#084200","--g-btn-inner-bg":"#060b0f","--g-btn-text":"#c8f0da","--g-menu-bg":"#007bff","--g-menu-border":"#2d5a3d","--g-menu-text":"#62bf80","--g-menu-hover":"#0d1f12","--g-menu-item-text":"#8ed4a8","--g-chk-bg":"#000000","--g-chk-border":"#2c4b58","--g-chk-active":"#8aff8c","--g-chk-label":"#e0e0e0","--g-search-bg":"#000a0f","--g-search-border":"#000000","--g-search-border-focus":"#001f0d","--g-search-text":"#25ad50","--g-search-placeholder":"#12973c","--g-search-icon":"#008a30","--g-search-icon-focus":"#62bf80","--g-search-btn-bg":"#050e10","--g-search-btn-icon":"#00a334","--g-search-topline":"#000000","--g-search-label":"#008028","--g-search-status":"#008028","--g-search-corner":"#00c73f","--g-search-spore":"#000000","--g-totals-left-poly":"#000000","--g-totals-right-poly":"#000b19","--g-totals-stroke":"#62bf80","--g-totals-name-text":"#d4ede0","--g-totals-val-text":"#62bf80","--g-totals-divider":"#1e4a2c","--g-totals-orb":"#4a9e6b","--g-totals-row-hover":"#8ed4a8","--bd-bg":"#000919","--bd-title-text":"#62bf80","--bd-title-line":"#2d5a3d","--bd-space-color":"#1e4a2c","--g-history-outer-border":"#00142e","--g-history-inner-bg":"#050505","--g-history-header-text":"#ffffff","--g-history-text-col":"#d4ede0","--g-history-header-border":"#1e4a2c","--g-date-wrap-border":"#1c1c1c","--g-date-section-bg":"#000000","--g-date-label-text":"#dedede","--g-date-input-bg":"#000000","--g-date-input-border":"#292929","--g-date-input-text":"#95e9b0","--g-date-result-bg":"#000000","--g-date-result-border":"#131313","--g-date-result-text":"#1e7a3c","--g-date-divider":"#262626","--g-date-detail-title":"#64b983","--g-date-detail-text":"#4abf6f","--g-popup-bg":"#00030a","--g-popup-border":"#62bf80","--g-popup-text":"#c8fed7","--g-popup-label":"#c8fed7","--g-popup-shadow":"#62bf80","--s-overlay-bg":"#000000","--s-panel-bg":"#02080f","--s-panel-border":"#1a3a2a","--s-header-bg":"#010508","--s-header-border":"#1a3a2a","--s-title-text":"#6dbf9e","--s-close-bg":"#010508","--s-close-border":"#1a3a2a","--s-close-text":"#4a9e6b","--s-close-hover-bg":"#1a3a2a","--s-close-hover-text":"#6dbf9e","--s-body-bg":"#02080f","--s-scrollbar-thumb":"#1a3a2a","--s-group-label-text":"#2a6a4a","--s-group-label-border":"#1a3a2a","--s-row-label-text":"#4a9e6b","--s-footer-bg":"#010508","--s-footer-border":"#1a3a2a","--s-reset-bg":"#010508","--s-reset-border":"#1a3a2a","--s-reset-text":"#4a9e6b","--s-reset-hover-bg":"#1a3a2a","--s-reset-hover-text":"#6dbf9e","--s-save-bg":"#1a3a2a","--s-save-border":"#2a5a3a","--s-save-text":"#6dbf9e","--s-save-hover-bg":"#2a5a3a","--s-saved-bg":"#4a9e6b","--s-saved-text":"#010508","--sz-btn-font":"1.35em","--sz-btn-w":"232px","--sz-btn-h":"74.4px","--sz-btn-ls":"4.3px","--sz-search-height":"80.4px","--sz-search-font":"1.66rem","--sz-input-font":"0.85rem","--sz-totals-name-font":"32.2px","--sz-totals-val-font":"41.8px","--sz-bd-title-font":"27.6px","--sz-bd-letter-font":"26px","--sz-bd-caps-letter-font":"26px","--sz-bd-value-font":"17px","--sz-history-font":"29.2px","--sz-date-input-w":"139.6px","--sz-date-label-font":"0.5rem","--sz-detail-label-font":"1.11rem","--sz-detail-val-font":"1.63rem","--sz-popup-w":"327px","--sz-popup-font":"25px","--sz-popup-label-font":"0.98em","--sz-co-tile-w":"679px","--sz-co-tile-h":"95.6px","--sz-co-tile-font":"1.46rem","--sz-settings-w":"380px","--sz-header-font":"0.7rem","--pos-app-margin-top":"56px","--pos-app-width":"99.5%","--pos-header-mb":"52px","--pos-search-mb":"36.8px","--pos-totals-mb":"54.8px","--pos-breakdown-mb":"64.8px","--pos-section-padding":"69.2px","--pos-date-max-w":"962px","--pos-bd-section-pad-h":"40px","--pos-co-overlay-pt":"35px","--pos-bd-underline-bottom":"12.6px","--sz-menu-pad":"24px","--sz-menu-w":"300px","--sz-menu-item-font":"20px","--sz-menu-item-pad":"12px","--sz-co-panel-gap":"14px","--sz-co-title-font":"0.48rem","--sz-co-title-ls":"7px","--sz-co-hint-font":"0.42rem","--sz-co-grid-gap":"23.2px","--sz-co-tile-clip":"20px","--sz-co-bar-w":"-43.8px","--sz-co-content-pl":"91.4px","--sz-co-content-pr":"65.8px","--sz-co-tile-ls":"2.5px","--sz-co-pip-size":"11.2px","--sz-chk-size":"44.4px","--sz-chk-dot":"19.2px","--sz-chk-font":"20px","--sz-search-pad-top":"24px","--sz-search-pad-bot":"21.6px","--sz-search-max-w":"960px","--sz-search-border":"0.8px","--sz-search-icon-sz":"25.4px","--sz-search-btn-icon":"33.4px","--sz-search-input-pad":"19px","--sz-search-input-ls":"2.8px","--sz-search-label-font":"0.8rem","--sz-search-label-ls":"2px","--sz-search-status-font":"0.59rem","--sz-search-status-ls":"1px","--sz-search-corner-sz":"13.6px","--sz-search-corner-pos":"20px","--sz-spore-1":"5.8px","--sz-spore-2":"4px","--sz-spore-3":"7px","--sz-totals-max-w":"960px","--sz-totals-td-pad-v":"7px","--sz-totals-td-pad-h":"6.2px","--sz-totals-row-h":"92px","--sz-totals-row-minw":"320px","--sz-totals-name-pt":"6.8px","--sz-totals-name-pl":"10px","--sz-totals-name-ls":"1px","--sz-totals-val-pt":"-80.2px","--sz-totals-val-pr":"12.8px","--sz-totals-val-ls":"1.1px","--sz-bd-clip":"22px","--sz-bd-pad-top":"4.4px","--sz-bd-pad-bot":"7.6px","--sz-bd-min-w":"440px","--sz-bd-max-w":"1010px","--sz-bd-title-mb":"-6px","--sz-bd-container-gap":"18.4px","--sz-bd-word-gap":"1.6px","--sz-bd-val-mt":"7.2px","--sz-hist-clip-out":"25px","--sz-hist-clip-in":"22px","--sz-hist-outer-pad":"2.2px","--sz-hist-inner-pad-v":"22.4px","--sz-hist-inner-pad-h":"35.6px","--sz-hist-cell-pad-v":"13px","--sz-hist-cell-pad-h":"14px","--sz-hist-header-font":"18px","--sz-hist-text-maxw":"378px","--sz-hist-row-gap":"-0px","--sz-popup-h":"214px","--sz-popup-pad-v":"12px","--sz-popup-pad-h":"20px","--pos-popup-offset-y":"8px","--sz-date-clip":"24px","--sz-date-row-gap":"57.6px","--sz-date-group-gap":"34.4px","--sz-date-grp-lbl-font":"0.86rem","--sz-date-grp-lbl-ls":"14.9px","--sz-date-inputs-gap":"58.4px","--sz-date-input-pad-v":"11.8px","--sz-date-input-pad-h":"8px","--sz-date-input-font":"1.81rem","--sz-date-input-ls":"1px","--sz-date-sec-lbl-font":"1.04rem","--sz-date-sec-lbl-ls":"2.9px","--sz-date-sec-lbl-mb":"31px","--sz-date-opts-gap":"21.2px","--sz-date-dur-gap":"56.4px","--sz-date-res-font":"53.2px","--sz-date-res-lh":"-7.06px","--sz-date-res-pad-v":"37.2px","--sz-date-res-pad-h":"46px","--sz-detail-head-font":"1.57rem","--sz-detail-head-ls":"3.9px","--sz-detail-head-mb":"15px","--sz-detail-head-pb":"18.6px","--sz-detail-panel-pad":"23.6px","--sz-detail-row-mb":"38.4px","--sz-detail-lbl-ls":"2.1px","--sz-detail-lbl-mb":"10.2px","--sz-detail-val-ls":"1px","--sz-detail-bd-font":"0.91rem","--sz-detail-bd-mt":"4px","--pos-app-mb":"50px","--pos-header-max-w":"960px","--pos-date-margin-v":"40px","--pos-date-pad-h":"51.6px","--g-black":"#060f09","--g-deeper":"#1e4a2c","--g-deep":"#132e19","--g-dark":"#2d5a3d","--g-hover":"#3a7a52","--g-mid":"#62bf80","--g-bright":"#8ed4a8","--matrix-color":"#62bf80","--matrix-bg":"#000000","--bd-shadow-light":"rgba(20,50,30,0.7)","--bd-shadow-dark":"rgba(0,0,0,1)","--bd-clip-border":"#2d5a3d","--bd-title-text-glow":"rgba(98,191,128,0.3)","--g-history-cell-bg":"transparent","--g-history-row-hover":"rgba(45,90,61,0.12)","--g-date-outer-bg":"#060f09","--s-panel-shadow":"rgba(0,0,0,0.8)","--s-row-divider":"rgba(30,74,44,0.2)","--co-overlay-bg":"rgba(0,0,0,0.82)","--co-tile-bg":"#000000","--co-tile-active-bg":"#000000","--co-tile-name-off":"#2a2a2a","--co-tile-border-off":"rgba(255,255,255,0.055)","--co-color-ordinal":"#00992e","--co-color-revOrdinal":"#00a87e","--co-color-reduction":"#0076ad","--co-color-revReduction":"#00adb3","--co-color-sumerian":"#84a465","--co-color-revSumerian":"#a19863","--co-color-satanic":"#b31800","--co-color-revSatanic":"#a84343","--co-color-jewish":"#9a38d8","--co-color-chaldean":"#88bf93","--sz-bd-letter-ls":"5px","--sz-bd-word-val-font":"23px","--sz-bd-word-val-ls":"-0.2px","--sz-bd-word-wrap-gap":"10.2px","--sz-bd-total-font":"44.6px","--sz-bd-total-ls":"4.9px","--sz-bd-total-mt":"3.6px","--bd-word-val-color":"#aaffcc","--bd-total-color":"#00ff4c","--font-body":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-buttons":"\"AEB\", \"Consolas\", \"Courier New\", monospace","--font-search-input":"\"Orbitron\", \"Consolas\", \"Courier New\", monospace","--font-search-meta":"\"77\", \"Consolas\", \"Courier New\", monospace","--font-search-status":"\"77\", \"Consolas\", \"Courier New\", monospace","--font-totals":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-totals-name":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-totals-value":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-title":"\"GOS\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-letters":"\"Orbitron\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-values":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-bd-word-total":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-bd-grand-total":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-history":"\"Orbitron\", \"Consolas\", \"Courier New\", monospace","--font-history-header":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-date":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-date-input":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-date-result":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-popup":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-cipher-overlay":"\"GOS\", \"Consolas\", \"Courier New\", monospace","--font-settings":"\"AESR\", \"Consolas\", \"Courier New\", monospace","--fw-buttons":"bold","--fw-search-input":"600","--fw-search-label":"900","--fw-search-status":"900","--fw-totals-name":"bold","--fw-totals-value":"bold","--fw-bd-title":"bold","--fw-bd-letters":"bold","--fw-bd-values":"bold","--fw-bd-word-total":"normal","--fw-bd-grand-total":"normal","--fw-history-cell":"500","--fw-history-header":"normal","--fw-date-label":"normal","--fw-date-input":"normal","--fw-date-result":"normal","--fw-popup":"normal","--fw-overlay-tile":"bold","--fw-settings":"normal","--tt-buttons":"uppercase","--tt-search-input":"none","--tt-search-label":"uppercase","--tt-search-status":"uppercase","--tt-totals-name":"uppercase","--tt-totals-value":"none","--tt-bd-title":"none","--tt-bd-letters":"none","--tt-bd-values":"none","--tt-history-header":"none","--tt-date-label":"uppercase","--tt-date-input":"none","--tt-date-result":"none","--tt-popup":"none","--tt-overlay-tile":"uppercase"};</script>
+<script>window.__BAKED_SETTINGS__ = {"--cipher-ordinal":"#00ff4c","--cipher-revOrdinal":"#00ff88","--cipher-reduction":"#00aeff","--cipher-revReduction":"#00f7ff","--cipher-sumerian":"#c4fa92","--cipher-revSumerian":"#fff09b","--cipher-satanic":"#ff0d00","--cipher-revSatanic":"#ff6868","--cipher-jewish":"#9a38d8","--cipher-chaldean":"#88bf93","--cipher-standard":"#c9a030","--cipher-standardAlt":"#c9a030","--cipher-archaicOrdinal":"#4dff55","--cipher-archaicReverse":"#4dff55","--cipher-baconKaye":"#e87868","--cipher-beatusOfLiebana":"#6699cc","--cipher-capitalsAdded":"#44ff44","--cipher-cipherX":"#f0a038","--cipher-fibonacci":"#c88860","--cipher-latinOrdinal":"#9966cc","--cipher-reverseCapsAdded":"#44ff44","--cipher-reverseCapsMixed":"#44ee44","--cipher-septenary":"#c9a030","--cipher-singleReduction":"#6699cc","--cipher-squares":"#c9a030","--cipher-alphanumericQabbala":"#b8b060","--cipher-capitalsMixed":"#5DBB58","--cipher-kvException":"#58B9E9","--cipher-skvException":"#5BB2EC","--cipher-revSingleReduction":"#64D8D0","--cipher-revStandard":"#DBCD95","--cipher-rStandardAlt":"#EEC868","--cipher-epException":"#62BCA5","--cipher-ehpException":"#71A285","--cipher-englishQaballa":"#E28065","--cipher-trigonal":"#C89D65","--cipher-primes":"#D4B768","--cipher-alphanumericSatanic":"#E0A25C","--cipher-alphanumericPrimes":"#DFBF96","--cipher-alphanumericSquares":"#89AEAB","--cipher-alphanumericTrigonal":"#9CB78F","--cipher-synx":"#82CECE","--cipher-qwerty":"#279027","--cipher-numericQwerty":"#5FD35F","--cipher-numericQwertyPrimes":"#D4B768","--cipher-keypad":"#FF80FF","--cipher-hex":"#C76682","--cipher-illuminatiNovice":"#F59E32","--cipher-illuminatiReverse":"#D1D16B","--cipher-reversePrimes":"#CBA672","--cipher-reverseSquares":"#AAA864","--cipher-reverseTrigonal":"#BB7B54","--cipher-archaicReduction":"#81DFDF","--cipher-archaicRReverse":"#5DAAEA","--cipher-modernKaye":"#E9A5AE","--cipher-elizabethan360":"#FAAB00","--cipher-elizabethanAlphanumeric":"#E3B072","--cipher-kabbalisticSepharial":"#87CB76","--cipher-falseKabbalah":"#8CC0BF","--cipher-primeQabalah":"#B4E085","--cipher-williamGGray":"#52E099","--cipher-zeroingKey":"#88A8D7","--cipher-mirroringKey":"#85C19D","--cipher-alphanumericHalves":"#A8A87A","--cipher-trigrammatonQabalah":"#7ACBE6","--cipher-elevenfoldQabalah":"#8FCE82","--cipher-toavoteaKey":"#D9B28C","--cipher-latinReduction":"#9F63C5","--cipher-beatusOrdinal":"#A0C3F8","--cipher-beatusReduction":"#82A5D9","--cipher-cabalaSimplex":"#70DBDB","--cipher-romanNumerals":"#66CC99","--bd-standard-title":"#c9a030","--bd-standard-underline":"#806618","--bd-standard-letter":"#c9a030","--bd-standard-value":"#a07c22","--bd-standardAlt-title":"#c9a030","--bd-standardAlt-underline":"#806618","--bd-standardAlt-letter":"#c9a030","--bd-standardAlt-value":"#a07c22","--bd-archaicOrdinal-title":"#4dff55","--bd-archaicOrdinal-underline":"#228822","--bd-archaicOrdinal-letter":"#4dff55","--bd-archaicOrdinal-value":"#33cc33","--bd-archaicReverse-title":"#4dff55","--bd-archaicReverse-underline":"#228822","--bd-archaicReverse-letter":"#4dff55","--bd-archaicReverse-value":"#33cc33","--bd-baconKaye-title":"#e87868","--bd-baconKaye-underline":"#883030","--bd-baconKaye-letter":"#e87868","--bd-baconKaye-value":"#bb5050","--bd-beatusOfLiebana-title":"#6699cc","--bd-beatusOfLiebana-underline":"#335588","--bd-beatusOfLiebana-letter":"#6699cc","--bd-beatusOfLiebana-value":"#4477aa","--bd-capitalsAdded-title":"#44ff44","--bd-capitalsAdded-underline":"#228822","--bd-capitalsAdded-letter":"#44ff44","--bd-capitalsAdded-value":"#33cc33","--bd-cipherX-title":"#f0a038","--bd-cipherX-underline":"#885510","--bd-cipherX-letter":"#f0a038","--bd-cipherX-value":"#c07828","--bd-fibonacci-title":"#c88860","--bd-fibonacci-underline":"#785030","--bd-fibonacci-letter":"#c88860","--bd-fibonacci-value":"#a06848","--bd-latinOrdinal-title":"#9966cc","--bd-latinOrdinal-underline":"#553388","--bd-latinOrdinal-letter":"#9966cc","--bd-latinOrdinal-value":"#7744aa","--bd-reverseCapsAdded-title":"#44ff44","--bd-reverseCapsAdded-underline":"#228822","--bd-reverseCapsAdded-letter":"#44ff44","--bd-reverseCapsAdded-value":"#33cc33","--bd-reverseCapsMixed-title":"#44ee44","--bd-reverseCapsMixed-underline":"#228822","--bd-reverseCapsMixed-letter":"#44ee44","--bd-reverseCapsMixed-value":"#33bb33","--bd-septenary-title":"#c9a030","--bd-septenary-underline":"#806618","--bd-septenary-letter":"#c9a030","--bd-septenary-value":"#a07c22","--bd-singleReduction-title":"#6699cc","--bd-singleReduction-underline":"#335588","--bd-singleReduction-letter":"#6699cc","--bd-singleReduction-value":"#4477aa","--bd-squares-title":"#c9a030","--bd-squares-underline":"#806618","--bd-squares-letter":"#c9a030","--bd-squares-value":"#a07c22","--bd-alphanumericQabbala-title":"#b8b060","--bd-alphanumericQabbala-underline":"#706830","--bd-alphanumericQabbala-letter":"#b8b060","--bd-alphanumericQabbala-value":"#908840","--bd-capitalsMixed-title":"#5DBB58","--bd-capitalsMixed-underline":"#2E5E2C","--bd-capitalsMixed-letter":"#5DBB58","--bd-capitalsMixed-value":"#4A9646","--bd-kvException-title":"#58B9E9","--bd-kvException-underline":"#2C5C74","--bd-kvException-letter":"#58B9E9","--bd-kvException-value":"#4694BA","--bd-skvException-title":"#5BB2EC","--bd-skvException-underline":"#2E5976","--bd-skvException-letter":"#5BB2EC","--bd-skvException-value":"#498EBD","--bd-revSingleReduction-title":"#64D8D0","--bd-revSingleReduction-underline":"#326C68","--bd-revSingleReduction-letter":"#64D8D0","--bd-revSingleReduction-value":"#50ADA6","--bd-revStandard-title":"#DBCD95","--bd-revStandard-underline":"#6E664A","--bd-revStandard-letter":"#DBCD95","--bd-revStandard-value":"#AFA477","--bd-rStandardAlt-title":"#EEC868","--bd-rStandardAlt-underline":"#776434","--bd-rStandardAlt-letter":"#EEC868","--bd-rStandardAlt-value":"#BEA053","--bd-epException-title":"#62BCA5","--bd-epException-underline":"#315E52","--bd-epException-letter":"#62BCA5","--bd-epException-value":"#4E9684","--bd-ehpException-title":"#71A285","--bd-ehpException-underline":"#385142","--bd-ehpException-letter":"#71A285","--bd-ehpException-value":"#5A826A","--bd-englishQaballa-title":"#E28065","--bd-englishQaballa-underline":"#714032","--bd-englishQaballa-letter":"#E28065","--bd-englishQaballa-value":"#B56651","--bd-trigonal-title":"#C89D65","--bd-trigonal-underline":"#644E32","--bd-trigonal-letter":"#C89D65","--bd-trigonal-value":"#A07E51","--bd-primes-title":"#D4B768","--bd-primes-underline":"#6A5C34","--bd-primes-letter":"#D4B768","--bd-primes-value":"#AA9253","--bd-alphanumericSatanic-title":"#E0A25C","--bd-alphanumericSatanic-underline":"#70512E","--bd-alphanumericSatanic-letter":"#E0A25C","--bd-alphanumericSatanic-value":"#B3824A","--bd-alphanumericPrimes-title":"#DFBF96","--bd-alphanumericPrimes-underline":"#70604B","--bd-alphanumericPrimes-letter":"#DFBF96","--bd-alphanumericPrimes-value":"#B29978","--bd-alphanumericSquares-title":"#89AEAB","--bd-alphanumericSquares-underline":"#445756","--bd-alphanumericSquares-letter":"#89AEAB","--bd-alphanumericSquares-value":"#6E8B89","--bd-alphanumericTrigonal-title":"#9CB78F","--bd-alphanumericTrigonal-underline":"#4E5C48","--bd-alphanumericTrigonal-letter":"#9CB78F","--bd-alphanumericTrigonal-value":"#7D9272","--bd-synx-title":"#82CECE","--bd-synx-underline":"#416767","--bd-synx-letter":"#82CECE","--bd-synx-value":"#68A5A5","--bd-qwerty-title":"#279027","--bd-qwerty-underline":"#144814","--bd-qwerty-letter":"#279027","--bd-qwerty-value":"#1F731F","--bd-numericQwerty-title":"#5FD35F","--bd-numericQwerty-underline":"#306A30","--bd-numericQwerty-letter":"#5FD35F","--bd-numericQwerty-value":"#4CA94C","--bd-numericQwertyPrimes-title":"#D4B768","--bd-numericQwertyPrimes-underline":"#6A5C34","--bd-numericQwertyPrimes-letter":"#D4B768","--bd-numericQwertyPrimes-value":"#AA9253","--bd-keypad-title":"#FF80FF","--bd-keypad-underline":"#804080","--bd-keypad-letter":"#FF80FF","--bd-keypad-value":"#CC66CC","--bd-hex-title":"#C76682","--bd-hex-underline":"#643341","--bd-hex-letter":"#C76682","--bd-hex-value":"#9F5268","--bd-illuminatiNovice-title":"#F59E32","--bd-illuminatiNovice-underline":"#7A4F19","--bd-illuminatiNovice-letter":"#F59E32","--bd-illuminatiNovice-value":"#C47E28","--bd-illuminatiReverse-title":"#D1D16B","--bd-illuminatiReverse-underline":"#686836","--bd-illuminatiReverse-letter":"#D1D16B","--bd-illuminatiReverse-value":"#A7A756","--bd-reversePrimes-title":"#CBA672","--bd-reversePrimes-underline":"#665339","--bd-reversePrimes-letter":"#CBA672","--bd-reversePrimes-value":"#A2855B","--bd-reverseSquares-title":"#AAA864","--bd-reverseSquares-underline":"#555432","--bd-reverseSquares-letter":"#AAA864","--bd-reverseSquares-value":"#888650","--bd-reverseTrigonal-title":"#BB7B54","--bd-reverseTrigonal-underline":"#5E3E2A","--bd-reverseTrigonal-letter":"#BB7B54","--bd-reverseTrigonal-value":"#966243","--bd-archaicReduction-title":"#81DFDF","--bd-archaicReduction-underline":"#407070","--bd-archaicReduction-letter":"#81DFDF","--bd-archaicReduction-value":"#67B2B2","--bd-archaicRReverse-title":"#5DAAEA","--bd-archaicRReverse-underline":"#2E5575","--bd-archaicRReverse-letter":"#5DAAEA","--bd-archaicRReverse-value":"#4A88BB","--bd-modernKaye-title":"#E9A5AE","--bd-modernKaye-underline":"#745257","--bd-modernKaye-letter":"#E9A5AE","--bd-modernKaye-value":"#BA848B","--bd-elizabethan360-title":"#FAAB00","--bd-elizabethan360-underline":"#7D5600","--bd-elizabethan360-letter":"#FAAB00","--bd-elizabethan360-value":"#C88900","--bd-elizabethanAlphanumeric-title":"#E3B072","--bd-elizabethanAlphanumeric-underline":"#725839","--bd-elizabethanAlphanumeric-letter":"#E3B072","--bd-elizabethanAlphanumeric-value":"#B68D5B","--bd-kabbalisticSepharial-title":"#87CB76","--bd-kabbalisticSepharial-underline":"#44663B","--bd-kabbalisticSepharial-letter":"#87CB76","--bd-kabbalisticSepharial-value":"#6CA25E","--bd-falseKabbalah-title":"#8CC0BF","--bd-falseKabbalah-underline":"#466060","--bd-falseKabbalah-letter":"#8CC0BF","--bd-falseKabbalah-value":"#709A99","--bd-primeQabalah-title":"#B4E085","--bd-primeQabalah-underline":"#5A7042","--bd-primeQabalah-letter":"#B4E085","--bd-primeQabalah-value":"#90B36A","--bd-williamGGray-title":"#52E099","--bd-williamGGray-underline":"#29704C","--bd-williamGGray-letter":"#52E099","--bd-williamGGray-value":"#42B37A","--bd-zeroingKey-title":"#88A8D7","--bd-zeroingKey-underline":"#44546C","--bd-zeroingKey-letter":"#88A8D7","--bd-zeroingKey-value":"#6D86AC","--bd-mirroringKey-title":"#85C19D","--bd-mirroringKey-underline":"#42604E","--bd-mirroringKey-letter":"#85C19D","--bd-mirroringKey-value":"#6A9A7E","--bd-alphanumericHalves-title":"#A8A87A","--bd-alphanumericHalves-underline":"#54543D","--bd-alphanumericHalves-letter":"#A8A87A","--bd-alphanumericHalves-value":"#868662","--bd-trigrammatonQabalah-title":"#7ACBE6","--bd-trigrammatonQabalah-underline":"#3D6673","--bd-trigrammatonQabalah-letter":"#7ACBE6","--bd-trigrammatonQabalah-value":"#62A2B8","--bd-elevenfoldQabalah-title":"#8FCE82","--bd-elevenfoldQabalah-underline":"#486741","--bd-elevenfoldQabalah-letter":"#8FCE82","--bd-elevenfoldQabalah-value":"#72A568","--bd-toavoteaKey-title":"#D9B28C","--bd-toavoteaKey-underline":"#6C5946","--bd-toavoteaKey-letter":"#D9B28C","--bd-toavoteaKey-value":"#AE8E70","--bd-latinReduction-title":"#9F63C5","--bd-latinReduction-underline":"#503262","--bd-latinReduction-letter":"#9F63C5","--bd-latinReduction-value":"#7F4F9E","--bd-beatusOrdinal-title":"#A0C3F8","--bd-beatusOrdinal-underline":"#50627C","--bd-beatusOrdinal-letter":"#A0C3F8","--bd-beatusOrdinal-value":"#809CC6","--bd-beatusReduction-title":"#82A5D9","--bd-beatusReduction-underline":"#41526C","--bd-beatusReduction-letter":"#82A5D9","--bd-beatusReduction-value":"#6884AE","--bd-cabalaSimplex-title":"#70DBDB","--bd-cabalaSimplex-underline":"#386E6E","--bd-cabalaSimplex-letter":"#70DBDB","--bd-cabalaSimplex-value":"#5AAFAF","--bd-romanNumerals-title":"#66CC99","--bd-romanNumerals-underline":"#33664C","--bd-romanNumerals-letter":"#66CC99","--bd-romanNumerals-value":"#52A37A","--bd-ordinal-title":"#00ff4c","--bd-ordinal-underline":"#00882a","--bd-ordinal-letter":"#00ff4c","--bd-ordinal-value":"#00cc3d","--bd-revOrdinal-title":"#00ff88","--bd-revOrdinal-underline":"#008844","--bd-revOrdinal-letter":"#00ff88","--bd-revOrdinal-value":"#00b35c","--bd-reduction-title":"#00aeff","--bd-reduction-underline":"#005f99","--bd-reduction-letter":"#00aeff","--bd-reduction-value":"#0088cc","--bd-revReduction-title":"#00f7ff","--bd-revReduction-underline":"#008899","--bd-revReduction-letter":"#00f7ff","--bd-revReduction-value":"#00c4cc","--bd-sumerian-title":"#c4fa92","--bd-sumerian-underline":"#6a9944","--bd-sumerian-letter":"#c4fa92","--bd-sumerian-value":"#9acc70","--bd-revSumerian-title":"#fff09b","--bd-revSumerian-underline":"#998844","--bd-revSumerian-letter":"#fff09b","--bd-revSumerian-value":"#ccbe7a","--bd-satanic-title":"#ff160a","--bd-satanic-underline":"#880800","--bd-satanic-letter":"#ff2a1f","--bd-satanic-value":"#ff0d00","--bd-revSatanic-title":"#ff6868","--bd-revSatanic-underline":"#883030","--bd-revSatanic-letter":"#ff6868","--bd-revSatanic-value":"#cc5252","--bd-jewish-title":"#7c2ed4","--bd-jewish-underline":"#6a2480","--bd-jewish-letter":"#8e3bc4","--bd-jewish-value":"#8530a0","--bd-chaldean-title":"#6c9973","--bd-chaldean-underline":"#567b59","--bd-chaldean-letter":"#83b57d","--bd-chaldean-value":"#899d7b","--g-btn-neon-1":"#003d07","--g-btn-neon-2":"#084200","--g-btn-inner-bg":"#060b0f","--g-btn-text":"#c8f0da","--g-menu-bg":"#007bff","--g-menu-border":"#2d5a3d","--g-menu-text":"#62bf80","--g-menu-hover":"#0d1f12","--g-menu-item-text":"#8ed4a8","--g-chk-bg":"#000000","--g-chk-border":"#2c4b58","--g-chk-active":"#8aff8c","--g-chk-label":"#e0e0e0","--g-search-bg":"#000a0f","--g-search-border":"#000000","--g-search-border-focus":"#c8f0da","--g-search-text":"#c8f0da","--g-search-placeholder":"#c8f0da","--g-search-icon":"#c8f0da","--g-search-icon-focus":"#c8f0da","--g-search-btn-bg":"#050e10","--g-search-btn-icon":"#c8f0da","--g-search-topline":"#000000","--g-search-label":"#c8f0da","--g-search-status":"#c8f0da","--g-search-corner":"#c8f0da","--g-search-spore":"#000000","--g-totals-left-poly":"#000000","--g-totals-right-poly":"#000b19","--g-totals-stroke":"#62bf80","--g-totals-name-text":"#d4ede0","--g-totals-val-text":"#62bf80","--g-totals-divider":"#1e4a2c","--g-totals-orb":"#4a9e6b","--g-totals-row-hover":"#8ed4a8","--bd-bg":"#000919","--bd-title-text":"#62bf80","--bd-title-line":"#2d5a3d","--bd-space-color":"#1e4a2c","--g-history-outer-border":"#00142e","--g-history-inner-bg":"#050505","--g-history-header-text":"#ffffff","--g-history-text-col":"#d4ede0","--g-history-header-border":"#1e4a2c","--g-date-wrap-border":"#1c1c1c","--g-date-section-bg":"#000000","--g-date-label-text":"#dedede","--g-date-input-bg":"#000000","--g-date-input-border":"#292929","--g-date-input-text":"#95e9b0","--g-date-result-bg":"#000000","--g-date-result-border":"#131313","--g-date-result-text":"#1e7a3c","--g-date-divider":"#262626","--g-date-detail-title":"#64b983","--g-date-detail-text":"#4abf6f","--g-popup-bg":"#00030a","--g-popup-border":"#62bf80","--g-popup-text":"#c8fed7","--g-popup-label":"#c8fed7","--g-popup-shadow":"#62bf80","--s-overlay-bg":"#000000","--s-panel-bg":"#02080f","--s-panel-border":"#1a3a2a","--s-header-bg":"#010508","--s-header-border":"#1a3a2a","--s-title-text":"#6dbf9e","--s-close-bg":"#010508","--s-close-border":"#1a3a2a","--s-close-text":"#4a9e6b","--s-close-hover-bg":"#1a3a2a","--s-close-hover-text":"#6dbf9e","--s-body-bg":"#02080f","--s-scrollbar-thumb":"#1a3a2a","--s-group-label-text":"#2a6a4a","--s-group-label-border":"#1a3a2a","--s-row-label-text":"#4a9e6b","--s-footer-bg":"#010508","--s-footer-border":"#1a3a2a","--s-reset-bg":"#010508","--s-reset-border":"#1a3a2a","--s-reset-text":"#4a9e6b","--s-reset-hover-bg":"#1a3a2a","--s-reset-hover-text":"#6dbf9e","--s-save-bg":"#1a3a2a","--s-save-border":"#2a5a3a","--s-save-text":"#6dbf9e","--s-save-hover-bg":"#2a5a3a","--s-saved-bg":"#4a9e6b","--s-saved-text":"#010508","--sz-btn-font":"1.35em","--sz-btn-w":"232px","--sz-btn-h":"74.4px","--sz-btn-ls":"4.3px","--sz-search-height":"80.4px","--sz-search-font":"1.66rem","--sz-input-font":"0.85rem","--sz-totals-name-font":"24px","--sz-totals-val-font":"24px","--sz-bd-title-font":"27.6px","--sz-bd-letter-font":"26px","--sz-bd-caps-letter-font":"26px","--sz-bd-value-font":"17px","--sz-history-font":"29.2px","--sz-date-input-w":"139.6px","--sz-date-label-font":"0.5rem","--sz-detail-label-font":"1.11rem","--sz-detail-val-font":"1.63rem","--sz-popup-w":"327px","--sz-popup-font":"25px","--sz-popup-label-font":"0.98em","--sz-co-tile-w":"679px","--sz-co-tile-h":"95.6px","--sz-co-tile-font":"1.46rem","--sz-settings-w":"380px","--sz-header-font":"0.7rem","--pos-app-margin-top":"56px","--pos-app-width":"99.5%","--pos-header-mb":"52px","--pos-search-mb":"36.8px","--pos-totals-mb":"54.8px","--pos-breakdown-mb":"64.8px","--pos-section-padding":"69.2px","--pos-date-max-w":"962px","--pos-bd-section-pad-h":"40px","--pos-co-overlay-pt":"35px","--pos-bd-underline-bottom":"12.6px","--sz-menu-pad":"24px","--sz-menu-w":"300px","--sz-menu-item-font":"20px","--sz-menu-item-pad":"12px","--sz-co-panel-gap":"14px","--sz-co-title-font":"0.48rem","--sz-co-title-ls":"7px","--sz-co-hint-font":"0.42rem","--sz-co-grid-gap":"23.2px","--sz-co-tile-clip":"20px","--sz-co-bar-w":"-43.8px","--sz-co-content-pl":"91.4px","--sz-co-content-pr":"65.8px","--sz-co-tile-ls":"2.5px","--sz-co-pip-size":"11.2px","--sz-chk-size":"44.4px","--sz-chk-dot":"19.2px","--sz-chk-font":"20px","--sz-search-pad-top":"24px","--sz-search-pad-bot":"21.6px","--sz-search-max-w":"960px","--sz-search-border":"0.8px","--sz-search-icon-sz":"25.4px","--sz-search-btn-icon":"33.4px","--sz-search-input-pad":"19px","--sz-search-input-ls":"2.8px","--sz-search-label-font":"0.8rem","--sz-search-label-ls":"2px","--sz-search-status-font":"0.59rem","--sz-search-status-ls":"1px","--sz-search-corner-sz":"13.6px","--sz-search-corner-pos":"20px","--sz-spore-1":"5.8px","--sz-spore-2":"4px","--sz-spore-3":"7px","--sz-totals-max-w":"960px","--sz-totals-td-pad-v":"7px","--sz-totals-td-pad-h":"6.2px","--sz-totals-row-h":"46px","--sz-totals-row-minw":"320px","--sz-totals-name-pt":"4px","--sz-totals-name-pl":"16px","--sz-totals-name-ls":"1px","--sz-totals-val-pt":"4px","--sz-totals-val-pr":"8px","--sz-totals-val-ls":"1.1px","--sz-bd-clip":"22px","--sz-bd-pad-top":"4.4px","--sz-bd-pad-bot":"7.6px","--sz-bd-min-w":"440px","--sz-bd-max-w":"1010px","--sz-bd-title-mb":"-6px","--sz-bd-container-gap":"18.4px","--sz-bd-word-gap":"1.6px","--sz-bd-val-mt":"7.2px","--sz-hist-clip-out":"25px","--sz-hist-clip-in":"22px","--sz-hist-outer-pad":"2.2px","--sz-hist-inner-pad-v":"22.4px","--sz-hist-inner-pad-h":"35.6px","--sz-hist-cell-pad-v":"13px","--sz-hist-cell-pad-h":"14px","--sz-hist-header-font":"18px","--sz-hist-text-maxw":"378px","--sz-hist-row-gap":"-0px","--sz-popup-h":"214px","--sz-popup-pad-v":"12px","--sz-popup-pad-h":"20px","--pos-popup-offset-y":"8px","--sz-date-clip":"24px","--sz-date-row-gap":"57.6px","--sz-date-group-gap":"34.4px","--sz-date-grp-lbl-font":"0.86rem","--sz-date-grp-lbl-ls":"14.9px","--sz-date-inputs-gap":"58.4px","--sz-date-input-pad-v":"11.8px","--sz-date-input-pad-h":"8px","--sz-date-input-font":"1.81rem","--sz-date-input-ls":"1px","--sz-date-sec-lbl-font":"1.04rem","--sz-date-sec-lbl-ls":"2.9px","--sz-date-sec-lbl-mb":"31px","--sz-date-opts-gap":"21.2px","--sz-date-dur-gap":"56.4px","--sz-date-res-font":"53.2px","--sz-date-res-lh":"-7.06px","--sz-date-res-pad-v":"37.2px","--sz-date-res-pad-h":"46px","--sz-detail-head-font":"1.57rem","--sz-detail-head-ls":"3.9px","--sz-detail-head-mb":"15px","--sz-detail-head-pb":"18.6px","--sz-detail-panel-pad":"23.6px","--sz-detail-row-mb":"38.4px","--sz-detail-lbl-ls":"2.1px","--sz-detail-lbl-mb":"10.2px","--sz-detail-val-ls":"1px","--sz-detail-bd-font":"0.91rem","--sz-detail-bd-mt":"4px","--pos-app-mb":"50px","--pos-header-max-w":"960px","--pos-date-margin-v":"40px","--pos-date-pad-h":"51.6px","--g-black":"#060f09","--g-deeper":"#1e4a2c","--g-deep":"#132e19","--g-dark":"#2d5a3d","--g-hover":"#3a7a52","--g-mid":"#62bf80","--g-bright":"#8ed4a8","--matrix-color":"#62bf80","--matrix-bg":"#000000","--bd-shadow-light":"rgba(20,50,30,0.7)","--bd-shadow-dark":"rgba(0,0,0,1)","--bd-clip-border":"#2d5a3d","--bd-title-text-glow":"rgba(98,191,128,0.3)","--g-history-cell-bg":"transparent","--g-history-row-hover":"rgba(45,90,61,0.12)","--g-date-outer-bg":"#060f09","--s-panel-shadow":"rgba(0,0,0,0.8)","--s-row-divider":"rgba(30,74,44,0.2)","--co-overlay-bg":"rgba(0,0,0,0.82)","--co-tile-bg":"#000000","--co-tile-active-bg":"#000000","--co-tile-name-off":"#2a2a2a","--co-tile-border-off":"rgba(255,255,255,0.055)","--co-color-ordinal":"#00992e","--co-color-revOrdinal":"#00a87e","--co-color-reduction":"#0076ad","--co-color-revReduction":"#00adb3","--co-color-sumerian":"#84a465","--co-color-revSumerian":"#a19863","--co-color-satanic":"#b31800","--co-color-revSatanic":"#a84343","--co-color-jewish":"#9a38d8","--co-color-chaldean":"#88bf93","--sz-bd-letter-ls":"5px","--sz-bd-word-val-font":"23px","--sz-bd-word-val-ls":"-0.2px","--sz-bd-word-wrap-gap":"10.2px","--sz-bd-total-font":"44.6px","--sz-bd-total-ls":"4.9px","--sz-bd-total-mt":"3.6px","--bd-word-val-color":"#aaffcc","--bd-total-color":"#00ff4c","--font-body":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-buttons":"\"AEB\", \"Consolas\", \"Courier New\", monospace","--font-search-input":"\"Orbitron\", \"Consolas\", \"Courier New\", monospace","--font-search-meta":"\"77\", \"Consolas\", \"Courier New\", monospace","--font-search-status":"\"77\", \"Consolas\", \"Courier New\", monospace","--font-totals":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-totals-name":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-totals-value":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-title":"\"GOS\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-letters":"\"Orbitron\", \"Consolas\", \"Courier New\", monospace","--font-breakdown-values":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-bd-word-total":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-bd-grand-total":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-history":"\"Orbitron\", \"Consolas\", \"Courier New\", monospace","--font-history-header":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-date":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-date-input":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-date-result":"\"AESB\", \"Consolas\", \"Courier New\", monospace","--font-popup":"\"AER\", \"Consolas\", \"Courier New\", monospace","--font-cipher-overlay":"\"GOS\", \"Consolas\", \"Courier New\", monospace","--font-settings":"\"AESR\", \"Consolas\", \"Courier New\", monospace","--fw-buttons":"bold","--fw-search-input":"600","--fw-search-label":"900","--fw-search-status":"900","--fw-totals-name":"bold","--fw-totals-value":"bold","--fw-bd-title":"bold","--fw-bd-letters":"bold","--fw-bd-values":"bold","--fw-bd-word-total":"normal","--fw-bd-grand-total":"normal","--fw-history-cell":"500","--fw-history-header":"normal","--fw-date-label":"normal","--fw-date-input":"normal","--fw-date-result":"normal","--fw-popup":"normal","--fw-overlay-tile":"bold","--fw-settings":"normal","--tt-buttons":"uppercase","--tt-search-input":"none","--tt-search-label":"uppercase","--tt-search-status":"uppercase","--tt-totals-name":"uppercase","--tt-totals-value":"none","--tt-bd-title":"none","--tt-bd-letters":"none","--tt-bd-values":"none","--tt-history-header":"none","--tt-date-label":"uppercase","--tt-date-input":"none","--tt-date-result":"none","--tt-popup":"none","--tt-overlay-tile":"uppercase","--gloss-top":"12.4%","--gloss-mid":"0.7%","--gloss-cut":"35.6%","--gloss-depth":"1%","--gloss-lip":"17.1%","--gloss-band":"6.2px","--gloss-band-top":"-3%","--gloss-rim-color":"#00558a","--gloss-rim":"55%","--gloss-rim-spread":"26px","--glow-db-color":"#62bf80","--glow-vault-color":"#4ca8f0","--glow-size":"22px","--glow-strength":"75%"};</script>
+<script>document.documentElement.classList.add("xc-anim-ready");</script>
 </head>
 <body>
 
@@ -3253,16 +4501,57 @@ body.co-open #coNavRight { display: flex; right: 0; }
 
   <div class="header">
     <div class="btn-container">
-      <button id="ciphersBtn" class="tab"><span class="tab-inner"></span><span class="tab-txt">CIPHERS</span></button>
+      <button id="ciphersBtn" class="tab tab-glow" title="Ciphers" aria-label="Ciphers">
+        <span class="tab-inner"></span>
+        <span class="tab-gloss"></span>
+        <span class="tab-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+          </svg>
+        </span>
+      </button>
     </div>
     <div class="btn-container">
-      <button id="dateBtn" class="tab"><span class="tab-inner"></span><span class="tab-txt">DATE CALC</span></button>
+      <button id="dateBtn" class="tab tab-glow" title="Date Calc" aria-label="Date Calc">
+        <span class="tab-inner"></span>
+        <span class="tab-gloss"></span>
+        <span class="tab-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+            <line x1="8" y1="14" x2="8" y2="14"></line>
+            <line x1="12" y1="14" x2="12" y2="14"></line>
+            <line x1="16" y1="14" x2="16" y2="14"></line>
+          </svg>
+        </span>
+      </button>
     </div>
     <div class="btn-container">
-      <button id="downloadBtn" class="tab"><span class="tab-inner"></span><span class="tab-txt">DOWNLOAD</span></button>
+      <button id="downloadBtn" class="tab tab-glow" title="Download" aria-label="Download">
+        <span class="tab-inner"></span>
+        <span class="tab-gloss"></span>
+        <span class="tab-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </span>
+      </button>
     </div>
     <div class="btn-container">
-      <button id="settingsBtn" class="tab"><span class="tab-inner"></span><span class="tab-txt">SETTINGS</span></button>
+      <button id="settingsBtn" class="tab tab-glow" title="Settings" aria-label="Settings">
+        <span class="tab-inner"></span>
+        <span class="tab-gloss"></span>
+        <span class="tab-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </span>
+      </button>
     </div>
 
     <!-- old cipherMenu removed, replaced by overlay below -->
@@ -3276,6 +4565,7 @@ body.co-open #coNavRight { display: flex; right: 0; }
     <span class="search-corner search-corner-bl"></span>
     <span class="search-corner search-corner-br"></span>
     <div class="search-wrapper">
+      <span class="search-gloss"></span>
       <div class="search-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <circle cx="11" cy="11" r="8"></circle>
@@ -3289,6 +4579,7 @@ body.co-open #coNavRight { display: flex; right: 0; }
         <span class="spore"></span>
       </div>
       <button id="enterBtn" class="search-btn">
+        <span class="search-btn-gloss"></span>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <path d="M5 12h14M12 5l7 7-7 7"></path>
         </svg>
@@ -3518,10 +4809,10 @@ body.co-open #coNavRight { display: flex; right: 0; }
         <div class="duration-format-block">
           <div class="date-section-label">Duration Format</div>
           <div class="duration-checkboxes">
-            <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" value="years"><div class="checkmark"><div class="inner-dot"></div></div><span>Years</span></label>
-            <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" value="months"><div class="checkmark"><div class="inner-dot"></div></div><span>Months</span></label>
-            <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" value="weeks"><div class="checkmark"><div class="inner-dot"></div></div><span>Weeks</span></label>
-            <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" value="days" checked><div class="checkmark"><div class="inner-dot"></div></div><span>Days</span></label>
+            <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" data-dur-unit value="years"><div class="checkmark"><div class="inner-dot"></div></div><span>Years</span></label>
+            <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" data-dur-unit value="months"><div class="checkmark"><div class="inner-dot"></div></div><span>Months</span></label>
+            <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" data-dur-unit value="weeks"><div class="checkmark"><div class="inner-dot"></div></div><span>Weeks</span></label>
+            <label class="chk-container" style="display:flex;align-items:center;gap:8px;"><input type="checkbox" data-dur-unit value="days" checked><div class="checkmark"><div class="inner-dot"></div></div><span>Days</span></label>
           </div>
         </div>
 
@@ -3538,10 +4829,6 @@ body.co-open #coNavRight { display: flex; right: 0; }
         <div id="dateDetails">
           <div id="startDetails">
             <div class="detail-heading" id="startDetailHeading">Start Date Details</div>
-            <div class="detail-row">
-              <span class="detail-row-label">Day of Week</span>
-              <span class="detail-row-value" id="startDayOfWeek">—</span>
-            </div>
             <div class="detail-row">
               <span class="detail-row-label">Day of Year</span>
               <span class="detail-row-value" id="startDayOfYear">—</span>
@@ -3565,14 +4852,20 @@ body.co-open #coNavRight { display: flex; right: 0; }
               <span class="detail-row-value" id="startNum3">—</span>
               <span class="detail-row-breakdown" id="startNum3Breakdown"></span>
             </div>
+            <div class="detail-row">
+              <span class="detail-row-label">Numerology 4</span>
+              <span class="detail-row-value" id="startNum4">—</span>
+              <span class="detail-row-breakdown" id="startNum4Breakdown"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row-label">Numerology 5</span>
+              <span class="detail-row-value" id="startNum5">—</span>
+              <span class="detail-row-breakdown" id="startNum5Breakdown"></span>
+            </div>
           </div>
           <div id="divider"></div>
           <div id="endDetails">
             <div class="detail-heading" id="endDetailHeading">End Date Details</div>
-            <div class="detail-row">
-              <span class="detail-row-label">Day of Week</span>
-              <span class="detail-row-value" id="endDayOfWeek">—</span>
-            </div>
             <div class="detail-row">
               <span class="detail-row-label">Day of Year</span>
               <span class="detail-row-value" id="endDayOfYear">—</span>
@@ -3595,6 +4888,16 @@ body.co-open #coNavRight { display: flex; right: 0; }
               <span class="detail-row-label">Numerology 3</span>
               <span class="detail-row-value" id="endNum3">—</span>
               <span class="detail-row-breakdown" id="endNum3Breakdown"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row-label">Numerology 4</span>
+              <span class="detail-row-value" id="endNum4">—</span>
+              <span class="detail-row-breakdown" id="endNum4Breakdown"></span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-row-label">Numerology 5</span>
+              <span class="detail-row-value" id="endNum5">—</span>
+              <span class="detail-row-breakdown" id="endNum5Breakdown"></span>
             </div>
           </div>
         </div>
@@ -3733,12 +5036,14 @@ body.co-open #coNavRight { display: flex; right: 0; }
 </div>
 <div id="cipherOverlay">
   <div class="co-panel">
-    <div class="co-title">&#x25C8; Select Ciphers</div>
-    <div class="co-page-indicator" id="coPageIndicator"></div>
+    <div class="co-title co-title-ciphers">Select Ciphers</div>
     <div class="co-grid" id="coGrid">
       <!-- tiles rendered by JS -->
     </div>
-    <button id="coCustomiseBtn">&#x25C8; CUSTOMISE CIPHER LIST</button>
+    <button id="coCustomiseBtn" class="tab tab-glow" type="button">
+      <span class="tab-inner"></span>
+      <span class="tab-txt">&#x25C8; CUSTOMISE CIPHER LIST</span>
+    </button>
     <div class="co-close-hint">Click outside or press ESC to close</div>
   </div>
 </div>
@@ -3755,7 +5060,10 @@ body.co-open #coNavRight { display: flex; right: 0; }
       <div class="ccp-hint">Click to enable/disable &middot; Drag to reorder</div>
     </div>
     <div id="cipherCustomiseList"></div>
-    <button id="cipherCustomiseDone">DONE</button>
+    <button id="cipherCustomiseDone" class="tab tab-glow" type="button">
+      <span class="tab-inner"></span>
+      <span class="tab-txt">DONE</span>
+    </button>
   </div>
 </div>
 
@@ -3780,6 +5088,25 @@ body.co-open #coNavRight { display: flex; right: 0; }
         <input type="text" id="settingsSearch" placeholder="FILTER SETTINGS..." autocomplete="off">
       </div>
       <div id="sTabColor" class="s-tab-panel s-panel-active">
+
+      <!-- GLOSS & GLOW -->
+      <div class="s-group" data-group="gloss glow specular highlight rim shine material">
+        <div class="s-group-label">GLOSS &amp; GLOW</div>
+        <div class="s-row-slider"><label>Highlight Top</label><div class="s-slider-wrap"><input type="range" data-var="--gloss-top" data-unit="%" data-min="0" data-max="40" data-step="0.5"><span class="s-slider-val"></span></div></div>
+        <div class="s-row-slider"><label>Highlight Mid</label><div class="s-slider-wrap"><input type="range" data-var="--gloss-mid" data-unit="%" data-min="0" data-max="30" data-step="0.5"><span class="s-slider-val"></span></div></div>
+        <div class="s-row-slider"><label>Highlight Cut</label><div class="s-slider-wrap"><input type="range" data-var="--gloss-cut" data-unit="%" data-min="10" data-max="90" data-step="1"><span class="s-slider-val"></span></div></div>
+        <div class="s-row-slider"><label>Base Shading</label><div class="s-slider-wrap"><input type="range" data-var="--gloss-depth" data-unit="%" data-min="0" data-max="50" data-step="1"><span class="s-slider-val"></span></div></div>
+        <div class="s-row-slider"><label>Top Lip</label><div class="s-slider-wrap"><input type="range" data-var="--gloss-lip" data-unit="%" data-min="0" data-max="35" data-step="0.5"><span class="s-slider-val"></span></div></div>
+        <div class="s-row-slider"><label>Panel Band H</label><div class="s-slider-wrap"><input type="range" data-var="--gloss-band" data-unit="px" data-min="0" data-max="90" data-step="1"><span class="s-slider-val"></span></div></div>
+        <div class="s-row-slider"><label>Panel Band Str</label><div class="s-slider-wrap"><input type="range" data-var="--gloss-band-top" data-unit="%" data-min="0" data-max="30" data-step="0.5"><span class="s-slider-val"></span></div></div>
+        <div class="s-row"><label>Rim Light Color</label><input type="color" data-var="--gloss-rim-color"></div>
+        <div class="s-row-slider"><label>Rim Intensity</label><div class="s-slider-wrap"><input type="range" data-var="--gloss-rim" data-unit="%" data-min="0" data-max="100" data-step="1"><span class="s-slider-val"></span></div></div>
+        <div class="s-row-slider"><label>Rim Spread</label><div class="s-slider-wrap"><input type="range" data-var="--gloss-rim-spread" data-unit="px" data-min="0" data-max="60" data-step="1"><span class="s-slider-val"></span></div></div>
+        <div class="s-row"><label>Glow — Database</label><input type="color" data-var="--glow-db-color"></div>
+        <div class="s-row"><label>Glow — Vault</label><input type="color" data-var="--glow-vault-color"></div>
+        <div class="s-row-slider"><label>Glow Size</label><div class="s-slider-wrap"><input type="range" data-var="--glow-size" data-unit="px" data-min="0" data-max="60" data-step="1"><span class="s-slider-val"></span></div></div>
+        <div class="s-row-slider"><label>Glow Strength</label><div class="s-slider-wrap"><input type="range" data-var="--glow-strength" data-unit="%" data-min="0" data-max="100" data-step="1"><span class="s-slider-val"></span></div></div>
+      </div>
 
       <!-- HEADER BUTTONS -->
       <div class="s-group" data-group="header buttons neon">
@@ -4630,7 +5957,7 @@ body.co-open #coNavRight { display: flex; right: 0; }
           <div class="s-row-slider"><label>TD Pad H</label><div class="s-slider-wrap"><input type="range" data-var="--sz-totals-td-pad-h" data-unit="px" data-min="-120.0" data-max="120" data-step="1.0"><span class="s-slider-val"></span></div></div>
           <div class="s-row-slider"><label>Name Font</label><div class="s-slider-wrap"><input type="range" data-var="--sz-totals-name-font" data-unit="px" data-min="0" data-max="84" data-step="1.0"><span class="s-slider-val"></span></div></div>
           <div class="s-row-slider"><label>Name Pad-Top</label><div class="s-slider-wrap"><input type="range" data-var="--sz-totals-name-pt" data-unit="px" data-min="-144.0" data-max="144" data-step="1.0"><span class="s-slider-val"></span></div></div>
-          <div class="s-row-slider"><label>Name Pad-Left</label><div class="s-slider-wrap"><input type="range" data-var="--sz-totals-name-pl" data-unit="px" data-min="-96.0" data-max="96" data-step="1.0"><span class="s-slider-val"></span></div></div>
+          <div class="s-row-slider"><label>Name Padding</label><div class="s-slider-wrap"><input type="range" data-var="--sz-totals-name-pl" data-unit="px" data-min="-96.0" data-max="96" data-step="1.0"><span class="s-slider-val"></span></div></div>
           <div class="s-row-slider"><label>Name Letter-Sp</label><div class="s-slider-wrap"><input type="range" data-var="--sz-totals-name-ls" data-unit="px" data-min="-24.0" data-max="24" data-step="0.5"><span class="s-slider-val"></span></div></div>
           <div class="s-row-slider"><label>Value Font</label><div class="s-slider-wrap"><input type="range" data-var="--sz-totals-val-font" data-unit="px" data-min="0" data-max="96" data-step="1.0"><span class="s-slider-val"></span></div></div>
           <div class="s-row-slider"><label>Value Pad-Top</label><div class="s-slider-wrap"><input type="range" data-var="--sz-totals-val-pt" data-unit="px" data-min="-144.0" data-max="144" data-step="1.0"><span class="s-slider-val"></span></div></div>
@@ -5116,6 +6443,13 @@ const cipherMeta = {
   cabalaSimplex: { label:"Cabala Simplex" },
   romanNumerals: { label:"Roman Numerals" },
 };
+/* Breakdown header text: append " BREAKDOWN" only for single-word cipher
+   names (ORDINAL, SUMERIAN, ...). Multi-word names stand on their own. */
+function breakdownTitleFor(cipher){
+  const name = (cipherNames[cipher] || "").trim();
+  return name.split(/\s+/).length === 1 ? name + " BREAKDOWN" : name;
+}
+
 const cipherNames = {
   ordinal:"ORDINAL", revOrdinal:"REVERSE ORDINAL",
   reduction:"REDUCTION", revReduction:"REVERSE REDUCTION",
@@ -5760,7 +7094,7 @@ function updateTotalsVisibility() {
     nameOverlay.addEventListener("click", ()=>{
       if(!activeCiphers[cipher]) return;
       activeBreakdownCipher = cipher;
-      document.getElementById("breakdownTitle").textContent = cipherNames[cipher] + " BREAKDOWN";
+      document.getElementById("breakdownTitle").textContent = breakdownTitleFor(cipher);
       applyBreakdownCipherColors(cipher);
       if(lastSubmittedText) renderBreakdown(lastSubmittedText);
       // click animation
@@ -5785,7 +7119,53 @@ function updateTotalsVisibility() {
     });
     row.appendChild(valueOverlay);
   });
+  fitTotalsNames();
 }
+
+// Shrink-to-fit: only long cipher names get a smaller font, short ones stay
+// at the normal size. Runs after layout so scrollHeight is accurate.
+function fitTotalsNames() {
+  requestAnimationFrame(() => {
+    const baseSize = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sz-totals-name-font')) || 13.5;
+    const minSize = 9;
+    const range = document.createRange();
+    document.querySelectorAll('#totalsTable .total-row span:first-child').forEach(span => {
+      span.style.fontSize = '';
+      if (!span.firstChild) return;
+
+      // The span is a centered flex box, so overflowing text spills equally
+      // above and below its edges. scrollHeight does not report overflow past
+      // the TOP edge, so it stays equal to clientHeight and never signals the
+      // overflow — that is why names used to bleed out of the tile. Measure
+      // the rendered text directly with a Range instead.
+      const cs = getComputedStyle(span);
+      const availH = span.clientHeight
+                   - parseFloat(cs.paddingTop)  - parseFloat(cs.paddingBottom);
+      const availW = span.clientWidth
+                   - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      if (availH <= 0 || availW <= 0) return;
+
+      const overflows = () => {
+        range.selectNodeContents(span);
+        const r = range.getBoundingClientRect();
+        return r.height > availH + 0.5 || r.width > availW + 0.5;
+      };
+
+      let size = baseSize;
+      let guard = 0;
+      while (overflows() && size > minSize && guard < 60) {
+        size -= 0.5;
+        span.style.fontSize = size + 'px';
+        guard++;
+      }
+    });
+  });
+}
+let _fitTotalsNamesResizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(_fitTotalsNamesResizeTimer);
+  _fitTotalsNamesResizeTimer = setTimeout(fitTotalsNames, 150);
+});
 
 function renderBreakdown(text) {
   const breakdownWrapper=document.querySelector(".breakdown-wrapper");
@@ -6487,7 +7867,7 @@ function renderPage(page){
 
   const slice = page === 0 ? primary : secondary;
 
-  coPageInd.textContent = tp > 1 ? `${page+1} / ${tp}` : "";
+  if (coPageInd) coPageInd.textContent = tp > 1 ? `${page+1} / ${tp}` : "";
   coNavLeft.disabled  = page === 0;
   coNavRight.disabled = page >= tp - 1;
 
@@ -7574,14 +8954,23 @@ function calculateDateNumerology(day,month,year){
   const num2=allDigits.reduce((a,b)=>a+b,0);
   const yearDigitSum=yearStr.split("").map(Number).reduce((a,b)=>a+b,0);
   const num3=day+month+yearDigitSum;
+  // 4: month + day + two-digit year, e.g. 13/7/2024 -> (7) + (13) + (24) = 44
+  const lastTwoStr=yearStr.slice(2,4);
+  const num4=month+day+lastTwo;
+  // 5: the same three parts, each reduced to its digit sum
+  const dsum=str=>str.split("").map(Number).reduce((a,b)=>a+b,0);
+  const num5=dsum(month.toString())+dsum(day.toString())+dsum(lastTwoStr);
 
   // Build breakdown strings
   const bd1=`${day} + ${month} + ${firstTwo} + ${lastTwo} = ${num1}`;
   const bd2=allDigits.join(" + ")+" = "+num2;
   const yearDigits=yearStr.split("").join("+");
   const bd3=`${day} + ${month} + (${yearDigits}) = ${num3}`;
+  const bd4=`(${month}) + (${day}) + (${lastTwoStr}) = ${num4}`;
+  const spread=str=>str.split("").join("+");
+  const bd5=`${spread(month.toString())} + ${spread(day.toString())} + ${spread(lastTwoStr)} = ${num5}`;
 
-  return{num1,num2,num3,bd1,bd2,bd3};
+  return{num1,num2,num3,num4,num5,bd1,bd2,bd3,bd4,bd5};
 }
 function getDayOfYear(date){
   const start=new Date(Date.UTC(date.getUTCFullYear(),0,1));
@@ -7601,11 +8990,11 @@ function setDetailField(idVal, idBd, val, bd) {
   if(elBd) elBd.textContent = bd||"";
 }
 function clearDetails(prefix){
-  ["DayOfWeek","DayOfYear","DaysLeft","Num1","Num2","Num3"].forEach(k=>{
+  ["DayOfYear","DaysLeft","Num1","Num2","Num3","Num4","Num5"].forEach(k=>{
     const el=document.getElementById(prefix+k);
     if(el)el.textContent="—";
   });
-  ["Num1Breakdown","Num2Breakdown","Num3Breakdown"].forEach(k=>{
+  ["Num1Breakdown","Num2Breakdown","Num3Breakdown","Num4Breakdown","Num5Breakdown"].forEach(k=>{
     const el=document.getElementById(prefix+k);
     if(el)el.textContent="";
   });
@@ -7626,14 +9015,16 @@ function calculateDateDifference(){
   if(startDate){
     const DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const n=calculateDateNumerology(sd,sm,sy);
-    setDetailField("startDayOfWeek",    null,              DOW[startDate.getUTCDay()]);
     setDetailField("startDayOfYear",   null,              getDayOfYear(startDate));
     setDetailField("startDaysLeft",    null,              getDaysLeftInYear(startDate));
     setDetailField("startNum1",        "startNum1Breakdown", n.num1, n.bd1);
     setDetailField("startNum2",        "startNum2Breakdown", n.num2, n.bd2);
     setDetailField("startNum3",        "startNum3Breakdown", n.num3, n.bd3);
+    setDetailField("startNum4",        "startNum4Breakdown", n.num4, n.bd4);
+    setDetailField("startNum5",        "startNum5Breakdown", n.num5, n.bd5);
     const startHeading = document.getElementById("startDetailHeading");
-    if(startHeading) startHeading.textContent = sd.toString().padStart(2,"0")+"/"+sm.toString().padStart(2,"0")+"/"+sy;
+    if(startHeading) startHeading.textContent = sd.toString().padStart(2,"0")+"/"+sm.toString().padStart(2,"0")+"/"+sy
+                                              + " \u00B7 " + DOW[startDate.getUTCDay()].slice(0,3).toUpperCase();
   } else {
     clearDetails("start");
     const startHeading = document.getElementById("startDetailHeading");
@@ -7643,14 +9034,16 @@ function calculateDateDifference(){
   if(endDate){
     const DOW=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
     const n=calculateDateNumerology(ed,em,ey);
-    setDetailField("endDayOfWeek",   null,            DOW[endDate.getUTCDay()]);
     setDetailField("endDayOfYear",   null,            getDayOfYear(endDate));
     setDetailField("endDaysLeft",    null,            getDaysLeftInYear(endDate));
     setDetailField("endNum1",        "endNum1Breakdown", n.num1, n.bd1);
     setDetailField("endNum2",        "endNum2Breakdown", n.num2, n.bd2);
     setDetailField("endNum3",        "endNum3Breakdown", n.num3, n.bd3);
+    setDetailField("endNum4",        "endNum4Breakdown", n.num4, n.bd4);
+    setDetailField("endNum5",        "endNum5Breakdown", n.num5, n.bd5);
     const endHeading = document.getElementById("endDetailHeading");
-    if(endHeading) endHeading.textContent = ed.toString().padStart(2,"0")+"/"+em.toString().padStart(2,"0")+"/"+ey;
+    if(endHeading) endHeading.textContent = ed.toString().padStart(2,"0")+"/"+em.toString().padStart(2,"0")+"/"+ey
+                                          + " \u00B7 " + DOW[endDate.getUTCDay()].slice(0,3).toUpperCase();
   } else {
     clearDetails("end");
     const endHeading = document.getElementById("endDetailHeading");
@@ -7668,8 +9061,12 @@ function calculateDateDifference(){
   if(document.getElementById("includeEnd").checked){e=new Date(e);e.setUTCDate(e.getUTCDate()+1);}
   if(document.getElementById("excludeStart").checked){s=new Date(s);s.setUTCDate(s.getUTCDate()+1);}
   if(s>e){resultEl.style.display="block";resultEl.textContent="0 Day(s)";return;}
-  const selectedUnits=Array.from(document.querySelectorAll('#dateSection input[type="checkbox"]'))
-    .filter(cb=>cb.checked&&["years","months","weeks","days"].includes(cb.value)).map(cb=>cb.value);
+  // Only the four checkboxes carrying data-dur-unit drive this result. The
+  // ± DATES offset panel lives inside #dateSection too and has its own
+  // years/months/weeks/days checkboxes with identical values, so any broader
+  // selector picks those up as well and these toggles stop having an effect.
+  const selectedUnits=Array.from(document.querySelectorAll('input[data-dur-unit]'))
+    .filter(cb=>cb.checked).map(cb=>cb.value);
   if(!selectedUnits.length){resultEl.style.display="block";resultEl.textContent="Select at least one duration format.";return;}
   let tempDate=new Date(s),years=0,months=0,weeks=0,days=0;
   if(selectedUnits.includes("years")){while(true){const next=new Date(tempDate);next.setUTCFullYear(next.getUTCFullYear()+1);if(next<=e){years++;tempDate=next;}else break;}}
@@ -7841,12 +9238,14 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
     // Numerology detail panel
     const n = calculateDateNumerology(rd, rm, ry);
     detailsInner.innerHTML =
-      `<div class="detail-heading" style="color:var(--g-date-detail-title);">${resFmt} &nbsp;·&nbsp; ${dayName}</div>`
+      `<div class="detail-heading" style="color:var(--g-date-detail-title);">${resFmt} &nbsp;·&nbsp; ${dayName.slice(0,3)}</div>`
     + `<div class="detail-row"><span class="detail-row-label">Day of Year</span><span class="detail-row-value">${getDayOfYear(base)}</span></div>`
     + `<div class="detail-row"><span class="detail-row-label">Days Left in Year</span><span class="detail-row-value">${getDaysLeftInYear(base)}</span></div>`
     + `<div class="detail-row"><span class="detail-row-label">Numerology 1</span><span class="detail-row-value">${n.num1}</span><span class="detail-row-breakdown">${n.bd1}</span></div>`
     + `<div class="detail-row"><span class="detail-row-label">Numerology 2</span><span class="detail-row-value">${n.num2}</span><span class="detail-row-breakdown">${n.bd2}</span></div>`
-    + `<div class="detail-row"><span class="detail-row-label">Numerology 3</span><span class="detail-row-value">${n.num3}</span><span class="detail-row-breakdown">${n.bd3}</span></div>`;
+    + `<div class="detail-row"><span class="detail-row-label">Numerology 3</span><span class="detail-row-value">${n.num3}</span><span class="detail-row-breakdown">${n.bd3}</span></div>`
+    + `<div class="detail-row"><span class="detail-row-label">Numerology 4</span><span class="detail-row-value">${n.num4}</span><span class="detail-row-breakdown">${n.bd4}</span></div>`
+    + `<div class="detail-row"><span class="detail-row-label">Numerology 5</span><span class="detail-row-value">${n.num5}</span><span class="detail-row-breakdown">${n.bd5}</span></div>`;
     detailsEl.classList.add('offset-details-visible');
   }
 })();
@@ -7857,6 +9256,21 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
 (function(){
   // ── UNIFIED DEFAULTS (colors + sizes + positions) ──
   const DEFAULTS = {
+    // ── Gloss & glow (specular material) ──
+    '--gloss-top': '12.4%',
+    '--gloss-mid': '0.7%',
+    '--gloss-cut': '35.6%',
+    '--gloss-depth': '1%',
+    '--gloss-lip': '17.1%',
+    '--gloss-band': '6.2px',
+    '--gloss-band-top': '0%',
+    '--gloss-rim-color': '#00558a',
+    '--gloss-rim': '55%',
+    '--gloss-rim-spread': '26px',
+    '--glow-db-color': '#62bf80',
+    '--glow-vault-color': '#4ca8f0',
+    '--glow-size': '22px',
+    '--glow-strength': '75%',
     '--cipher-ordinal': '#00ff4c',
     '--cipher-revOrdinal': '#00ff88',
     '--cipher-reduction': '#00aeff',
@@ -8232,17 +9646,17 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
     '--g-chk-label': '#e0e0e0',
     '--g-search-bg': '#000a0f',
     '--g-search-border': '#000000',
-    '--g-search-border-focus': '#001f0d',
-    '--g-search-text': '#25ad50',
-    '--g-search-placeholder': '#12973c',
-    '--g-search-icon': '#008a30',
-    '--g-search-icon-focus': '#62bf80',
+    '--g-search-border-focus': '#c8f0da',
+    '--g-search-text': '#c8f0da',
+    '--g-search-placeholder': '#c8f0da',
+    '--g-search-icon': '#c8f0da',
+    '--g-search-icon-focus': '#c8f0da',
     '--g-search-btn-bg': '#050e10',
-    '--g-search-btn-icon': '#00a334',
+    '--g-search-btn-icon': '#c8f0da',
     '--g-search-topline': '#000000',
-    '--g-search-label': '#008028',
-    '--g-search-status': '#008028',
-    '--g-search-corner': '#00c73f',
+    '--g-search-label': '#c8f0da',
+    '--g-search-status': '#c8f0da',
+    '--g-search-corner': '#c8f0da',
     '--g-search-spore': '#000000',
     '--g-totals-left-poly': '#000000',
     '--g-totals-right-poly': '#000b19',
@@ -8318,8 +9732,8 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
     '--sz-search-height': '80.4px',
     '--sz-search-font': '1.66rem',
     '--sz-input-font': '0.85rem',
-    '--sz-totals-name-font': '32.2px',
-    '--sz-totals-val-font': '41.8px',
+    '--sz-totals-name-font': '24px',
+    '--sz-totals-val-font': '24px',
     '--sz-bd-title-font': '27.6px',
     '--sz-bd-letter-font': '26px',
     '--sz-bd-caps-letter-font': '26px',
@@ -8386,13 +9800,13 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
     '--sz-totals-max-w': '960px',
     '--sz-totals-td-pad-v': '7px',
     '--sz-totals-td-pad-h': '6.2px',
-    '--sz-totals-row-h': '92px',
+    '--sz-totals-row-h': '46px',
     '--sz-totals-row-minw': '320px',
-    '--sz-totals-name-pt': '6.8px',
-    '--sz-totals-name-pl': '10px',
+    '--sz-totals-name-pt': '4px',
+    '--sz-totals-name-pl': '16px',
     '--sz-totals-name-ls': '1px',
-    '--sz-totals-val-pt': '-80.2px',
-    '--sz-totals-val-pr': '12.8px',
+    '--sz-totals-val-pt': '4px',
+    '--sz-totals-val-pr': '8px',
     '--sz-totals-val-ls': '1.1px',
     '--sz-bd-clip': '22px',
     '--sz-bd-pad-top': '4.4px',
@@ -8509,7 +9923,7 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
     '--font-bd-grand-total':    '"AER", "Consolas", "Courier New", monospace',
     '--font-history':           '"Orbitron", "Consolas", "Courier New", monospace',
     '--font-history-header':    '"AESB", "Consolas", "Courier New", monospace',
-    '--font-date':              '"AER", "Consolas", "Courier New", monospace',
+    '--font-date':              '"AESB", "Consolas", "Courier New", monospace',
     '--font-date-input':        '"AESB", "Consolas", "Courier New", monospace',
     '--font-date-result':       '"AESB", "Consolas", "Courier New", monospace',
     '--font-popup':             '"AER", "Consolas", "Courier New", monospace',
@@ -8640,6 +10054,7 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
         currentSettings[k]=val;
         root.style.setProperty(k,val);
         if(disp) disp.textContent=val;
+        if(k.indexOf('--sz-totals-')===0 && typeof fitTotalsNames==='function') fitTotalsNames();
       });
     });
   }
@@ -9255,6 +10670,430 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
   });  // end DOMContentLoaded
 
 })();  // end IIFE
+</script>
+
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   ENTRANCE CHOREOGRAPHY — driver
+   Pairs with the "ENTRANCE CHOREOGRAPHY" block in the stylesheet. Fires
+   each element's reveal, then marks it .xc-shown and strips the helper
+   class so hover / :active behave exactly as before. Totals tiles are
+   revealed lazily as they scroll into view, so the ~90 tiles never queue
+   up behind one long cascade.
+   ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  var root = document.documentElement;
+  var reduced = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function unlock() { root.classList.remove('xc-anim-ready'); }
+
+  // Failsafe — whatever happens below, nothing is left invisible.
+  var failsafe = setTimeout(unlock, 8000);
+
+  function fire(el, delay) {
+    if (!el || el.classList.contains('xc-shown') || el.classList.contains('xc-in')) return;
+    el.style.setProperty('--xc-d', (delay || 0) + 'ms');
+    el.classList.add('xc-in');
+
+    var settled = false;
+    function done() {
+      if (settled) return;
+      settled = true;
+      el.classList.add('xc-shown');
+      el.classList.remove('xc-in');
+      el.style.removeProperty('--xc-d');
+      el.style.removeProperty('--xc-x');
+      el.style.willChange = '';
+      el.removeEventListener('animationend', onEnd);
+    }
+    function onEnd(e) { if (e.target === el) done(); }
+
+    el.addEventListener('animationend', onEnd);
+    setTimeout(done, (delay || 0) + 1300); // belt and braces
+  }
+
+  function start() {
+    if (reduced) { clearTimeout(failsafe); unlock(); return; }
+
+    var headerBtns = [].slice.call(document.querySelectorAll('.header .tab'));
+    var search     = document.querySelector('.search-container');
+    var tiles      = [].slice.call(document.querySelectorAll('#totalsTable .total-row'));
+    var dbBtns     = [].slice.call(document.querySelectorAll('#dbBtnRow button'));
+
+    // left column drifts in from the left, right column from the right
+    tiles.forEach(function (t) {
+      var cell = t.parentElement;
+      var fromLeft = cell && cell.cellIndex === 0;
+      t.style.setProperty('--xc-x', (fromLeft ? -22 : 22) + 'px');
+    });
+
+    requestAnimationFrame(function () {
+      headerBtns.forEach(function (b, i) { fire(b, 50 + i * 33); });
+      fire(search, 155);
+
+      /* ── tiles: cascade the opening screenful, ripple the rest in ── */
+      var opening = true;
+      setTimeout(function () { opening = false; }, 600);
+
+      function revealTile(el, i) {
+        fire(el, opening ? 250 + Math.min(i * 15, 320)
+                         : Math.min(i * 16, 115));
+      }
+
+      if ('IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function (entries) {
+          var visible = entries.filter(function (e) { return e.isIntersecting; });
+          visible.sort(function (a, b) {           // top-to-bottom, left-to-right
+            var ra = a.boundingClientRect, rb = b.boundingClientRect;
+            return (ra.top - rb.top) || (ra.left - rb.left);
+          });
+          visible.forEach(function (entry, i) {
+            revealTile(entry.target, i);
+            io.unobserve(entry.target);
+          });
+        }, { rootMargin: '140px 0px', threshold: 0.01 });
+        tiles.forEach(function (t) { io.observe(t); });
+      } else {
+        tiles.forEach(revealTile);
+      }
+
+      /* ── database / vault buttons bring up the rear ── */
+      dbBtns.forEach(function (b, i) { fire(b, 630 + i * 70); });
+
+      // The choreography is running, so the blanket failsafe is no longer
+      // needed — tiles still below the fold are hidden on purpose and get
+      // their reveal from the observer when they scroll into view.
+      clearTimeout(failsafe);
+    });
+
+    // Safety net for the (unlikely) case the observer never delivers:
+    // anything sitting in the viewport but still hidden gets shown.
+    setInterval(function () {
+      var vh = window.innerHeight || root.clientHeight;
+      tiles.forEach(function (t) {
+        if (t.classList.contains('xc-shown') || t.classList.contains('xc-in')) return;
+        var r = t.getBoundingClientRect();
+        if (r.bottom > -40 && r.top < vh + 40 && r.height > 0) fire(t, 0);
+      });
+    }, 2500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start, { once: true });
+  } else {
+    start();
+  }
+})();
+</script>
+
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   BREAKDOWN REVEAL — driver
+   Watches the breakdown panel instead of hooking renderBreakdown, so the
+   existing render path is untouched.
+     • panel goes from hidden to visible  → full reveal (panel rises, gloss
+       sweep, title + underline, letters cascade, totals land)
+     • already open and a character is typed → only the new letter pops in,
+       so typing stays calm instead of re-animating the whole line
+     • cipher swapped → the title alone re-sets
+   Every helper class is removed once its animation ends.
+   ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  var reduced = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced || !('MutationObserver' in window)) return;
+
+  function init() {
+    var wrapper   = document.querySelector('.breakdown-wrapper');
+    var container = document.getElementById('breakdownContainer');
+    var titleEl   = document.getElementById('breakdownTitle');
+    if (!wrapper || !container) return;
+
+    var isOpen     = getComputedStyle(wrapper).display !== 'none';
+    var justOpened = false;
+    var prevCount  = container.querySelectorAll('.breakdown-item').length;
+    var panelTimer = null;
+
+    /* ── full panel reveal ── */
+    function playPanel() {
+      wrapper.classList.remove('xc-bd-in');
+      void wrapper.offsetWidth;              // restart the animation
+      wrapper.classList.add('xc-bd-in');
+      clearTimeout(panelTimer);
+      // longest child animation is the grand total at 0.46s + 0.75s
+      panelTimer = setTimeout(function () {
+        wrapper.classList.remove('xc-bd-in');
+      }, 1500);
+    }
+
+    /* ── letter columns ── */
+    function playItems(items, base, step, cap) {
+      items.forEach(function (it, i) {
+        it.style.setProperty('--xc-d', (base + Math.min(i * step, cap)) + 'ms');
+        it.classList.add('xc-bd-item');
+        var settled = false;
+        function done() {
+          if (settled) return;
+          settled = true;
+          it.classList.remove('xc-bd-item');
+          it.style.removeProperty('--xc-d');
+          it.removeEventListener('animationend', done);
+        }
+        it.addEventListener('animationend', done);
+        setTimeout(done, base + cap + 900);
+      });
+    }
+
+    /* ── observer 1: open / close of the panel (declared first so its
+          callback runs before the container's on the same task) ── */
+    new MutationObserver(function () {
+      var open = getComputedStyle(wrapper).display !== 'none';
+      if (open && !isOpen) { justOpened = true; prevCount = 0; playPanel(); }
+      if (!open) prevCount = 0;
+      isOpen = open;
+    }).observe(wrapper, { attributes: true, attributeFilter: ['style', 'class'] });
+
+    /* ── observer 2: the letters themselves ── */
+    new MutationObserver(function () {
+      var items = [].slice.call(container.querySelectorAll('.breakdown-item'));
+      if (!items.length) { prevCount = 0; return; }
+
+      if (justOpened) {
+        justOpened = false;
+        playItems(items, 230, 26, 750);        // opening cascade
+      } else if (items.length > prevCount) {
+        playItems(items.slice(prevCount), 0, 30, 220);  // just the new ones
+      }
+      prevCount = items.length;
+    }).observe(container, { childList: true, subtree: true });
+
+    /* ── observer 3: cipher swap re-titles the panel ── */
+    if (titleEl) {
+      var lastTitle = titleEl.textContent;
+      new MutationObserver(function () {
+        var now = titleEl.textContent;
+        if (now === lastTitle) return;
+        lastTitle = now;
+        if (wrapper.classList.contains('xc-bd-in')) return; // opening covers it
+        titleEl.classList.remove('xc-bd-retitle');
+        void titleEl.offsetWidth;
+        titleEl.classList.add('xc-bd-retitle');
+        setTimeout(function () { titleEl.classList.remove('xc-bd-retitle'); }, 900);
+      }).observe(titleEl, { childList: true, characterData: true, subtree: true });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();
+</script>
+
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   DATE SECTION REVEAL — driver
+   Watches the panel rather than hooking the ◈ Date click handler, so the
+   existing toggle, scroll-into-view and calculation code are untouched.
+     • Date button opens the panel  → panel unfolds, then the date rows /
+       format / options / details / ± DATES button stage in
+     • a duration or offset result appears → it pops in on its own
+     • ± DATES drawer opens → drawer swings down, its rows stage in
+   Helper classes are removed once their animation ends.
+   ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  var reduced = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced || !('MutationObserver' in window)) return;
+
+  function init() {
+    var wrap    = document.querySelector('.date-border-wrap');
+    var section = document.getElementById('dateSection');
+    if (!wrap || !section) return;
+
+    var offPanel   = document.getElementById('dateOffsetPanel');
+    var offTrigger = document.getElementById('dateOffsetTrigger');
+    var results    = [document.getElementById('dateResult'),
+                      document.getElementById('dateOffsetResult'),
+                      document.getElementById('dateOffsetDetails')]
+                     .filter(Boolean);
+
+    var lastOpen = performance.now() - 100000;   // long ago
+
+    function play(el, cls, life) {
+      if (!el) return;
+      el.classList.remove(cls);
+      void el.offsetWidth;                        // restart
+      el.classList.add(cls);
+      setTimeout(function () { el.classList.remove(cls); }, life);
+    }
+
+    function stage(els, base, step) {
+      els.forEach(function (el, i) {
+        if (!el) return;
+        el.style.setProperty('--xc-d', (base + i * step) + 'ms');
+        el.classList.remove('xc-date-stage');
+        void el.offsetWidth;
+        el.classList.add('xc-date-stage');
+        setTimeout(function () {
+          el.classList.remove('xc-date-stage');
+          el.style.removeProperty('--xc-d');
+        }, base + i * step + 1200);
+      });
+    }
+
+    /* ── main panel open ── */
+    var wasOpen = getComputedStyle(wrap).display !== 'none';
+    new MutationObserver(function () {
+      var open = getComputedStyle(wrap).display !== 'none';
+      if (open && !wasOpen) {
+        lastOpen = performance.now();
+        play(wrap, 'xc-date-in', 1900);
+
+        var blocks = [].slice.call(section.querySelectorAll(
+          ':scope > div > .date-row, ' +
+          ':scope > div > .duration-format-block, ' +
+          ':scope > div > .date-options-block, ' +
+          ':scope > div > #dateResult, ' +
+          ':scope > div > #dateDetails, ' +
+          ':scope > div > #dateOffsetTrigger, ' +
+          ':scope > div > #dateOffsetPanel'
+        )).filter(function (el) {
+          return getComputedStyle(el).display !== 'none';
+        });
+        stage(blocks, 240, 115);
+      }
+      wasOpen = open;
+    }).observe(wrap, { attributes: true, attributeFilter: ['style', 'class'] });
+
+    /* ── results appearing on their own ── */
+    results.forEach(function (el) {
+      var shown = getComputedStyle(el).display !== 'none';
+      new MutationObserver(function () {
+        var now = getComputedStyle(el).display !== 'none';
+        if (now && !shown && performance.now() - lastOpen > 1900) {
+          play(el, 'xc-date-pop', 1100);           // skip if the panel just opened
+        }
+        shown = now;
+      }).observe(el, { attributes: true, attributeFilter: ['style', 'class'] });
+    });
+
+    /* ── ± DATES offset drawer ── */
+    if (offPanel) {
+      var offOpen = offPanel.classList.contains('offset-visible');
+      new MutationObserver(function () {
+        var open = offPanel.classList.contains('offset-visible');
+        if (open && !offOpen) {
+          play(offPanel, 'xc-off-in', 1200);
+          var rows = [].slice.call(offPanel.querySelectorAll(':scope > .off-row'));
+          stage(rows, 160, 100);
+        }
+        offOpen = open;
+      }).observe(offPanel, { attributes: true, attributeFilter: ['class', 'style'] });
+    }
+    if (offTrigger) { /* trigger arrow rotation is already handled in CSS */ }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();
+</script>
+
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════
+   DATABASE / VAULT REVEAL — driver
+   Watches each results panel for .db-visible instead of hooking the
+   search functions, so the Firestore path, the local vault path and the
+   error/empty branches all get the same reveal for free.
+     panel rises → caption → header cells left-to-right →
+     result rows top-to-bottom (capped so a big result set doesn't crawl)
+   Rows are display:contents, so each row's cells are animated together
+   with a shared delay. Helper classes are removed when they finish.
+   ══════════════════════════════════════════════════════════════════════ */
+(function () {
+  var reduced = window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduced || !('MutationObserver' in window)) return;
+
+  var PANELS = [
+    { panel: 'dbResultsPanel',      title: 'dbResultsTitle',      row: '.db-result-row' },
+    { panel: 'localDbResultsPanel', title: 'localDbResultsTitle', row: '.local-db-result-row' }
+  ];
+
+  function init() {
+    PANELS.forEach(function (cfg) {
+      var panel = document.getElementById(cfg.panel);
+      if (!panel) return;
+      var title = document.getElementById(cfg.title);
+      var open  = panel.classList.contains('db-visible');
+
+      function play(el, cls, life) {
+        if (!el) return;
+        el.classList.remove(cls);
+        void el.offsetWidth;                     // restart
+        el.classList.add(cls);
+        setTimeout(function () { el.classList.remove(cls); }, life);
+      }
+
+      function stage(els, cls, delay) {
+        els.forEach(function (el) {
+          el.style.setProperty('--xc-d', delay + 'ms');
+          el.classList.remove(cls);
+          void el.offsetWidth;
+          el.classList.add(cls);
+          setTimeout(function () {
+            el.classList.remove(cls);
+            el.style.removeProperty('--xc-d');
+          }, delay + 560);
+        });
+      }
+
+      function reveal() {
+        play(panel, 'xc-db-in', 780);
+        play(title, 'xc-db-title', 560);
+
+        // header cells — left to right
+        var heads = [].slice.call(panel.querySelectorAll('.compare-cell.header-cell'));
+        heads.forEach(function (cell, i) {
+          stage([cell], 'xc-db-head', 110 + Math.min(i * 15, 275));
+        });
+
+        // result rows — top to bottom, shared delay per row
+        var rows = [].slice.call(panel.querySelectorAll(cfg.row));
+        rows.forEach(function (row, i) {
+          if (i > 70) return;                    // very long result sets just appear
+          var delay = 180 + Math.min(i * 23, 520);
+          stage([].slice.call(row.querySelectorAll('.compare-cell')), 'xc-db-cell', delay);
+        });
+
+        // empty / not-connected / error state
+        var empty = panel.querySelector('.db-no-results');
+        if (empty) play(empty, 'xc-db-empty', 560);
+      }
+
+      new MutationObserver(function () {
+        var now = panel.classList.contains('db-visible');
+        if (now && !open) reveal();
+        open = now;
+      }).observe(panel, { attributes: true, attributeFilter: ['class'] });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();
 </script>
 
 </body>
