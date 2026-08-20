@@ -3891,15 +3891,11 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
     --mat-scan: none;
   }
 
-  #cipherOverlay.co-visible,
-  #cipherCustomisePanel,
-  #settingsPanel.open,
-  #downloadOverlay,
-  .co-nav-btn,
-  .tab-glow .tab-inner,
-  .search-wrapper,
-  .search-btn,
-  .total-row::before {
+  /* The previous build carried 11 backdrop-filters and was smooth on phones;
+     the glass pass took it to 61. Clear every one of them on touch rather
+     than chasing individual selectors — the opaque fills below cover what
+     the blur was providing. */
+  *, *::before, *::after {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
   }
@@ -10893,8 +10889,13 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
    ══════════════════════════════════════════════════════════════════════ */
 (function () {
   var root = document.documentElement;
+  /* Touch devices take the same path as prefers-reduced-motion: the reveal
+     drivers install IntersectionObservers, MutationObservers and timers that
+     stay live for the session. The old build had none of this machinery and
+     ran fine on phones, so phones simply skip it. Desktop is unaffected. */
   var reduced = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+                 window.matchMedia('(hover: none), (pointer: coarse)').matches);
 
   function unlock() { root.classList.remove('xc-anim-ready'); }
 
@@ -11018,8 +11019,13 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
    Every helper class is removed once its animation ends.
    ══════════════════════════════════════════════════════════════════════ */
 (function () {
+  /* Touch devices take the same path as prefers-reduced-motion: the reveal
+     drivers install IntersectionObservers, MutationObservers and timers that
+     stay live for the session. The old build had none of this machinery and
+     ran fine on phones, so phones simply skip it. Desktop is unaffected. */
   var reduced = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+                 window.matchMedia('(hover: none), (pointer: coarse)').matches);
   if (reduced || !('MutationObserver' in window)) return;
 
   function init() {
@@ -11125,8 +11131,13 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
    Helper classes are removed once their animation ends.
    ══════════════════════════════════════════════════════════════════════ */
 (function () {
+  /* Touch devices take the same path as prefers-reduced-motion: the reveal
+     drivers install IntersectionObservers, MutationObservers and timers that
+     stay live for the session. The old build had none of this machinery and
+     ran fine on phones, so phones simply skip it. Desktop is unaffected. */
   var reduced = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+                 window.matchMedia('(hover: none), (pointer: coarse)').matches);
   if (reduced || !('MutationObserver' in window)) return;
 
   function init() {
@@ -11238,8 +11249,13 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
    with a shared delay. Helper classes are removed when they finish.
    ══════════════════════════════════════════════════════════════════════ */
 (function () {
+  /* Touch devices take the same path as prefers-reduced-motion: the reveal
+     drivers install IntersectionObservers, MutationObservers and timers that
+     stay live for the session. The old build had none of this machinery and
+     ran fine on phones, so phones simply skip it. Desktop is unaffected. */
   var reduced = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                (window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+                 window.matchMedia('(hover: none), (pointer: coarse)').matches);
   if (reduced || !('MutationObserver' in window)) return;
 
   var PANELS = [
