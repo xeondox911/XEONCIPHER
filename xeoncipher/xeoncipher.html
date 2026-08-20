@@ -795,7 +795,7 @@
 
 }
 
-@font-face { font-family: "rf3"; src: url("rf3.otf") format("opentype"); }
+@font-face { font-family: "rf3"; src: url("rf3.otf") format("opentype"); font-display: swap; }
 
 /* ── CAPS-MODE: history text column + breakdown letters use rf3 (case-preserving) ── */
 .caps-history-mode .compare-text-inner {
@@ -1132,36 +1132,34 @@
 
 @font-face {
   font-family: "MatrixFont";
-  src: url("matrix code nfi.ttf") format("truetype");
-}
+  src: url("matrix code nfi.ttf") format("truetype"); font-display: swap; }
 
 @font-face {
   font-family: "AER";
   src: url("Alien-Encounters-Regular.ttf") format("truetype");
   font-weight: var(--fw-buttons); text-transform: var(--tt-buttons);
-  font-style: normal;
-}
+  font-style: normal; font-display: swap; }
 
-@font-face { font-family: "Orbitron"; src: url("Orbitron.ttf") format("truetype"); }
-@font-face { font-family: "COAL";  src: url("COAL.ttf")  format("truetype"); }
-@font-face { font-family: "AESR";  src: url("AESR.ttf")  format("truetype"); }
-@font-face { font-family: "AESI";  src: url("AESI.ttf")  format("truetype"); }
-@font-face { font-family: "AESB";  src: url("AESB.ttf")  format("truetype"); }
-@font-face { font-family: "AER";   src: url("AER.ttf")   format("truetype"); }
-@font-face { font-family: "AEI";   src: url("AEI.ttf")   format("truetype"); }
-@font-face { font-family: "G7";    src: url("G7.ttf")    format("truetype"); }
-@font-face { font-family: "AEBI";  src: url("AEBI.ttf")  format("truetype"); }
-@font-face { font-family: "AEB";   src: url("AEB.ttf")   format("truetype"); }
-@font-face { font-family: "GOS";   src: url("GOS.ttf")   format("truetype"); }
-@font-face { font-family: "11";    src: url("11.ttf")    format("truetype"); }
-@font-face { font-family: "22";    src: url("22.ttf")    format("truetype"); }
-@font-face { font-family: "33";    src: url("33.ttf")    format("truetype"); }
-@font-face { font-family: "44";    src: url("44.ttf")    format("truetype"); }
-@font-face { font-family: "55";    src: url("55.ttf")    format("truetype"); }
-@font-face { font-family: "66";    src: url("66.ttf")    format("truetype"); }
-@font-face { font-family: "77";    src: url("77.ttf")    format("truetype"); }
-@font-face { font-family: "88";    src: url("88.ttf")    format("truetype"); }
-@font-face { font-family: "99";    src: url("99.ttf")    format("truetype"); }
+@font-face { font-family: "Orbitron"; src: url("Orbitron.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "COAL";  src: url("COAL.ttf")  format("truetype"); font-display: swap; }
+@font-face { font-family: "AESR";  src: url("AESR.ttf")  format("truetype"); font-display: swap; }
+@font-face { font-family: "AESI";  src: url("AESI.ttf")  format("truetype"); font-display: swap; }
+@font-face { font-family: "AESB";  src: url("AESB.ttf")  format("truetype"); font-display: swap; }
+@font-face { font-family: "AER";   src: url("AER.ttf")   format("truetype"); font-display: swap; }
+@font-face { font-family: "AEI";   src: url("AEI.ttf")   format("truetype"); font-display: swap; }
+@font-face { font-family: "G7";    src: url("G7.ttf")    format("truetype"); font-display: swap; }
+@font-face { font-family: "AEBI";  src: url("AEBI.ttf")  format("truetype"); font-display: swap; }
+@font-face { font-family: "AEB";   src: url("AEB.ttf")   format("truetype"); font-display: swap; }
+@font-face { font-family: "GOS";   src: url("GOS.ttf")   format("truetype"); font-display: swap; }
+@font-face { font-family: "11";    src: url("11.ttf")    format("truetype"); font-display: swap; }
+@font-face { font-family: "22";    src: url("22.ttf")    format("truetype"); font-display: swap; }
+@font-face { font-family: "33";    src: url("33.ttf")    format("truetype"); font-display: swap; }
+@font-face { font-family: "44";    src: url("44.ttf")    format("truetype"); font-display: swap; }
+@font-face { font-family: "55";    src: url("55.ttf")    format("truetype"); font-display: swap; }
+@font-face { font-family: "66";    src: url("66.ttf")    format("truetype"); font-display: swap; }
+@font-face { font-family: "77";    src: url("77.ttf")    format("truetype"); font-display: swap; }
+@font-face { font-family: "88";    src: url("88.ttf")    format("truetype"); font-display: swap; }
+@font-face { font-family: "99";    src: url("99.ttf")    format("truetype"); font-display: swap; }
 
 * {
   box-sizing: border-box;
@@ -1748,7 +1746,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
 .co-tile-pip {
   width: var(--sz-co-pip-size); height: var(--sz-co-pip-size); border-radius: 50% !important;
   border: 1px solid #222; background: transparent; flex-shrink: 0;
-  transition: all 0.28s ease;
+  transition: background-color 0.28s ease, color 0.28s ease, border-color 0.28s ease;
 }
 .co-tile.co-active { background: color-mix(in srgb, var(--tile-color,#62bf80) 9%, #000000); filter: drop-shadow(0 0 3px var(--tile-color,#62bf80)) drop-shadow(0 0 10px color-mix(in srgb, var(--tile-color,#62bf80) 35%, transparent)); }
 .co-tile.co-active .co-tile-bar {
@@ -1907,7 +1905,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   border: var(--sz-search-border) solid var(--g-search-border);
   padding: 0;
   box-shadow: 0 8px 30px rgba(0,0,0,0.8), inset 0 2px 6px rgba(0,0,0,0.7);
-  transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  transition: border-color 0.4s cubic-bezier(0.16,1,0.3,1), box-shadow 0.4s cubic-bezier(0.16,1,0.3,1), background-color 0.4s cubic-bezier(0.16,1,0.3,1);
   overflow: hidden;
 }
 /* same glossy sheen recipe as the header buttons */
@@ -1955,7 +1953,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   transform: translateY(-50%); width: 1px; height: 24px;
   background: linear-gradient(180deg, transparent, var(--g-search-icon), transparent);
 }
-.search-icon svg { width: var(--sz-search-icon-sz); height: var(--sz-search-icon-sz); color: var(--g-search-icon); transition: all 0.4s ease; }
+.search-icon svg { width: var(--sz-search-icon-sz); height: var(--sz-search-icon-sz); color: var(--g-search-icon); transition: color 0.4s ease, filter 0.4s ease; }
 .search-wrapper:focus-within .search-icon svg {
   color: var(--g-search-icon-focus);
   filter: drop-shadow(0 0 8px rgba(200,240,218,0.7));
@@ -2010,7 +2008,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
   -webkit-backdrop-filter: blur(4px) brightness(0.4) saturate(1.1);
   border: none; border-left: 1px solid var(--g-search-border);
-  cursor: pointer; transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
+  cursor: pointer; transition: background-color 0.3s cubic-bezier(0.16,1,0.3,1), border-color 0.3s cubic-bezier(0.16,1,0.3,1);
   flex-shrink: 0; position: relative; z-index: 2; overflow: hidden;
   color: var(--g-search-btn-icon);
 }
@@ -2036,7 +2034,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   transition: left 0.5s ease;
 }
 .search-btn:hover::before { left:100%; }
-.search-btn svg { width:var(--sz-search-btn-icon); height:var(--sz-search-btn-icon); color:var(--g-search-btn-icon); transition:all 0.3s ease; position:relative; z-index:1; }
+.search-btn svg { width:var(--sz-search-btn-icon); height:var(--sz-search-btn-icon); color:var(--g-search-btn-icon); transition:color 0.3s ease, transform 0.3s ease; position:relative; z-index:1; }
 .search-btn:hover svg { color:var(--g-search-btn-icon); transform:translateX(3px) scale(1.08); filter:drop-shadow(0 0 6px rgba(200,240,218,0.8)); }
 .search-btn:active { transform:scale(0.96); }
 
@@ -2049,7 +2047,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   font-family:var(--font-search-meta); font-size:var(--sz-search-label-font);
   font-weight:var(--fw-search-label); color:var(--g-search-label);
   text-transform:var(--tt-search-label); letter-spacing:var(--sz-search-label-ls);
-  display:flex; align-items:center; gap:6px; transition:all 0.4s ease;
+  display:flex; align-items:center; gap:6px; transition:color 0.4s ease, opacity 0.4s ease;
 }
 .search-label::before { content:"◆"; font-size:0.45rem; color:var(--g-search-label); transition:color 0.4s ease; }
 .search-wrapper:focus-within ~ .search-label { color:var(--g-search-icon-focus); }
@@ -3149,7 +3147,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   color:var(--s-close-text); cursor:pointer;
   width:44px; height:44px; font-size:1.1rem;
   display:flex; align-items:center; justify-content:center;
-  transition:all 0.2s;
+  transition:background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 #settingsClose:hover { background:var(--s-close-hover-bg); color:var(--s-close-hover-text); }
 
@@ -3196,7 +3194,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   flex:1; padding:13px;
   font-family:var(--font-settings);
   font-size:0.75rem; letter-spacing:2px;
-  cursor:pointer; text-transform:uppercase; transition:all 0.2s;
+  cursor:pointer; text-transform:uppercase; transition:background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 #settingsReset {
   background:var(--s-reset-bg); border:1px solid var(--s-reset-border);
@@ -3213,7 +3211,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   flex:1; padding:13px;
   font-family:var(--font-settings);
   font-size:0.75rem; letter-spacing:2px;
-  cursor:pointer; text-transform:uppercase; transition:all 0.2s;
+  cursor:pointer; text-transform:uppercase; transition:background-color 0.2s, color 0.2s, border-color 0.2s;
   background: #0a1a10; border: 1px solid #1e6a3a; color: #3dff7a;
 }
 #settingsBake:hover { background: #0f2a18; color: #6fffaa; }
@@ -3222,7 +3220,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
   flex:1; padding:13px;
   font-family:var(--font-settings);
   font-size:0.75rem; letter-spacing:2px;
-  cursor:pointer; text-transform:uppercase; transition:all 0.2s;
+  cursor:pointer; text-transform:uppercase; transition:background-color 0.2s, color 0.2s, border-color 0.2s;
   background: #07131f; border: 1px solid #1e4a6a; color: #3dc8ff;
 }
 #settingsExport:hover { background: #0c2030; color: #7fe0ff; }
@@ -3262,7 +3260,7 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
 #exportCopy, #exportClose {
   flex:1; padding:12px;
   font-family:var(--font-settings); font-size:0.75rem; letter-spacing:2px;
-  cursor:pointer; text-transform:uppercase; transition:all 0.2s;
+  cursor:pointer; text-transform:uppercase; transition:background-color 0.2s, color 0.2s, border-color 0.2s;
 }
 #exportCopy {
   background:#07131f; border:1px solid #1e4a6a; color:#3dc8ff;
@@ -3829,6 +3827,42 @@ body.co-open #coNavRight { display: flex; right: var(--sz-co-nav-inset); }
    max-width:768px query stays dead. Layout is untouched — this block only
    removes always-on GPU work.
    ══════════════════════════════════════════════════════════════════════ */
+/* ══════════════════════════════════════════════════════════════════════
+   MOTION OFF ON TOUCH DEVICES
+   ----------------------------------------------------------------------
+   Every animation and transition is collapsed to ~0 on phones. Durations
+   are set to 0.001ms rather than `animation: none` on purpose: the
+   entrance choreography hides elements until their animation ENDS, and
+   with `none` no animationend ever fires, so things would sit invisible
+   until a JS fallback timer rescued them. A near-zero duration still
+   fires the event, so every element lands immediately and all the
+   existing cleanup code runs untouched.
+
+   To put the motion back, delete this one block. Nothing else depends
+   on it.
+   ══════════════════════════════════════════════════════════════════════ */
+@media (hover: none), (pointer: coarse) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transition-delay: 0ms !important;
+  }
+  /* belt and braces: land the reveal targets outright, exactly as the
+     reduced-motion block already does */
+  html.xc-anim-ready .header .tab,
+  html.xc-anim-ready .search-container,
+  html.xc-anim-ready .search-container .search-corner,
+  html.xc-anim-ready .search-container .search-label,
+  html.xc-anim-ready .search-container .search-status,
+  html.xc-anim-ready #totalsTable .total-row,
+  html.xc-anim-ready #dbBtnRow button {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
 /* ══════════════════════════════════════════════════════════════════════
    PERFORMANCE — touch devices: strip paint cost, keep the layout
    ----------------------------------------------------------------------
@@ -7411,6 +7445,10 @@ function renderBreakdown(text) {
 
   const container=document.getElementById("breakdownContainer");
   container.innerHTML="";
+  /* Build into a detached node and attach once at the end. Previously every
+     letter was inserted straight into the live DOM, so an N-character phrase
+     meant N separate layout invalidations while typing. */
+  const bdBuild=document.createElement("div");
   Object.values(totalEls).forEach(el=>el.textContent="—");
 
   const totals={ordinal:0,revOrdinal:0,reduction:0,revReduction:0,sumerian:0,revSumerian:0,satanic:0,revSatanic:0,jewish:0,chaldean:0,standard:0,standardAlt:0,archaicOrdinal:0,archaicReverse:0,baconKaye:0,beatusOfLiebana:0,capitalsAdded:0,cipherX:0,fibonacci:0,latinOrdinal:0,reverseCapsAdded:0,reverseCapsMixed:0,septenary:0,singleReduction:0,squares:0,alphanumericQabbala:0,capitalsMixed:0,kvException:0,skvException:0,revSingleReduction:0,revStandard:0,rStandardAlt:0,epException:0,ehpException:0,englishQaballa:0,trigonal:0,primes:0,alphanumericSatanic:0,alphanumericPrimes:0,alphanumericSquares:0,alphanumericTrigonal:0,synx:0,qwerty:0,numericQwerty:0,numericQwertyPrimes:0,keypad:0,hex:0,illuminatiNovice:0,illuminatiReverse:0,reversePrimes:0,reverseSquares:0,reverseTrigonal:0,archaicReduction:0,archaicRReverse:0,modernKaye:0,elizabethan360:0,elizabethanAlphanumeric:0,kabbalisticSepharial:0,falseKabbalah:0,primeQabalah:0,williamGGray:0,zeroingKey:0,mirroringKey:0,alphanumericHalves:0,trigrammatonQabalah:0,elevenfoldQabalah:0,toavoteaKey:0,latinReduction:0,beatusOrdinal:0,beatusReduction:0,cabalaSimplex:0,romanNumerals:0};
@@ -7420,7 +7458,7 @@ function renderBreakdown(text) {
     const ch = rawCh === ',' ? ' ' : rawCh.toUpperCase();
     if(ch===" "){
       wordDiv=null;
-      container.insertAdjacentHTML("beforeend",`<div style="min-width:var(--sz-bd-container-gap,16px);"></div>`);
+      bdBuild.insertAdjacentHTML("beforeend",`<div style="min-width:var(--sz-bd-container-gap,16px);"></div>`);
       continue;
     }
     const o=ordinalValue(ch);
@@ -7508,7 +7546,7 @@ function renderBreakdown(text) {
       wvEl.className="breakdown-word-val";
       wrapDiv.appendChild(wordDiv);
       wrapDiv.appendChild(wvEl);
-      container.appendChild(wrapDiv);
+      bdBuild.appendChild(wrapDiv);
     }
     if(activeCiphers[activeBreakdownCipher]){
       let val;
@@ -7592,6 +7630,9 @@ function renderBreakdown(text) {
       );
     }
   }
+  // Single attach — one layout pass for the whole breakdown
+  container.replaceChildren(...bdBuild.childNodes);
+
   // Fill per-word totals
   container.querySelectorAll(".breakdown-word-wrap").forEach(wrap=>{
     const word=wrap.querySelector(".breakdown-word");
@@ -10613,7 +10654,7 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
     function registerFontUrl(name, url) {
       if (loadedFontNames.has(name)) return;
       const style = document.createElement('style');
-      style.textContent = `@font-face { font-family: "${name}"; src: url("${url}"); }`;
+      style.textContent = `@font-face { font-family: "${name}"; src: url("${url}"); font-display: swap; }`;
       document.head.appendChild(style);
       loadedFonts.push({ name, url });
       loadedFontNames.add(name);
