@@ -7,23 +7,31 @@
   <title>XEONCIPHER — Advanced Gematria Terminal</title>
   <link rel="icon" type="image/png" href="assets/icon.png">
   <link rel="canonical" href="https://xeoncipher.com/" />
+  <meta name="theme-color" content="#000000" />
 
-  <!-- Force HTTPS so Instagram/social scrapers always hit the canonical URL -->
   <script>
     if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
       location.replace('https://' + location.hostname + location.pathname + location.search);
     }
   </script>
 
-  <!-- Primary Meta -->
-  <meta name="description" content="XEONCIPHER is an advanced gematria terminal for cipher-based cryptography. Decode words and phrases across multiple ciphers with a real-time updating database, and explore community decodes in the blog." />
+  <script>
+    // Gate all motion before first paint. No JS / reduced motion = everything simply static and visible.
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduce && 'IntersectionObserver' in window) {
+        document.documentElement.className += ' js';
+      }
+    })();
+  </script>
+
+  <meta name="description" content="XEONCIPHER is an advanced gematria terminal for cipher-based cryptography. Decode words and phrases across 82 ciphers with a real-time updating database, and explore community decodes in the blog." />
   <meta name="keywords" content="gematria, cipher, cryptography, gematria calculator, gematria decoder, numerology, english ordinal, full reduction, gematria terminal" />
   <meta name="author" content="XEONCIPHER" />
   <meta name="robots" content="index, follow" />
 
-  <!-- Open Graph -->
   <meta property="og:title" content="XEONCIPHER — Advanced Gematria Terminal" />
-  <meta property="og:description" content="Decode words and phrases across multiple ciphers with a real-time database. The most advanced gematria terminal on the web." />
+  <meta property="og:description" content="Decode words and phrases across 82 ciphers with a real-time database. The most advanced gematria terminal on the web." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://xeoncipher.com" />
   <meta property="og:image" content="https://xeoncipher.com/assets/og-preview.png" />
@@ -32,38 +40,51 @@
   <meta property="og:image:type" content="image/png" />
   <meta property="og:site_name" content="XEONCIPHER" />
 
-  <!-- Twitter/X Card -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="XEONCIPHER — Advanced Gematria Terminal" />
-  <meta name="twitter:description" content="Decode words and phrases across multiple ciphers with a real-time database. The most advanced gematria terminal on the web." />
+  <meta name="twitter:description" content="Decode words and phrases across 82 ciphers with a real-time database. The most advanced gematria terminal on the web." />
   <meta name="twitter:image" content="https://xeoncipher.com/assets/og-preview.png" />
 
   <style>
 
-@font-face { font-family: "MatrixFont"; src: url("matrix code nfi.ttf") format("truetype"); }
-@font-face { font-family: "AER";  src: url("Alien-Encounters-Regular.ttf") format("truetype"); }
-@font-face { font-family: "AEB";  src: url("AEB.ttf")  format("truetype"); }
-@font-face { font-family: "AESR"; src: url("AESR.ttf") format("truetype"); }
-@font-face { font-family: "AESB"; src: url("AESB.ttf") format("truetype"); }
-@font-face { font-family: "GOS";  src: url("GOS.ttf")  format("truetype"); }
-@font-face { font-family: "77";   src: url("77.ttf")   format("truetype"); }
-@font-face { font-family: "22";   src: url("22.ttf")   format("truetype"); }
-@font-face { font-family: "G7";   src: url("G7.ttf")   format("truetype"); }
+@font-face { font-family: "MatrixFont"; src: url("matrix code nfi.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "AER";  src: url("Alien-Encounters-Regular.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "AEB";  src: url("AEB.ttf")  format("truetype"); font-display: swap; }
+@font-face { font-family: "AESR"; src: url("AESR.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "AESB"; src: url("AESB.ttf") format("truetype"); font-display: swap; }
+@font-face { font-family: "GOS";  src: url("GOS.ttf")  format("truetype"); font-display: swap; }
+@font-face { font-family: "77";   src: url("77.ttf")   format("truetype"); font-display: swap; }
+@font-face { font-family: "22";   src: url("22.ttf")   format("truetype"); font-display: swap; }
+@font-face { font-family: "G7";   src: url("G7.ttf")   format("truetype"); font-display: swap; }
 
 :root {
-  --g-btn-neon-1:   #003d07;
-  --g-btn-neon-2:   #084200;
-  --g-btn-inner-bg: #060b0f;
-  --g-btn-text:     #c8f0da;
-  --c-min:    #7abf95;
-  --c-mid:    #62bf80;
-  --c-bright: #a8d8bc;
-  --c-text:   #d4ede0;
+  --ink:     #000000;
+  --panel:   #050607;
+  --panel-2: #080b0a;
+  --line:    #12241a;
+  --line-lo: #0b160f;
+
+  --dim:     #4e7862;
+  --mid:     #7fae93;
+  --bright:  #cfe8da;
+  --signal:  #00ff4c;
+
+  /* the original neon button engine, desaturated */
+  --g-btn-neon-1:   #1b4429;
+  --g-btn-neon-2:   #113420;
+  --g-btn-inner-bg: #050708;
+  --g-btn-text:     #cfe8da;
+
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+
   --font-body:    "AESB",  "Consolas", "Courier New", monospace;
-  --font-buttons: "AEB",  "Consolas", "Courier New", monospace;
-  --font-display: "GOS",  "Consolas", "Courier New", monospace;
-  --font-meta:    "22",   "Consolas", "Courier New", monospace;
-  --font-sub:     "AESR", "Consolas", "Courier New", monospace;
+  --font-buttons: "AEB",   "Consolas", "Courier New", monospace;
+  --font-display: "GOS",   "Consolas", "Courier New", monospace;
+  --font-meta:    "22",    "Consolas", "Courier New", monospace;
+  --font-sub:     "AESR",  "Consolas", "Courier New", monospace;
+
+  --col: 940px;
+  --gut: 56px;
 }
 
 *, *::before, *::after {
@@ -77,83 +98,79 @@
 
 html, body {
   width: 100%; min-height: 100%;
-  background: #000000;
+  background: var(--ink);
   font-family: var(--font-body);
-  color: var(--c-mid);
+  color: var(--mid);
   overflow-x: hidden;
   text-transform: uppercase;
 }
 
-canvas#matrix {
-  position: fixed; inset: 0; z-index: 0;
-  font-family: MatrixFont;
+canvas#matrix { position: fixed; inset: 0; z-index: 0; font-family: MatrixFont; }
+.veil { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: rgba(0,0,0,0.62); }
+
+a { color: inherit; text-decoration: none; }
+:focus-visible { outline: 1px solid var(--signal); outline-offset: 3px; }
+
+.rail {
+  position: fixed; top: 0; bottom: 0; width: 1px;
+  background: var(--line-lo); z-index: 3; pointer-events: none;
 }
+.rail-l { left:  max(10px, calc(50% - (var(--col) / 2) - var(--gut))); }
+.rail-r { right: max(10px, calc(50% - (var(--col) / 2) - var(--gut))); }
 
 .page {
-  position: relative; z-index: 1;
-  max-width: 1000px;
+  position: relative; z-index: 2;
+  max-width: var(--col);
   margin: 0 auto;
-  padding: 80px 32px 80px 32px;
+  padding: 148px 28px 0 28px;
 }
 
-/* ── HERO ── */
-.hero {
-  text-align: center;
-  margin-bottom: 96px;
-  position: relative;
+/* ── NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+  background: rgba(0,0,0,0.7);
+  border-bottom: 1px solid transparent;
+  transition: background 0.35s ease, border-color 0.35s ease;
 }
-
-
-.hero-title {
+.nav.stuck { background: rgba(0,0,0,0.93); border-bottom-color: var(--line-lo); }
+.nav-inner {
+  max-width: var(--col); margin: 0 auto;
+  padding: 0 28px; height: 56px;
+  display: flex; align-items: center; gap: 22px;
+}
+.nav-mark {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 8vw, 5.4rem);
-  letter-spacing: -2px;
-  color: #00ff4c;
-  text-shadow: 0 0 20px rgba(0,255,76,0.25), 0 0 60px rgba(0,255,76,0.08);
-  line-height: 1;
-  margin-bottom: 10px;
-  position: relative;
-  display: inline-block;
+  font-size: 0.95rem; letter-spacing: 1px;
+  color: var(--bright);
+  display: flex; align-items: center; gap: 9px;
 }
+.nav-led {
+  width: 5px; height: 5px; background: var(--signal); flex-shrink: 0;
+  animation: pulse 2.6s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+.nav-spacer { flex: 1; }
+.pill {
+  font-family: var(--font-buttons);
+  font-size: 0.66rem; letter-spacing: 3px;
+  color: var(--bright);
+  border: 1px solid var(--line);
+  padding: 10px 18px;
+  transition: border-color 0.25s, background 0.25s;
+}
+.pill:hover { border-color: var(--dim); background: rgba(255,255,255,0.03); }
 
-.hero-tm {
-  font-family: var(--font-display);
-  font-size: 0.45em;
-  letter-spacing: 0;
-  color: rgba(0,255,76,0.55);
-  text-shadow: none;
-  vertical-align: super;
-  position: relative;
-  top: 0.1em;
-}
-/* ── HERO SUBTITLE ──*/
-.hero-subtitle {
-  font-family: var(--font-sub);
-  font-size: clamp(0.7rem, 2.5vw, 1.1rem);
-  letter-spacing: clamp(2px, 1.5vw, 7px);
-  color: var(--c-mid);
-  margin-top: 6px;
-  margin-bottom: 32px;
-}
-
-/* ── CTA BUTTON ── */
-.cta-wrap {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
+/* ═══ NEON BUTTON — original geometry, muted palette ═══ */
 .cta-btn {
   width: 340px; height: 74px;
   cursor: pointer;
   display: flex; justify-content: center; align-items: center;
-  padding: 0;
-  background: transparent; border: none;
+  padding: 0; background: transparent; border: none;
   position: relative; overflow: hidden;
   clip-path: polygon(6% 0,93% 0,100% 8%,100% 86%,90% 89%,88% 100%,5% 100%,0% 85%);
   font-family: var(--font-buttons);
   font-size: 1.35em; font-weight: bold;
-  text-decoration: none; flex-shrink: 0;
-  transition: filter 0.3s ease;
+  flex-shrink: 0;
 }
 .cta-btn .cta-inner {
   display: block;
@@ -166,777 +183,533 @@ canvas#matrix {
   position: relative; z-index: 2;
   color: var(--g-btn-text);
   font-size: 1em; letter-spacing: 5px;
-  text-shadow: 0 0 1px var(--g-btn-neon-1),0 0 1px var(--g-btn-neon-2),0 0 1px rgba(255,255,255,0.4);
-  transition: text-shadow 0.3s ease, color 0.3s ease;
+  transition: color 0.3s ease, letter-spacing 0.4s var(--ease);
   white-space: nowrap; pointer-events: none;
 }
 .cta-btn::before {
   content: ""; position: absolute; height: 300px; aspect-ratio: 1.5/1;
   background-image: conic-gradient(var(--g-btn-neon-1),transparent,transparent,transparent,transparent,transparent,transparent,var(--g-btn-neon-1));
   box-shadow: -17px -19px 20px var(--g-btn-neon-1);
-  animation: neonRot 4s linear infinite -2s; z-index: 0;
+  animation: neonRot 5s linear infinite -2.5s; z-index: 0;
 }
 .cta-btn::after {
   content: ""; position: absolute; height: 300px; aspect-ratio: 1.5/1;
   background-image: conic-gradient(var(--g-btn-neon-2),transparent,transparent,transparent,transparent,transparent,transparent,transparent,var(--g-btn-neon-2));
   box-shadow: -17px -19px 10px var(--g-btn-neon-2);
-  animation: neonRot 4s linear infinite; z-index: 0;
+  animation: neonRot 5s linear infinite; z-index: 0;
 }
-.cta-btn:hover .cta-txt { color: #fff; text-shadow: 2px 3px 1px var(--g-btn-neon-1),2px 2px 1px var(--g-btn-neon-2),0 0 18px rgba(255,255,255,0.55); }
-.cta-btn:active .cta-inner { inset: 3px; background: repeating-linear-gradient(to bottom,transparent 0%,var(--g-btn-neon-2) 1px,var(--g-btn-neon-2) 3px,transparent 3px,transparent 5px),var(--g-btn-inner-bg); }
-@keyframes neonRot { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+.cta-btn:hover .cta-txt { color: #fff; letter-spacing: 7px; }
+.cta-btn:active .cta-inner {
+  inset: 3px;
+  background: repeating-linear-gradient(to bottom,transparent 0%,var(--g-btn-neon-2) 1px,var(--g-btn-neon-2) 3px,transparent 3px,transparent 5px),var(--g-btn-inner-bg);
+}
+@keyframes neonRot { to { transform: rotate(360deg); } }
 
-/* ── DATABASE NOTE ── */
-.db-note {
-  margin-top: 2px;
-  background: #04000a;
-  padding: 0;
-  position: relative;
-  clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
-  cursor: pointer;
-  transition: background 0.2s;
+.cta-btn--sm { width: 300px; height: 62px; }
+.cta-btn--sm .cta-txt { font-size: 0.62em; letter-spacing: 4px; }
+.cta-btn--sm:hover .cta-txt { letter-spacing: 6px; }
+
+/* support pair reuses the same engine, full-width */
+.row { display: flex; gap: 3px; }
+.row .cta-btn { flex: 1; width: auto; height: 66px; }
+.row .cta-txt { font-size: 0.62em; letter-spacing: 4px; }
+.row .cta-btn:hover .cta-txt { letter-spacing: 6px; }
+.cta-btn--off { pointer-events: none; opacity: 0.3; }
+
+/* ── HERO ── */
+.hero { text-align: center; }
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.6rem, 7.5vw, 4.6rem);
+  letter-spacing: -1px; line-height: 1;
+  color: var(--bright);
+  margin-bottom: 16px;
 }
-.db-note::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(to right, transparent, #5a1a1a, transparent);
-  pointer-events: none;
-}
-.db-note:hover { background: #0a0008; }
-.db-note-header {
-  display: flex; align-items: center; gap: 10px;
-  padding: 24px 28px;
-  font-family: var(--font-buttons);
-  font-size: 0.85rem; letter-spacing: 4px;
-  color: #d4706a;
-  flex-wrap: wrap;
-}
-.db-note-header > svg { stroke: #a04444; flex-shrink: 0; }
-.db-note-title { flex: 1; min-width: 0; }
-.db-note-urgency {
-  font-family: var(--font-meta);
-  font-size: 0.6rem; letter-spacing: 2px;
-  color: #a04444;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-@media (max-width: 520px) {
-  .db-note-header {
-    font-size: 0.72rem;
-    letter-spacing: 2px;
-    padding: 20px 18px;
-    gap: 8px;
-    row-gap: 6px;
-  }
-  .db-note-title {
-    order: 1;
-    flex-basis: calc(100% - 44px);
-  }
-  .db-note-header > svg { order: 0; }
-  .db-note-arrow { order: 2; }
-  .db-note-urgency {
-    order: 3;
-    flex-basis: 100%;
-    padding-left: 24px;
-    font-size: 0.58rem;
-    letter-spacing: 1.5px;
-  }
-  .db-note-body { padding: 0 18px; }
-  .db-note.open .db-note-body { padding: 0 18px 20px 18px; }
-}
-.db-note-arrow {
-  width: 26px; height: 26px;
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid #5a1a1a;
-  background: transparent;
-  clip-path: polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);
-  transition: border-color 0.2s, background 0.2s;
-  pointer-events: none;
-}
-.db-note-arrow svg {
-  width: 11px; height: 11px;
-  stroke: #a04444;
-  fill: none;
-  stroke-width: 2;
-  transition: stroke 0.2s, transform 0.3s;
-}
-.db-note:hover .db-note-arrow { border-color: #7a2a2a; background: #150505; }
-.db-note:hover .db-note-arrow svg { stroke: #d4706a; }
-.db-note.open .db-note-arrow { border-color: #d4706a; background: #1a0808; }
-.db-note.open .db-note-arrow svg { stroke: #d4706a; transform: rotate(180deg); }
-.db-note-body {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1);
-  padding: 0 28px;
-  display: flex; flex-direction: column; gap: 0;
-}
-.db-note.open .db-note-body {
-  max-height: 1200px;
-  padding: 0 28px 26px 28px;
-}
-.db-note-body p {
+.hero-tm { font-size: 0.36em; letter-spacing: 0; color: var(--dim); vertical-align: super; }
+.hero-sub {
   font-family: var(--font-sub);
-  font-size: 0.75rem; letter-spacing: 1px; line-height: 2;
-  color: var(--c-mid);
-  border-top: 1px solid #0d2014;
-  padding-top: 14px;
-  padding-bottom: 14px;
+  font-size: clamp(0.7rem, 2vw, 0.9rem);
+  letter-spacing: clamp(2px, 1.2vw, 6px);
+  color: var(--mid);
+  margin-bottom: 36px;
 }
-.db-note-warn {
-  color: var(--c-mid) !important;
-}
-.db-note-patience {
-  color: var(--c-min) !important;
-}
+.cta-wrap { display: flex; justify-content: center; }
 
-.cta-hint {
+/* ── RULE ── */
+.rule {
+  height: 1px; background: var(--line-lo); border: 0;
+  margin: 62px 0;
+  width: min(calc(100vw - 20px), calc(var(--col) + (var(--gut) * 2)));
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
+.js .rule { transform: translateX(-50%) scaleX(0); }
+.js .rule.in { transform: translateX(-50%) scaleX(1); transition: transform 1.1s var(--ease); }
+
+/* ── SECTIONS ── */
+.sec { margin-bottom: 68px; scroll-margin-top: 74px; }
+.sec-head { margin-bottom: 28px; }
+.sec-tag {
   font-family: var(--font-meta);
-  font-size: 0.65rem; letter-spacing: 3px;
-  color: var(--c-min);
+  font-size: 0.58rem; letter-spacing: 4px;
+  color: var(--dim);
+  margin-bottom: 14px;
 }
-
-/* ── STAT STRIP ── */
-.stat-strip {
-  display: flex; justify-content: center;
-  gap: 0; margin: 72px 0 80px 0; flex-wrap: wrap;
-}
-.stat-item {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 28px 48px;
-  background: #04000a;
-  clip-path: polygon(14px 0%,100% 0%,calc(100% - 14px) 100%,0% 100%);
-  position: relative;
-  width: 250px;
-}
-.stat-item+.stat-item { margin-left: -10px; }
-.stat-item::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg,rgba(0,255,76,0.03) 0%,transparent 60%);
-  pointer-events: none;
-}
-.stat-num {
+.sec-title {
   font-family: var(--font-display);
-  font-size: 1.9rem; letter-spacing: 3px;
-  color: #00ff4c;
-  text-shadow: 0 0 14px rgba(0,255,76,0.3);
-  line-height: 1; margin-bottom: 8px;
-}
-.stat-dl .stat-num {
-}
-.stat-label {
-  font-family: var(--font-meta);
-  font-size: 0.7rem; letter-spacing: 4px;
-  color: var(--c-min);
+  font-size: clamp(1.3rem, 3.2vw, 1.9rem);
+  letter-spacing: 0; line-height: 1.25;
+  color: var(--bright);
+  font-weight: normal;
 }
 
-/* ── SECTION HEADER ── */
-.section-header {
-  display: flex; align-items: center; gap: 16px; margin-bottom: 40px;
+/* line-mask: type rises up out of a hidden edge */
+.mask { display: block; overflow: hidden; padding-bottom: 0.14em; margin-bottom: -0.14em; }
+.mask > span { display: block; }
+.js .mask > span { transform: translateY(115%); }
+.js .in > .mask > span, .js .mask.in > span {
+  transform: translateY(0);
+  transition: transform 0.95s var(--ease);
 }
-.section-header-line {
-  flex: 1; height: 1px;
-  background: linear-gradient(to right, #1e4a2c, transparent);
-}
-.section-header-line.right { background: linear-gradient(to left, #1e4a2c, transparent); }
-.section-title {
-  font-family: var(--font-display);
-  font-size: 0.95rem; letter-spacing: 7px;
-  color: var(--c-mid);
-  white-space: nowrap;
-}
+/* the hero title reveals on load rather than on scroll */
+.js .hero .mask > span { animation: maskUp 1s var(--ease) 0.18s forwards; }
+@keyframes maskUp { to { transform: translateY(0); } }
 
-/* ── FEATURES — accordion ── */
-.features { margin-bottom: 96px; }
-.features-grid {
+.grid--trio { grid-template-columns: repeat(3, 1fr); }
+.blog-cta { margin-top: 34px; }
+
+/* ── GRID ── */
+.grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 2px;
-}
-.feature-card.feature-card--centre {
-  grid-column: 1 / -1;
-  max-width: calc(50% - 1px);
-  margin: 0 auto;
-  width: 100%;
-}
-
-.feature-card {
-  background: #04000a;
-  position: relative; overflow: hidden;
-  clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.feature-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(to right, transparent, #1e4a2c, transparent);
-  pointer-events: none;
-}
-.feature-card:hover { background: #060010; }
-.feature-card.open   { background: #060010; }
-
-/* Header row — always visible */
-.feature-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 28px 28px;
-  gap: 16px;
-}
-.feature-name {
-  font-family: var(--font-buttons);
-  font-size: 0.85rem; letter-spacing: 4px;
-  color: var(--c-bright);
-  flex: 1;
-}
-/* Arrow button */
-.feature-arrow {
-  width: 26px; height: 26px;
-  flex-shrink: 0;
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid #1e4a2c;
-  background: transparent;
-  clip-path: polygon(4px 0%,100% 0%,calc(100% - 4px) 100%,0% 100%);
-  transition: border-color 0.2s, background 0.2s, transform 0.3s;
-  pointer-events: none;
-}
-.feature-arrow svg {
-  width: 11px; height: 11px;
-  stroke: var(--c-min);
-  fill: none;
-  stroke-width: 2;
-  transition: stroke 0.2s, transform 0.3s;
-}
-.feature-card:hover .feature-arrow {
-  border-color: #2d5a3d;
-  background: #0a1a0f;
-}
-.feature-card:hover .feature-arrow svg { stroke: var(--c-mid); }
-.feature-card.open .feature-arrow {
-  border-color: var(--c-mid);
-  background: #0d2014;
-}
-.feature-card.open .feature-arrow svg {
-  stroke: var(--c-mid);
-  transform: rotate(180deg);
-}
-
-/* Collapsible desc */
-.feature-body {
-  max-height: 0;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line-lo);
+  border: 1px solid var(--line-lo);
+  position: relative;
   overflow: hidden;
-  transition: max-height 0.35s cubic-bezier(0.4,0,0.2,1), padding 0.3s;
-  padding: 0 28px;
 }
-.feature-card.open .feature-body {
-  max-height: 200px;
-  padding: 0 28px 26px 28px;
+/* cursor spotlight — a pre-painted blob that only ever gets translated */
+.spot {
+  position: absolute; top: 0; left: 0;
+  width: 460px; height: 460px; margin: -230px 0 0 -230px;
+  background: radial-gradient(circle closest-side, rgba(0,255,76,0.075), transparent);
+  opacity: 0; z-index: 3; pointer-events: none;
+  transition: opacity 0.4s ease;
+  will-change: transform;
 }
-.feature-desc {
-  font-family: var(--font-sub);
-  font-size: 0.75rem; letter-spacing: 1px; line-height: 2;
-  color: var(--c-min);
-  border-top: 1px solid #0d2014;
-  padding-top: 16px;
-}
+.grid.lit .spot { opacity: 1; }
 
-/* ── BLOG ── */
-.blog { margin-bottom: 96px; }
-.write-banner {
-  background: #04000a;
-  clip-path: polygon(20px 0%,100% 0%,calc(100% - 20px) 100%,0% 100%);
-  padding: 40px 48px;
-  display: flex; align-items: center; flex-direction: column;
-  justify-content: center; text-align: center;
-  gap: 32px; flex-wrap: wrap;
-  position: relative; overflow: hidden;
+.cell {
+  background: var(--panel);
+  padding: 26px 24px;
+  position: relative;
+  transition: background 0.35s ease;
 }
-.write-banner::before {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg,rgba(0,255,76,0.03) 0%,transparent 50%);
-  pointer-events: none;
+/* accent bar wipes across the top edge on hover */
+.cell::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: var(--signal);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.5s var(--ease);
 }
-.write-banner::after {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(to right,transparent,#2d5a3d,transparent);
-  pointer-events: none;
+.cell:hover { background: var(--panel-2); }
+.cell:hover::before { transform: scaleX(1); }
+.cell:hover .cell-icon { transform: translateY(-2px); }
+.cell:hover .cell-icon svg { stroke: var(--bright); }
+
+.cell-fig {
+  font-family: var(--font-display);
+  font-size: 2.2rem; line-height: 1;
+  color: var(--signal);
+  display: block; height: 24px; margin-bottom: 16px;
 }
-.write-banner-text { flex: 1; }
-.write-banner-title {
+.cell-icon {
+  height: 24px; margin-bottom: 16px;
+  transition: transform 0.4s var(--ease);
+}
+.cell-icon svg { display: block; transition: stroke 0.3s ease; }
+.cell-name {
   font-family: var(--font-buttons);
-  font-size: 1rem; letter-spacing: 4px;
-  color: var(--c-bright);
-  margin-bottom: 12px;
+  font-size: 0.76rem; letter-spacing: 3px;
+  color: var(--bright);
 }
-.write-banner-sub {
-  font-family: var(--font-sub);
-  font-size: 0.75rem; letter-spacing: 1.5px; line-height: 2;
-  color: var(--c-min);
-}
-.write-banner-badge {
+
+.note {
   font-family: var(--font-meta);
-  font-size: 0.75rem; letter-spacing: 5px;
-  color: var(--c-mid);
-  border: 1px solid #2d5a3d;
-  padding: 14px 28px;
-  clip-path: polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);
-  white-space: nowrap;
+  font-size: 0.62rem; letter-spacing: 2px;
+  text-align: center; color: var(--dim);
+  margin-top: 24px;
 }
 
-/* ── SUPPORT US ── */
-.support { margin-bottom: 96px; }
-.support-row {
-  display: flex;
-  gap: 2px;
-  flex-wrap: wrap;
-}
-
-/* Shared support tile base — same clip-path / neon button style */
-.support-tile {
-  flex: 1;
-  min-width: 220px;
-  height: 74px;
-  cursor: pointer;
-  display: flex; justify-content: center; align-items: center;
-  gap: 12px;
-  padding: 0 32px;
-  background: transparent; border: none;
-  position: relative; overflow: hidden;
-  clip-path: polygon(6% 0,93% 0,100% 8%,100% 86%,90% 89%,88% 100%,5% 100%,0% 85%);
-  font-family: var(--font-buttons);
-  font-size: 0.9rem; font-weight: bold; letter-spacing: 4px;
-  text-decoration: none; text-transform: uppercase;
-  flex-shrink: 0;
-  transition: filter 0.3s ease;
-}
-.support-tile .s-inner {
-  display: block;
-  clip-path: polygon(6% 0,93% 0,100% 8%,100% 86%,90% 89%,88% 100%,5% 100%,0% 85%);
-  position: absolute; inset: 2px;
-  background-color: var(--g-btn-inner-bg);
-  z-index: 1; transition: inset 0.15s, background 0.15s;
-}
-.support-tile .s-txt {
-  position: relative; z-index: 2;
-  white-space: nowrap; pointer-events: none;
-  text-shadow: 0 0 1px var(--g-btn-neon-1),0 0 1px var(--g-btn-neon-2),0 0 1px rgba(255,255,255,0.4);
-  transition: text-shadow 0.3s ease, color 0.3s ease;
-}
-.support-tile::before {
-  content: ""; position: absolute; height: 300px; aspect-ratio: 1.5/1;
-  background-image: conic-gradient(var(--g-btn-neon-1),transparent,transparent,transparent,transparent,transparent,transparent,var(--g-btn-neon-1));
-  box-shadow: -17px -19px 20px var(--g-btn-neon-1);
-  animation: neonRot 4s linear infinite -2s; z-index: 0;
-}
-.support-tile::after {
-  content: ""; position: absolute; height: 300px; aspect-ratio: 1.5/1;
-  background-image: conic-gradient(var(--g-btn-neon-2),transparent,transparent,transparent,transparent,transparent,transparent,transparent,var(--g-btn-neon-2));
-  box-shadow: -17px -19px 10px var(--g-btn-neon-2);
-  animation: neonRot 4s linear infinite; z-index: 0;
-}
-.support-tile:hover .s-txt { color: #fff; text-shadow: 2px 3px 1px var(--g-btn-neon-1),2px 2px 1px var(--g-btn-neon-2),0 0 18px rgba(255,255,255,0.55); }
-.support-tile:active .s-inner { inset: 3px; background: repeating-linear-gradient(to bottom,transparent 0%,var(--g-btn-neon-2) 1px,var(--g-btn-neon-2) 3px,transparent 3px,transparent 5px),var(--g-btn-inner-bg); }
-
-.support-tile--disabled {
-  cursor: not-allowed;
-  pointer-events: none;
-  opacity: 0.35;
-  filter: saturate(0.3);
-}
-
-.support-tile .s-txt { color: var(--g-btn-text); }
-.support-note {
-  font-family: var(--font-meta);
-  font-size: 0.9rem;
-  letter-spacing: 2px;
-  text-align: center;
-  color: var(--c-min);
-  margin-top: 1px;
-  padding-top: 1px;
-  border-top: 0px dashed #1e4a2c;
-}
 /* ── FOOTER ── */
 .footer {
-  border-top: 1px solid #0d1f12;
-  padding-top: 32px;
-  text-align: center;
+  border-top: 1px solid var(--line-lo);
+  padding: 26px 0 42px 0;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; flex-wrap: wrap;
 }
-.footer-copy {
+.footer div {
   font-family: var(--font-meta);
-  font-size: 0.65rem; letter-spacing: 3px;
-  color: var(--c-min);
-  line-height: 2;
+  font-size: 0.6rem; letter-spacing: 2.5px;
+  color: var(--dim);
 }
 
-/* ── SCANLINES ── */
-body::after {
-  content: ''; position: fixed; inset: 0; z-index: 2;
-  background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,255,76,0.008) 3px,rgba(0,255,76,0.008) 6px);
-  pointer-events: none;
+/* ═══ MOTION ═══ */
+/* scroll reveal */
+.js .rise { opacity: 0; transform: translateY(20px); }
+.js .rise.in {
+  opacity: 1; transform: none;
+  transition: opacity 0.7s ease, transform 0.9s var(--ease);
+}
+/* hero plays on load, in sequence */
+.js .load { opacity: 0; animation: riseIn 0.9s var(--ease) forwards; }
+@keyframes riseIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+.js .load:nth-child(1) { animation-delay: 0.05s; }
+.js .load:nth-child(2) { animation-delay: 0.15s; }
+.js .load:nth-child(3) { animation-delay: 0.25s; }
+.js .load:nth-child(4) { animation-delay: 0.35s; }
+.js .load:nth-child(5) { animation-delay: 0.45s; }
+
+/* ── TABLET ── */
+@media (max-width: 900px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+  .grid--trio { grid-template-columns: repeat(3, 1fr); }
 }
 
 /* ── MOBILE ── */
 @media (max-width: 640px) {
+  :root { --gut: 0px; }
+  .rail-l { left: 4px; }
+  .rail-r { right: 4px; }
 
-  /* ── PAGE ── */
-  .page {
-    padding: 28px 14px 48px 14px;
-  }
+  .nav-inner { padding: 0 16px; height: 50px; gap: 14px; }
+  .nav-mark { font-size: 0.82rem; }
+  .pill { font-size: 0.6rem; letter-spacing: 2px; padding: 9px 13px; }
 
-  /* ── HERO ── */
-  .hero {
-    margin-bottom: 40px;
-  }
+  .page { padding: 100px 16px 0 16px; }
 
-  .hero-title {
-    font-size: clamp(1.6rem, 9vw, 2.6rem);
-    letter-spacing: -2px;
-    margin-bottom: 4px;
-  }
+  .hero-title { font-size: clamp(1.7rem, 9vw, 2.6rem); margin-bottom: 12px; }
+  .hero-sub { font-size: 0.68rem; letter-spacing: 2px; margin-bottom: 26px; }
 
-  .hero-subtitle {
-    font-size: 0.72rem;
-    letter-spacing: 1.5px;
-    margin-top: 4px;
-    margin-bottom: 18px;
-    word-break: break-word;
-    hyphens: auto;
-  }
+  .cta-btn { width: 260px; height: 56px; }
+  .cta-btn .cta-txt { font-size: 0.86rem; letter-spacing: 3px; }
+  .cta-btn:hover .cta-txt, .row .cta-btn:hover .cta-txt, .cta-btn--sm:hover .cta-txt { letter-spacing: 3px; }
+  .cta-btn--sm { width: 240px; height: 54px; }
+  .cta-btn--sm .cta-txt { font-size: 0.74rem; letter-spacing: 2.5px; }
+  .row { gap: 6px; }
+  .row .cta-btn { height: 56px; }
+  .row .cta-txt { font-size: 0.72rem; letter-spacing: 2.5px; }
 
-  .cta-btn {
-    width: 270px;
-    height: 56px;
-  }
+  .rule { margin: 44px 0 44px 50%; width: calc(100vw - 8px); }
 
-  .cta-btn .cta-txt {
-    font-size: 0.88rem;
-    letter-spacing: 3px;
-  }
+  .sec { margin-bottom: 44px; }
+  .sec-head { margin-bottom: 20px; }
+  .sec-tag { font-size: 0.54rem; letter-spacing: 2.5px; margin-bottom: 12px; }
+  .sec-title { font-size: 1.1rem; }
 
-  .cta-hint {
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-  }
+  .grid--trio { grid-template-columns: 1fr 1fr; }
+  .grid--trio .cell:last-child { grid-column: span 2; }
+  .blog-cta { margin-top: 22px; }
 
-  /* ── STAT STRIP — 2×2 grid, no horizontal scroll ── */
-  .stat-strip {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3px;
-    margin: 36px 0 48px 0;
-    flex-wrap: unset;
-  }
+  .grid { grid-template-columns: 1fr 1fr; }
+  .cell { padding: 20px 16px; }
+  .cell-fig { font-size: 1.7rem; height: 21px; margin-bottom: 12px; }
+  .cell-icon { height: 21px; margin-bottom: 12px; }
+  .cell-name { font-size: 0.66rem; letter-spacing: 1.5px; line-height: 1.5; }
 
-  .stat-item {
-    width: auto !important;
-    min-width: 0;
-    margin-left: 0 !important;
-    padding: 18px 8px;
-    clip-path: polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);
-  }
+  .note { font-size: 0.58rem; letter-spacing: 1.2px; margin-top: 18px; }
+  .footer { padding: 20px 0 34px 0; justify-content: center; text-align: center; }
+  .footer div { font-size: 0.55rem; letter-spacing: 1.8px; }
+}
 
-  .stat-item + .stat-item {
-    margin-left: 0;
+/* ═══ TOUCH BUDGET — halve the permanently-compositing layers on phones ═══ */
+@media (hover: none), (pointer: coarse) {
+  .cta-btn::after { display: none; }
+  .cta-btn::before {
+    animation-duration: 11s;
+    height: 190px;
+    box-shadow: -12px -14px 16px var(--g-btn-neon-1);
   }
+  .spot { display: none; }
+  .cell:hover { background: var(--panel); }
+  .cell:hover::before { transform: scaleX(0); }
+  .cell:hover .cell-icon { transform: none; }
+}
 
-  .stat-item:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    width: calc(50% - 1.5px) !important;
-    margin-left: auto !important;
-    margin-right: auto;
-  }
-
-  .stat-num {
-    font-size: 1.25rem;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-  }
-
-  .stat-label {
-    font-size: 0.65rem;
-    letter-spacing: 1px;
-    text-align: center;
-    white-space: normal;
-    line-height: 1.4;
-  }
-
-  /* ── SECTION HEADERS ── */
-  .section-header {
-    gap: 8px;
-    margin-bottom: 18px;
-  }
-
-  .section-title {
-    font-size: 0.72rem;
-    letter-spacing: 3px;
-    white-space: nowrap;
-  }
-
-  /* ── FEATURES — accordion ── */
-  .features {
-    margin-bottom: 52px;
-  }
-
-  .features-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 3px;
-  }
-
-  .feature-header {
-    padding: 14px 10px;
-  }
-
-  .feature-name {
-    font-size: 0.78rem;
-    letter-spacing: 2px;
-  }
-
-  .feature-arrow {
-    width: 22px;
-    height: 22px;
-    flex-shrink: 0;
-  }
-
-  .feature-arrow svg {
-    width: 9px;
-    height: 9px;
-  }
-
-  .feature-card.open .feature-body {
-    max-height: 300px;
-    padding: 0 14px 16px 14px;
-  }
-
-  .feature-desc {
-    font-size: 0.72rem;
-    line-height: 1.8;
-    letter-spacing: 0.5px;
-    padding-top: 12px;
-  }
-
-  /* ── BLOG ── */
-  .blog {
-    margin-bottom: 52px;
-  }
-
-  .write-banner {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 20px 16px;
-    gap: 16px;
-    clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
-  }
-
-  .write-banner .cta-btn {
-    align-self: center;
-    margin: 0 auto;
-  }
-
-  .write-banner-title {
-    font-size: 0.78rem;
-    letter-spacing: 2px;
-    margin-bottom: 8px;
-  }
-
-  .write-banner-sub {
-    font-size: 0.68rem;
-    line-height: 1.7;
-    letter-spacing: 0.8px;
-  }
-
-  .write-banner-badge {
-    align-self: center;
-    padding: 8px 16px;
-    font-size: 0.7rem;
-    letter-spacing: 3px;
-  }
-
-  /* ── SUPPORT ── */
-  .support {
-    margin-bottom: 24px;
-  }
-
-  /* Side-by-side buttons, equal width */
-  .support-row {
-    display: flex;
-    flex-direction: row !important;
-    flex-wrap: nowrap;
-    gap: 6px;
-  }
-
-  .support-tile {
-    flex: 1;
-    min-width: 0;
-    width: auto !important;
-    height: 58px;
-    padding: 0 12px;
-  }
-
-  .support-tile .s-txt {
-    font-size: 0.78rem;
-    letter-spacing: 2.5px;
-  }
-
-  /* ── SUPPORT NOTE ── */
-  .support-note {
-    font-size: 0.68rem;
-    letter-spacing: 1.5px;
-    margin-top: 20px;
-    line-height: 1.6;
-    text-align: center;
-  }
-
-  /* ── FOOTER ── */
-  .footer {
-    padding-top: 20px;
-  }
-
-  .footer-copy {
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-  }
+/* ═══ REDUCED MOTION ═══ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js .rise, .js .load { opacity: 1 !important; transform: none !important; }
+  .js .mask > span { transform: none !important; }
+  .js .rule { transform: translateX(-50%) !important; }
 }
 </style>
 </head>
 <body>
 
 <canvas id="matrix"></canvas>
+<div class="veil"></div>
+<div class="rail rail-l"></div>
+<div class="rail rail-r"></div>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a class="nav-mark" href="/"><span class="nav-led"></span>XEONCIPHER</a>
+    <div class="nav-spacer"></div>
+    <a class="pill" href="/blog">BLOG</a>
+    <a class="pill" href="/terminal">TERMINAL</a>
+  </div>
+</nav>
 
 <div class="page">
 
-  <!-- HERO — no nav, no eyebrow -->
   <section class="hero">
-    <div class="hero-title">XEONCIPHER<sup class="hero-tm">&#x2122;</sup></div>
-    <div class="hero-subtitle">CIPHER BASED CRYPTOGRAPHY I.E GEMATRIA</div>
-    <div class="cta-wrap">
+    <h1 class="hero-title"><span class="mask"><span>XEONCIPHER<sup class="hero-tm">&#x2122;</sup></span></span></h1>
+    <div class="hero-sub load">GEMATRIA TERMINAL</div>
+    <div class="cta-wrap load">
       <a class="cta-btn" href="/terminal">
         <span class="cta-inner"></span>
-        <span class="cta-txt">
-        ENTER TERMINAL</span>
+        <span class="cta-txt">ENTER TERMINAL</span>
       </a>
     </div>
-    <div class="cta-hint">&#x25C8; FREE TO ACCESS</div>
   </section>
 
-  <!-- STAT STRIP — 4 tiles, 2 replaced -->
-  <div class="stat-strip">
-    <div class="stat-item">
-      <span class="stat-num">10</span>
-      <span class="stat-label">CIPHER SYSTEMS</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-num">A&#x2013;Z</span>
-      <span class="stat-label">COMPLETE BREAKDOWN</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-num" style="line-height:0;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#00ff4c" stroke-width="1.5" width="1.4rem" height="1.4rem" style="filter:drop-shadow(0 0 8px rgba(0,255,76,0.35));display:block;">
-          <rect x="2" y="3" width="20" height="19"/>
-          <line x1="2" y1="8" x2="22" y2="8"/>
-          <line x1="7" y1="1" x2="7" y2="5"/>
-          <line x1="17" y1="1" x2="17" y2="5"/>
-          <rect x="5.5" y="12" width="3" height="2.5" fill="#00ff4c" stroke="none"/>
-          <rect x="10.5" y="12" width="3" height="2.5" fill="#00ff4c" stroke="none"/>
-          <rect x="15.5" y="12" width="3" height="2.5" fill="#00ff4c" stroke="none"/>
-          <rect x="5.5" y="16" width="3" height="2.5" fill="#00ff4c" stroke="none"/>
-          <rect x="10.5" y="16" width="3" height="2.5" fill="#00ff4c" stroke="none"/>
-        </svg>
-      </span>
-      <span class="stat-label">DATE CALCULATION</span>
-    </div>
-    <div class="stat-item stat-dl">
-      <span class="stat-num" style="line-height:0;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#00ff4c" stroke-width="1.8" stroke-linecap="square" stroke-linejoin="miter" width="1.4rem" height="1.4rem" style="filter:drop-shadow(0 0 8px rgba(0,255,76,0.35));display:block;">
-          <line x1="12" y1="3" x2="12" y2="15"/>
-          <polyline points="7,10 12,15 17,10"/>
-          <line x1="4" y1="19" x2="20" y2="19"/>
-        </svg>
-      </span>
-      <span class="stat-label">EFFORTLESS DOWNLOADS</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-num" style="line-height:0;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#00ff4c" stroke-width="1.5" width="1.4rem" height="1.4rem" style="filter:drop-shadow(0 0 8px rgba(0,255,76,0.35));display:block;">
-          <ellipse cx="12" cy="5" rx="9" ry="3"/>
-          <path d="M3 5v4c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/>
-          <path d="M3 9v4c0 1.66 4.03 3 9 3s9-1.34 9-3V9"/>
-          <path d="M3 13v4c0 1.66 4.03 3 9 3s9-1.34 9-3v-4"/>
-          <polyline points="15,17 17,19 21,15" stroke-width="1.8"/>
-        </svg>
-      </span>
-      <span class="stat-label">LIVE BACKEND DATABASE</span>
-    </div>
-    <div class="stat-item">
-      <span class="stat-num" style="line-height:0;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#00ff4c" stroke-width="1.5" width="1.4rem" height="1.4rem" style="filter:drop-shadow(0 0 8px rgba(0,255,76,0.35));display:block;">
-          <rect x="3" y="11" width="18" height="11"/>
-          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          <circle cx="12" cy="16.5" r="1.2" fill="#00ff4c" stroke="none"/>
-        </svg>
-      </span>
-      <span class="stat-label">VAULT — CLEANED DB</span>
-    </div>
-  </div>
+  <hr class="rule">
 
-
-
-  <!-- BLOG -->
-  <section class="blog">
-    <div class="section-header">
-      <div class="section-header-line"></div>
-      <div class="section-title">&#x25C8; DECODE BLOG</div>
-      <div class="section-header-line right"></div>
+  <section class="sec" id="capabilities">
+    <div class="sec-head">
+      <div class="sec-tag rise">TERMINAL</div>
+      <h2 class="sec-title"><span class="mask"><span>Everything the decode needs, in a single pass.</span></span></h2>
     </div>
-    <div class="write-banner">
-      <div class="write-banner-text">
-        <div class="write-banner-title">&#x25C8; WANT TO PUBLISH YOUR OWN DECODE?</div>
-        <div class="write-banner-sub">THE BLOG IS LIVE. EXPLORE COMMUNITY DECODES, CREATE A FREE ACCOUNT AND SUBMIT YOUR OWN.</div>
-      </div>
-      <a href="/blog" class="cta-btn" style="width:320px;height:64px;text-decoration:none;">
+
+    <div class="grid">
+
+      <article class="cell rise">
+        <span class="cell-fig" data-count="82">82</span>
+        <div class="cell-name">CIPHER SYSTEMS</div>
+      </article>
+
+      <article class="cell rise">
+        <div class="cell-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7fae93" stroke-width="1.25" width="22" height="22">
+            <rect x="2.5" y="4" width="19" height="16"/>
+            <line x1="2.5" y1="9" x2="21.5" y2="9"/>
+            <line x1="8" y1="9" x2="8" y2="20"/>
+            <line x1="14" y1="9" x2="14" y2="20"/>
+            <line x1="2.5" y1="14.5" x2="21.5" y2="14.5"/>
+          </svg>
+        </div>
+        <div class="cell-name">A&#x2013;Z BREAKDOWN</div>
+      </article>
+
+      <article class="cell rise">
+        <div class="cell-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7fae93" stroke-width="1.25" width="22" height="22">
+            <rect x="2.5" y="4" width="19" height="17"/>
+            <line x1="2.5" y1="9" x2="21.5" y2="9"/>
+            <line x1="7.5" y1="2" x2="7.5" y2="6"/>
+            <line x1="16.5" y1="2" x2="16.5" y2="6"/>
+            <line x1="7" y1="13" x2="9" y2="13"/>
+            <line x1="11" y1="13" x2="13" y2="13"/>
+            <line x1="15" y1="13" x2="17" y2="13"/>
+            <line x1="7" y1="17" x2="9" y2="17"/>
+            <line x1="11" y1="17" x2="13" y2="17"/>
+          </svg>
+        </div>
+        <div class="cell-name">DATE CALCULATION</div>
+      </article>
+
+      <article class="cell rise">
+        <div class="cell-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7fae93" stroke-width="1.25" width="22" height="22">
+            <line x1="12" y1="3" x2="12" y2="15"/>
+            <polyline points="7,10 12,15 17,10"/>
+            <line x1="4" y1="20" x2="20" y2="20"/>
+          </svg>
+        </div>
+        <div class="cell-name">EFFORTLESS DOWNLOADS</div>
+      </article>
+
+      <article class="cell rise">
+        <div class="cell-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7fae93" stroke-width="1.25" width="22" height="22">
+            <ellipse cx="12" cy="5.5" rx="8.5" ry="2.8"/>
+            <path d="M3.5 5.5v5c0 1.55 3.8 2.8 8.5 2.8s8.5-1.25 8.5-2.8v-5"/>
+            <path d="M3.5 10.5v5c0 1.55 3.8 2.8 8.5 2.8s8.5-1.25 8.5-2.8v-5"/>
+          </svg>
+        </div>
+        <div class="cell-name">LIVE DATABASE</div>
+      </article>
+
+      <article class="cell rise">
+        <div class="cell-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7fae93" stroke-width="1.25" width="22" height="22">
+            <rect x="3.5" y="10.5" width="17" height="10.5"/>
+            <path d="M7.5 10.5V7a4.5 4.5 0 0 1 9 0v3.5"/>
+            <line x1="12" y1="14.5" x2="12" y2="17"/>
+          </svg>
+        </div>
+        <div class="cell-name">THE VAULT</div>
+      </article>
+
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section class="sec">
+    <div class="sec-head">
+      <div class="sec-tag rise">DECODE BLOG</div>
+      <h2 class="sec-title"><span class="mask"><span>Community-driven gematria research.</span></span></h2>
+    </div>
+
+    <div class="grid grid--trio">
+
+      <article class="cell rise">
+        <div class="cell-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7fae93" stroke-width="1.25" width="22" height="22">
+            <path d="M2.5 6.5h7l2 2.5h10v11.5h-19z"/>
+            <line x1="2.5" y1="13" x2="21.5" y2="13"/>
+          </svg>
+        </div>
+        <div class="cell-name">SECTIONS</div>
+      </article>
+
+      <article class="cell rise">
+        <div class="cell-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7fae93" stroke-width="1.25" width="22" height="22">
+            <path d="M5 2.5h9l5 5v14h-14z"/>
+            <polyline points="14,2.5 14,7.5 19,7.5"/>
+            <line x1="8" y1="12" x2="16" y2="12"/>
+            <line x1="8" y1="16" x2="14" y2="16"/>
+          </svg>
+        </div>
+        <div class="cell-name">DECODES</div>
+      </article>
+
+      <article class="cell rise">
+        <div class="cell-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#7fae93" stroke-width="1.25" width="22" height="22">
+            <path d="M2.5 4h19v13h-11l-5 4v-4h-3z"/>
+            <line x1="7" y1="9" x2="17" y2="9"/>
+            <line x1="7" y1="12.5" x2="13" y2="12.5"/>
+          </svg>
+        </div>
+        <div class="cell-name">COMMENTS</div>
+      </article>
+
+    </div>
+
+    <div class="blog-cta rise">
+      <a class="cta-btn cta-btn--sm" href="/blog">
         <span class="cta-inner"></span>
-        <span class="cta-txt">BLOG SECTION</span>
+        <span class="cta-txt">OPEN THE BLOG</span>
       </a>
     </div>
   </section>
 
-  <!-- SUPPORT US -->
-  <section class="support">
-    <div class="section-header">
-      <div class="section-header-line"></div>
-      <div class="section-title">&#x25C8; SUPPORT US</div>
-      <div class="section-header-line right"></div>
+  <section class="sec">
+    <div class="sec-head">
+      <div class="sec-tag rise">SUPPORT</div>
+      <h2 class="sec-title"><span class="mask"><span>Keep the terminal running.</span></span></h2>
     </div>
-    <div class="support-row">
-      <a class="support-tile" href="https://instagram.com/xeoncipher" target="_blank">
-        <span class="s-inner"></span>
-        <span class="s-txt">&#x25C8; INSTAGRAM</span>
+    <div class="row rise">
+      <a class="cta-btn" href="https://instagram.com/xeoncrap" target="_blank" rel="noopener">
+        <span class="cta-inner"></span>
+        <span class="cta-txt">INSTAGRAM</span>
       </a>
-      <a class="support-tile support-tile--disabled">
-        <span class="s-inner"></span>
-        <span class="s-txt">&#x25C8; DONATE</span>
-      </a>
+      <span class="cta-btn cta-btn--off">
+        <span class="cta-inner"></span>
+        <span class="cta-txt">DONATE</span>
+      </span>
     </div>
+    <div class="note rise">REPORT ALL BUGS &amp; RECOMMENDATIONS ON MY INSTAGRAM</div>
   </section>
-  <div class="support-note">
-    REPORT ALL BUGS &amp; RECOMMENDATIONS ON MY INSTAGRAM
-  </div>
-  <!-- FOOTER -->
+
   <footer class="footer">
-    <div class="footer-copy">
-      &#x25C8; XEONCIPHER &nbsp;&#x2014;&nbsp; ESTABLISHED 2026 &nbsp;&#x2014;&nbsp; 
-    </div>
+    <div>XEONCIPHER &nbsp;&mdash;&nbsp; ESTABLISHED 2026</div>
+    <div>82 CIPHERS &nbsp;&middot;&nbsp; DATABASE ONLINE</div>
   </footer>
 
 </div>
 
 <script src="js/rain.js"></script>
 <script>
-  // Accordion: all .db-note and .feature-card elements
-  document.querySelectorAll('.db-note, .feature-card').forEach(el => {
-    el.addEventListener('click', () => el.classList.toggle('open'));
-  });
+(function () {
+
+  if (!document.documentElement.classList.contains('js')) return;
+
+  /* ── Scroll reveals, staggered within each group ── */
+  var io = new IntersectionObserver(function (entries) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].isIntersecting) {
+        entries[i].target.classList.add('in');
+        io.unobserve(entries[i].target);
+      }
+    }
+  }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+
+  var grids = document.querySelectorAll('.grid');
+  for (var gi = 0; gi < grids.length; gi++) {
+    var cs = grids[gi].querySelectorAll('.rise');          // restart the stagger per grid
+    for (var c = 0; c < cs.length; c++) cs[c].style.transitionDelay = (c * 70) + 'ms';
+  }
+  var targets = document.querySelectorAll('.rise, .rule, .sec-title .mask');
+  for (var t = 0; t < targets.length; t++) io.observe(targets[t]);
+
+  /* ── Count-up on the 82 ── */
+  var fig = document.querySelector('[data-count]');
+  if (fig) {
+    var target = parseInt(fig.getAttribute('data-count'), 10);
+    fig.textContent = '0';
+    new IntersectionObserver(function (e, obs) {
+      if (!e[0].isIntersecting) return;
+      obs.disconnect();
+      var t0 = null;
+      (function step(ts) {
+        if (t0 === null) t0 = ts;
+        var p = Math.min((ts - t0) / 900, 1);
+        fig.textContent = Math.round(target * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) requestAnimationFrame(step);
+      })(performance.now());
+    }, { threshold: 0.5 }).observe(fig);
+  }
+
+  /* ── Nav gains a background once you leave the hero ── */
+  var nav = document.getElementById('nav'), ticking = false;
+  addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      nav.classList.toggle('stuck', scrollY > 40);
+      ticking = false;
+    });
+  }, { passive: true });
+
+  /* ── Cursor spotlight over the grid (fine pointers only) ── */
+  if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    for (var k = 0; k < grids.length; k++) attachSpot(grids[k]);
+  }
+  function attachSpot(grid) {
+    var spot = document.createElement('div');
+    spot.className = 'spot';
+    grid.insertBefore(spot, grid.firstChild);
+    var px = 0, py = 0, queued = false;
+    grid.addEventListener('pointermove', function (e) {
+      var r = grid.getBoundingClientRect();
+      px = e.clientX - r.left; py = e.clientY - r.top;
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () {
+        spot.style.transform = 'translate3d(' + px + 'px,' + py + 'px,0)';
+        grid.classList.add('lit');   // arm here too: scrolling under a still cursor fires no enter
+        queued = false;
+      });
+    }, { passive: true });
+    grid.addEventListener('pointerleave', function () { grid.classList.remove('lit'); });
+  }
+
+})();
 </script>
 
 </body>
