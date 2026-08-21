@@ -3455,14 +3455,13 @@ html.xc-anim-ready #dbBtnRow button.xc-in {
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  html.xc-anim-ready .header .tab,
-  html.xc-anim-ready .search-container,
-  html.xc-anim-ready .search-container .search-corner,
-  html.xc-anim-ready .search-container .search-label,
-  html.xc-anim-ready .search-container .search-status,
-  html.xc-anim-ready #totalsTable .total-row,
-  html.xc-anim-ready #dbBtnRow button {
+@media (prefers-reduced-motion: reduce) {html:not(.xc-anim-ready) .header .tab,
+  html:not(.xc-anim-ready) .search-container,
+  html:not(.xc-anim-ready) .search-container .search-corner,
+  html:not(.xc-anim-ready) .search-container .search-label,
+  html:not(.xc-anim-ready) .search-container .search-status,
+  html:not(.xc-anim-ready) #totalsTable .total-row,
+  html:not(.xc-anim-ready) #dbBtnRow button {
     opacity: 1 !important;
     transform: none !important;
     animation: none !important;
@@ -3568,15 +3567,14 @@ html.xc-anim-ready #dbBtnRow button.xc-in {
   100% { opacity: 1; transform: translateY(0); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .breakdown-wrapper.xc-bd-in,
-  .breakdown-wrapper.xc-bd-in .breakdown-section::after,
-  .breakdown-wrapper.xc-bd-in .breakdown-title,
-  .breakdown-wrapper.xc-bd-in .breakdown-title::after,
-  .breakdown-wrapper.xc-bd-in .breakdown-word-val,
-  .breakdown-wrapper.xc-bd-in .breakdown-total,
-  .breakdown-item.xc-bd-item,
-  .breakdown-title.xc-bd-retitle { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {html:not(.xc-anim-ready) .breakdown-wrapper.xc-bd-in,
+  html:not(.xc-anim-ready) .breakdown-wrapper.xc-bd-in .breakdown-section::after,
+  html:not(.xc-anim-ready) .breakdown-wrapper.xc-bd-in .breakdown-title,
+  html:not(.xc-anim-ready) .breakdown-wrapper.xc-bd-in .breakdown-title::after,
+  html:not(.xc-anim-ready) .breakdown-wrapper.xc-bd-in .breakdown-word-val,
+  html:not(.xc-anim-ready) .breakdown-wrapper.xc-bd-in .breakdown-total,
+  html:not(.xc-anim-ready) .breakdown-item.xc-bd-item,
+  html:not(.xc-anim-ready) .breakdown-title.xc-bd-retitle { animation: none !important; }
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -3633,11 +3631,10 @@ html.xc-anim-ready #dbBtnRow button.xc-in {
   100% { opacity: 1; transform: translateY(0) scaleY(1); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .date-border-wrap.xc-date-in,
-  .xc-date-stage,
-  .xc-date-pop,
-  #dateOffsetPanel.xc-off-in { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {html:not(.xc-anim-ready) .date-border-wrap.xc-date-in,
+  html:not(.xc-anim-ready) .xc-date-stage,
+  html:not(.xc-anim-ready) .xc-date-pop,
+  html:not(.xc-anim-ready) #dateOffsetPanel.xc-off-in { animation: none !important; }
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -3701,13 +3698,12 @@ html.xc-anim-ready #dbBtnRow button.xc-in {
   100% { opacity: 1; transform: scale(1); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  #dbResultsPanel.xc-db-in,
-  #localDbResultsPanel.xc-db-in,
-  .xc-db-title,
-  .compare-cell.xc-db-head,
-  .compare-cell.xc-db-cell,
-  .db-no-results.xc-db-empty { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {html:not(.xc-anim-ready) #dbResultsPanel.xc-db-in,
+  html:not(.xc-anim-ready) #localDbResultsPanel.xc-db-in,
+  html:not(.xc-anim-ready) .xc-db-title,
+  html:not(.xc-anim-ready) .compare-cell.xc-db-head,
+  html:not(.xc-anim-ready) .compare-cell.xc-db-cell,
+  html:not(.xc-anim-ready) .db-no-results.xc-db-empty { animation: none !important; }
 }
 
 </style>
@@ -3731,19 +3727,36 @@ document.addEventListener('pointerdown', function (e) {
 
 <script>
 /* ── ANIMATION SWITCH ──────────────────────────────────────────────────
-   The reveal choreography is gated on <html class="xc-anim-ready">, added
-   on every device including phones. Only the OS-level "reduce motion"
-   setting opts out.
+   Animations are FORCED ON for every device. The OS "reduce motion"
+   setting no longer turns them off — note that Android's battery saver
+   flips that setting on by itself, which is why some phones were showing
+   no animation while others were fine.
 
-   TO TURN THEM OFF ON PHONES: add `|| isTouch` to the test below, and in
-   each of the four driver scripts at the end of <body> add
-   `|| matchMedia('(hover: none), (pointer: coarse)').matches`
-   alongside the prefers-reduced-motion test.
+   Two things had to change for this to work, and both matter:
+     1. this script adds .xc-anim-ready unconditionally, and
+     2. the four `@media (prefers-reduced-motion: reduce)` blocks in the
+        stylesheet are now scoped to `html:not(.xc-anim-ready)`. They
+        previously set `animation: none !important`, which killed every
+        reveal on those devices no matter what this script decided — the
+        JS fallback still un-hid the elements, so the page looked correct
+        but nothing animated. That was the actual bug.
+
+   Still overridable: ?anim=off in the URL, or
+   localStorage.setItem('xc-anim','off'). Add ?animdebug for a readout.
    ────────────────────────────────────────────────────────────────────── */
 (function () {
   var mm = window.matchMedia;
-  var isCalm = mm && mm('(prefers-reduced-motion: reduce)').matches;
-  if (!isCalm) document.documentElement.classList.add("xc-anim-ready");
+  var q  = (location.search || '') + (location.hash || '');
+  var forced = /anim=on/.test(q) ? 'on' : (/anim=off/.test(q) ? 'off' : null);
+  var stored = null;
+  try { stored = localStorage.getItem('xc-anim'); } catch (e) {}
+
+  var mode = forced || stored || 'always';
+  var calm = !!(mm && mm('(prefers-reduced-motion: reduce)').matches);
+  var on   = mode !== 'off';           // on unless explicitly turned off
+
+  window.__XC_ANIM__ = { mode: mode, calm: calm, on: on, forced: forced, stored: stored };
+  if (on) document.documentElement.classList.add('xc-anim-ready');
 })();
 </script>
 </head>
@@ -9945,8 +9958,7 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
    ══════════════════════════════════════════════════════════════════════ */
 (function () {
   var root = document.documentElement;
-  var reduced = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduced = !(window.__XC_ANIM__ && window.__XC_ANIM__.on);
 
   function unlock() { root.classList.remove('xc-anim-ready'); }
 
@@ -10070,8 +10082,7 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
    Every helper class is removed once its animation ends.
    ══════════════════════════════════════════════════════════════════════ */
 (function () {
-  var reduced = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduced = !(window.__XC_ANIM__ && window.__XC_ANIM__.on);
   if (reduced || !('MutationObserver' in window)) return;
 
   function init() {
@@ -10177,8 +10188,7 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
    Helper classes are removed once their animation ends.
    ══════════════════════════════════════════════════════════════════════ */
 (function () {
-  var reduced = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduced = !(window.__XC_ANIM__ && window.__XC_ANIM__.on);
   if (reduced || !('MutationObserver' in window)) return;
 
   function init() {
@@ -10290,8 +10300,7 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
    with a shared delay. Helper classes are removed when they finish.
    ══════════════════════════════════════════════════════════════════════ */
 (function () {
-  var reduced = window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduced = !(window.__XC_ANIM__ && window.__XC_ANIM__.on);
   if (reduced || !('MutationObserver' in window)) return;
 
   var PANELS = [
@@ -10363,6 +10372,52 @@ document.querySelectorAll("#dateSection input").forEach(input=>{
   } else {
     init();
   }
+})();
+</script>
+
+
+<script>
+/* ── ANIMATION DIAGNOSTIC ─────────────────────────────────────────────
+   Only runs when ?animdebug is in the URL. Draws a small readout of every
+   condition that decides whether the reveals play, so a device that is not
+   animating can be diagnosed without a debugger attached.
+   ─────────────────────────────────────────────────────────────────────── */
+(function () {
+  if (!/animdebug/.test((location.search || '') + (location.hash || ''))) return;
+  function show() {
+    var a = window.__XC_ANIM__ || {};
+    var mm = window.matchMedia;
+    var tiles = document.querySelectorAll('#totalsTable .total-row');
+    var shown = document.querySelectorAll('#totalsTable .total-row.xc-shown');
+    var rows = [
+      ['animations ON',      a.on],
+      ['mode',               a.mode],
+      ['reduce-motion',      a.calm],
+      ['URL override',       a.forced || 'none'],
+      ['saved override',     a.stored || 'none'],
+      ['xc-anim-ready',      document.documentElement.classList.contains('xc-anim-ready')],
+      ['CSS animation',      (typeof document.body.style.animation === 'string')],
+      ['IntersectionObserver', ('IntersectionObserver' in window)],
+      ['matchMedia',         !!mm],
+      ['tiles / revealed',   tiles.length + ' / ' + shown.length],
+      ['viewport',           window.innerWidth + 'x' + window.innerHeight],
+      ['dpr',                window.devicePixelRatio],
+      ['UA',                 navigator.userAgent]
+    ];
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;left:8px;right:8px;bottom:8px;z-index:99999;' +
+      'background:#000d;color:#8ef;border:1px solid #08a;padding:10px 12px;' +
+      'font:12px/1.5 monospace;white-space:pre-wrap;word-break:break-word;' +
+      'max-height:60vh;overflow:auto;';
+    d.textContent = rows.map(function (r) {
+      return (r[0] + '                    ').slice(0, 20) + ': ' + r[1];
+    }).join('\n');
+    d.addEventListener('click', function () { d.remove(); });
+    document.body.appendChild(d);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(show, 1200); });
+  } else { setTimeout(show, 1200); }
 })();
 </script>
 
