@@ -502,7 +502,14 @@ button { font: inherit; background: none; border: none; color: inherit; cursor: 
 }
 .cp-tile:hover { background: var(--panel-2); transform: translateY(-2px); }
 .cp-tile:active { transform: none; }
+.cp-tile.on {
+  background: currentColor;
+  box-shadow: inset 0 0 0 2px var(--panel);
+}
+.cp-tile.on .cp-tile-name, .cp-tile.on .cp-tile-val { color: #000; opacity: 1; }
+.cp-tile.on .cp-tile-name { opacity: 0.75; }
 .cp-tile.off { opacity: 0.28; cursor: default; }
+.cp-tile.off.on { background: var(--panel); box-shadow: none; }
 .cp-tile.off:hover { background: var(--panel); transform: none; }
 .cp-tile-name {
   font-family: var(--font-meta);
@@ -2057,15 +2064,24 @@ document.addEventListener('selectionchange', () => {
   }
 });
 
+/* The finished tile under the cursor, whether the range is inside it
+   or wrapped around it. */
+function padTile(pfx){
+  const ed = edOf(pfx);
+  const r  = edRange(pfx);
+  if(!ed || !r) return null;
+  return edTile(r.commonAncestorContainer, ed)
+      || (r.startContainer === r.endContainer && r.endOffset - r.startOffset === 1
+          ? edTile(r.startContainer.childNodes[r.startOffset], ed) : null);
+}
+
 /* Only a real selection counts — most words are just words. */
 function padActive(pfx){
   const ed = edOf(pfx);
   const r  = edRange(pfx);
   if(!ed || !r) return '';
 
-  const tile = edTile(r.commonAncestorContainer, ed)
-            || (r.startContainer === r.endContainer && r.endOffset - r.startOffset === 1
-                ? edTile(r.startContainer.childNodes[r.startOffset], ed) : null);
+  const tile = padTile(pfx);
   if(tile){
     const p = tile.querySelector('.ci-p');
     return p ? p.textContent.trim() : '';
@@ -2079,6 +2095,7 @@ function padCalc(pfx){
   const totals = cipherTotals(phrase);
   const empty  = !phrase;
   const live   = document.getElementById(pfx + '-live');
+  const tile   = padTile(pfx);
 
   if(live) live.textContent = phrase;
   CIPHERS.forEach(c => {
@@ -2086,8 +2103,15 @@ function padCalc(pfx){
     if(el) el.textContent = empty ? '0' : totals[c.k];
   });
   document.querySelectorAll('#' + pfx + '-grid .cp-tile').forEach(t => {
+    const on = !!(tile && tile.querySelector('.ci-v[data-tag="' + tileTag(t) + '"]'));
     t.classList.toggle('off', empty);
+    t.classList.toggle('on', on);
   });
+}
+
+function tileTag(padTileEl){
+  const c = cipherByKey(padTileEl.dataset.k);
+  return c ? c.tag : '';
 }
 
 function padAdd(pfx, key){
@@ -2097,12 +2121,31 @@ function padAdd(pfx, key){
 
   const c = cipherByKey(key) || CIPHERS[0];
 
-  // already a tile? stack this cipher onto it
-  const existing = edTile(r.commonAncestorContainer, ed)
-                || (r.startContainer === r.endContainer && r.endOffset - r.startOffset === 1
-                    ? edTile(r.startContainer.childNodes[r.startOffset], ed) : null);
+  // already a tile? toggle this cipher on it
+  const existing = padTile(pfx);
   if(existing){
-    if(existing.querySelector('.ci-v[data-tag="' + c.tag + '"]')) return;
+    const already = existing.querySelector('.ci-v[data-tag="' + c.tag + '"]');
+    if(already){
+      // second press on the same cipher takes it back off
+      already.remove();
+      if(!existing.querySelector('.ci-v')){
+        // last one gone — unwrap the tile back into plain text
+        const p    = existing.querySelector('.ci-p');
+        const node = document.createTextNode(p ? p.textContent : '');
+        existing.parentNode.replaceChild(node, existing);
+        const r2 = document.createRange();
+        r2.setStart(node, 0);
+        r2.setEnd(node, node.nodeValue.length);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(r2);
+      } else {
+        edSelectNode(existing);
+      }
+      edSync(pfx);
+      padCalc(pfx);
+      return;
+    }
     const p      = existing.querySelector('.ci-p');
     const phrase = p ? p.textContent.trim() : '';
     if(!phrase) return;
