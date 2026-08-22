@@ -450,6 +450,106 @@ button { font: inherit; background: none; border: none; color: inherit; cursor: 
   border-top: 1px solid var(--line-lo);
 }
 
+/* ── CIPHER PAD — selection-driven tile bar under the decode ── */
+.cp-host { border-bottom-color: transparent; }
+.cp-editor {
+  min-height: 190px; max-height: 340px;
+  overflow-y: auto;
+  white-space: pre-wrap; word-break: break-word;
+  line-height: 2;
+  cursor: text;
+}
+.cp-editor--sm { min-height: 96px; max-height: 220px; line-height: 1.95; }
+.cp-editor:empty::before {
+  content: attr(data-ph);
+  color: var(--dim); opacity: 0.6;
+  font-family: var(--font-sub); letter-spacing: 0.5px;
+}
+/* tiles inside the editor behave as single atomic characters */
+.cp-editor .ci { cursor: pointer; }
+.cp-editor .ci::selection, .cp-editor .ci *::selection { background: rgba(0,255,76,0.25); }
+.cp-bar {
+  border: 1px solid var(--line);
+  border-top: none;
+  background: var(--panel);
+  padding: 9px;
+}
+.cp-live {
+  font-family: var(--font-body);
+  font-size: 0.78rem; letter-spacing: 1px;
+  color: var(--bright);
+  padding: 0 2px 8px 2px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-height: 26px;
+}
+.cp-live:empty::before {
+  content: 'HIGHLIGHT A WORD';
+  color: var(--dim); opacity: 0.55;
+  font-family: var(--font-sub); letter-spacing: 1px;
+}
+.cp-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+.cp-tile {
+  background: var(--panel);
+  border: 1px solid currentColor;
+  padding: 8px 2px 7px 2px;
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.18s ease, transform 0.18s var(--ease), opacity 0.25s ease;
+}
+.cp-tile:hover { background: var(--panel-2); transform: translateY(-2px); }
+.cp-tile:active { transform: none; }
+.cp-tile.off { opacity: 0.28; cursor: default; }
+.cp-tile.off:hover { background: var(--panel); transform: none; }
+.cp-tile-name {
+  font-family: var(--font-meta);
+  font-size: 0.62rem; letter-spacing: 0.5px;
+  color: inherit; opacity: 0.7;
+  display: block; margin-bottom: 3px;
+}
+.cp-tile-val {
+  font-family: var(--font-display);
+  font-size: 0.98rem; letter-spacing: 0;
+  color: inherit;
+  display: block;
+}
+
+/* ── INLINE CIPHER TOKEN (inside decode paragraphs) ── */
+.ci {
+  display: inline-flex; align-items: stretch;
+  vertical-align: baseline;
+  margin: 2px 4px;
+  border: 1px solid;
+  line-height: 1;
+  overflow: hidden;
+  -webkit-user-select: text; user-select: text;
+}
+.ci-p {
+  font-family: var(--font-body);
+  font-size: 1em; letter-spacing: 1px;
+  color: var(--bright);
+  background: rgba(255,255,255,0.05);
+  padding: 7px 11px 6px 11px;
+  display: inline-flex; align-items: center;
+}
+.ci-v {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-display);
+  font-size: 0.95em; letter-spacing: 0.5px;
+  padding: 7px 10px 6px 10px;
+  border-left: 1px solid;
+  white-space: nowrap;
+}
+.ci-v i {
+  font-family: var(--font-meta);
+  font-style: normal;
+  font-size: 0.62em; letter-spacing: 1px;
+  opacity: 0.8;
+}
+
 /* ── CIPHER DATA ── */
 .cipher-block {
   margin-top: 26px;
@@ -475,6 +575,11 @@ button { font: inherit; background: none; border: none; color: inherit; cursor: 
   font-family: var(--font-display);
   font-size: 1.2rem; letter-spacing: 1px;
   color: var(--signal); flex-shrink: 0;
+}
+.cipher-tag {
+  font-family: var(--font-meta);
+  font-size: 0.7rem; letter-spacing: 1.5px;
+  opacity: 0.75; flex-shrink: 0;
 }
 
 /* ── COMMENTS ── */
@@ -511,8 +616,11 @@ button { font: inherit; background: none; border: none; color: inherit; cursor: 
   font-size: 0.92rem; letter-spacing: 1px;
   color: var(--mid);
 }
-.comment-submit-row { display: flex; align-items: flex-end; gap: 14px; }
-.comment-submit-row .form-group { flex: 1; margin-bottom: 0; }
+.comment-submit-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 14px; margin-top: 12px;
+}
+.comment-submit-row .char-count { margin-top: 0; text-align: left; }
 .comment-submit-row .submit-btn { width: 150px; height: 50px; }
 
 /* ── EMPTY STATE ── */
@@ -779,6 +887,11 @@ button { font: inherit; background: none; border: none; color: inherit; cursor: 
   .pv-body { padding: 20px 18px; }
   .comment-card { padding: 18px 16px; }
   .comment-form, .comment-login-prompt { padding: 18px 16px; }
+  .cp-bar { padding: 7px; }
+  .cp-grid { gap: 3px; }
+  .cp-tile { padding: 7px 1px 6px 1px; }
+  .cp-tile-name { font-size: 0.58rem; }
+  .cp-tile-val { font-size: 0.9rem; }
   .comment-submit-row { flex-direction: column; align-items: stretch; }
   .comment-submit-row .submit-btn { width: 100%; }
 
@@ -970,12 +1083,14 @@ button { font: inherit; background: none; border: none; color: inherit; cursor: 
       </div>
       <div class="form-group">
         <label class="form-label">DECODE</label>
-        <textarea id="np-content" class="form-textarea" maxlength="4000" rows="8" oninput="updateCharCount()"></textarea>
+        <div id="np-editor" class="form-textarea cp-host cp-editor" contenteditable="true" spellcheck="false"></div>
+        <textarea id="np-content" maxlength="4000" style="display:none"></textarea>
+        <div class="cp-bar">
+          <div class="cp-live" id="np-live"></div>
+          <div class="cp-grid" id="np-grid"></div>
+        </div>
         <div id="np-char-count" class="char-count">0 / 4000</div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">CIPHER VALUES <span class="form-label-optional">&mdash; OPTIONAL</span></label>
-        <textarea id="np-ciphers" class="form-textarea" rows="4" maxlength="600"></textarea>
+        <textarea id="np-ciphers" rows="4" maxlength="600" style="display:none"></textarea>
       </div>
       <div id="np-error" class="form-error" style="display:none"></div>
       <button class="submit-btn" onclick="createPost()">
@@ -1001,12 +1116,14 @@ button { font: inherit; background: none; border: none; color: inherit; cursor: 
       </div>
       <div class="form-group">
         <label class="form-label">DECODE</label>
-        <textarea id="ep-content" class="form-textarea" maxlength="4000" rows="8" oninput="updateEditCharCount()"></textarea>
+        <div id="ep-editor" class="form-textarea cp-host cp-editor" contenteditable="true" spellcheck="false"></div>
+        <textarea id="ep-content" maxlength="4000" style="display:none"></textarea>
+        <div class="cp-bar">
+          <div class="cp-live" id="ep-live"></div>
+          <div class="cp-grid" id="ep-grid"></div>
+        </div>
         <div id="ep-char-count" class="char-count">0 / 4000</div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">CIPHER VALUES <span class="form-label-optional">&mdash; OPTIONAL</span></label>
-        <textarea id="ep-ciphers" class="form-textarea" rows="4" maxlength="600"></textarea>
+        <textarea id="ep-ciphers" rows="4" maxlength="600" style="display:none"></textarea>
       </div>
       <div id="ep-error" class="form-error" style="display:none"></div>
       <button class="submit-btn" onclick="saveEditPost()">
@@ -1548,7 +1665,8 @@ async function renderSection(sectionId){
 
     list.innerHTML = sectionPosts.map((p, i) => {
       const cmtCount = allComments.filter(c => c.post_id === p.id).length;
-      const preview  = p.content.replace(/\n/g,' ').substring(0, 130) + (p.content.length > 130 ? '...' : '');
+      const plain    = stripTokens(p.content).replace(/\n/g,' ');
+      const preview  = plain.substring(0, 130) + (plain.length > 130 ? '...' : '');
       const isOwner  = currentUser && currentUser.username === p.author;
       return `
       <div class="post-card rise" onclick="showPost('${p.id}')">
@@ -1590,12 +1708,16 @@ async function renderPost(postId){
     let cipherHtml = '';
     if(post.cipher_data && post.cipher_data.trim()){
       const rows = post.cipher_data.trim().split('\n').map(line => {
-        const [phrase, val] = line.split('=');
+        const parts = line.split('=');
+        const phrase = (parts[0] || '').trim();
+        const val    = (parts[1] || '').trim();
         if(!phrase || !val) return '';
+        const c = cipherByKey(parts[2]);
         return `<div class="cipher-row">
-          <span class="cipher-phrase">${esc(phrase.trim())}</span>
-          <div class="cipher-separator"></div>
-          <span class="cipher-value">${esc(val.trim())}</span>
+          <span class="cipher-phrase">${esc(phrase)}</span>
+          <div class="cipher-separator"${c ? ` style="background:${c.color};opacity:0.45"` : ''}></div>
+          ${c ? `<span class="cipher-tag" style="color:${c.color}">${c.tag}</span>` : ''}
+          <span class="cipher-value"${c ? ` style="color:${c.color}"` : ''}>${esc(val)}</span>
         </div>`;
       }).filter(Boolean).join('');
       if(rows){
@@ -1625,7 +1747,7 @@ async function renderPost(postId){
           ${ownerHtml}
         </div>
         <div class="pv-body">
-          <div class="pv-content">${esc(post.content)}</div>
+          <div class="pv-content">${renderDecode(post.content)}</div>
           ${cipherHtml}
         </div>
       </div>`;
@@ -1659,7 +1781,7 @@ async function renderComments(postId){
             <span class="comment-author">${esc(c.author)}</span>
             <span class="comment-date">${fmtDateLong(c.created_at)}</span>
           </div>
-          <div class="comment-text">${esc(c.content)}</div>
+          <div class="comment-text">${renderDecode(c.content)}</div>
         </div>`).join('');
       revealScan(list);
     }
@@ -1671,17 +1793,23 @@ async function renderComments(postId){
   if(currentUser){
     formArea.innerHTML = `
       <div class="comment-form">
+        <label class="form-label">${esc(currentUser.username)}</label>
+        <div id="cm-editor" class="form-textarea cp-host cp-editor cp-editor--sm"
+             contenteditable="true" spellcheck="false" data-ph="ADD YOUR FINDS"></div>
+        <textarea id="cm-content" style="display:none"></textarea>
+        <div class="cp-bar">
+          <div class="cp-live" id="cm-live"></div>
+          <div class="cp-grid" id="cm-grid"></div>
+        </div>
         <div class="comment-submit-row">
-          <div class="form-group">
-            <label class="form-label">${esc(currentUser.username)}</label>
-            <textarea id="new-comment-text" class="form-textarea" placeholder="ADD YOUR FINDS" maxlength="1000" rows="3"></textarea>
-          </div>
+          <div id="cm-char-count" class="char-count">0 / 1000</div>
           <button class="submit-btn" onclick="submitComment('${postId}')">
             <span class="submit-inner"></span>
             <span class="submit-txt">POST</span>
           </button>
         </div>
       </div>`;
+    padInit('cm', '');
   } else {
     formArea.innerHTML = `
       <div class="comment-login-prompt">
@@ -1689,6 +1817,407 @@ async function renderComments(postId){
         <button class="clp-btn" onclick="openAuth('comment')">LOGIN</button>
       </div>`;
   }
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   CIPHERS — logic + palette ported from the terminal
+═══════════════════════════════════════════════════════ */
+function isDigit(ch)    { return /[0-9]/.test(ch); }
+function digitValue(ch) { return parseInt(ch,10); }
+
+function ordinalValue(char){
+  if(isDigit(char)) return digitValue(char);
+  const c = char.toUpperCase().charCodeAt(0);
+  if(c < 65 || c > 90) return null;
+  return c - 64;
+}
+function reductionValue(val){
+  if(val < 10) return val;
+  while(val > 9) val = val.toString().split('').reduce((a,b)=>a+parseInt(b),0);
+  return val;
+}
+function reverseOrdinalValue(char){
+  if(isDigit(char)) return digitValue(char);
+  const val = ordinalValue(char);
+  return val !== null ? 27 - val : null;
+}
+function reverseReductionValue(char){
+  if(isDigit(char)) return digitValue(char);
+  const val = reverseOrdinalValue(char);
+  return val !== null ? reductionValue(val) : null;
+}
+function sumerianValue(char){
+  if(isDigit(char)) return digitValue(char);
+  const val = ordinalValue(char);
+  return val !== null ? val * 6 : null;
+}
+function revSumerianValue(char){
+  if(isDigit(char)) return digitValue(char);
+  const val = reverseOrdinalValue(char);
+  return val !== null ? val * 6 : null;
+}
+function satanicValue(char){
+  if(isDigit(char)) return digitValue(char);
+  const val = ordinalValue(char);
+  return val !== null ? val + 35 : null;
+}
+function revSatanicValue(char){
+  if(isDigit(char)) return digitValue(char);
+  const val = reverseOrdinalValue(char);
+  return val !== null ? val + 35 : null;
+}
+const JEWISH_MAP   = [1,2,3,4,5,6,7,8,9,600,10,20,30,40,50,60,70,80,90,100,200,700,900,300,400,500];
+const CHALDEAN_MAP = [1,2,3,4,5,8,3,5,1,1,2,3,4,5,7,8,1,2,3,4,6,6,6,5,1,7];
+function jewishValue(char){
+  if(isDigit(char)) return digitValue(char);
+  const o = ordinalValue(char);
+  return o !== null ? JEWISH_MAP[o-1] : null;
+}
+function chaldeanValue(char){
+  if(isDigit(char)) return digitValue(char);
+  const o = ordinalValue(char);
+  return o !== null ? CHALDEAN_MAP[o-1] : null;
+}
+function reductionOf(char){
+  const o = ordinalValue(char);
+  return o !== null ? reductionValue(o) : null;
+}
+
+const CIPHERS = [
+  { k:'ordinal',      tag:'ORD',   name:'ORDINAL',           color:'#00ff4c', f:ordinalValue },
+  { k:'revOrdinal',   tag:'R.ORD', name:'REVERSE ORDINAL',   color:'#00ff88', f:reverseOrdinalValue },
+  { k:'reduction',    tag:'RED',   name:'REDUCTION',         color:'#00aeff', f:reductionOf },
+  { k:'revReduction', tag:'R.RED', name:'REVERSE REDUCTION', color:'#00f7ff', f:reverseReductionValue },
+  { k:'sumerian',     tag:'SUM',   name:'SUMERIAN',          color:'#c4fa92', f:sumerianValue },
+  { k:'revSumerian',  tag:'R.SUM', name:'REVERSE SUMERIAN',  color:'#fff09b', f:revSumerianValue },
+  { k:'satanic',      tag:'SAT',   name:'SATANIC',           color:'#ff0d00', f:satanicValue },
+  { k:'revSatanic',   tag:'R.SAT', name:'REVERSE SATANIC',   color:'#ff6868', f:revSatanicValue },
+  { k:'jewish',       tag:'JEW',   name:'JEWISH',            color:'#9a38d8', f:jewishValue },
+  { k:'chaldean',     tag:'CHA',   name:'CHALDEAN',          color:'#88bf93', f:chaldeanValue }
+];
+const CIPHER_BY_KEY = {};
+CIPHERS.forEach(c => { CIPHER_BY_KEY[c.k.toLowerCase()] = c; });
+function cipherByKey(k){ return CIPHER_BY_KEY[String(k || '').trim().toLowerCase()] || null; }
+
+/* Same accumulation rule the terminal uses: skip anything that is neither
+   a letter nor a digit, then add each cipher's value for the character. */
+function cipherTotals(text){
+  const t = {};
+  CIPHERS.forEach(c => { t[c.k] = 0; });
+  for(const raw of String(text || '')){
+    const ch = raw.toUpperCase();
+    const o  = ordinalValue(ch);
+    if(o === null && !/\p{L}/u.test(raw)) continue;
+    CIPHERS.forEach(c => { t[c.k] += (c.f(ch) || 0); });
+  }
+  return t;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CIPHER PAD — live totals inside the decode modals
+═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+   LIVE DECODE EDITOR
+   A contenteditable surface where cipher tiles are real,
+   atomic elements. The hidden textarea stays the data field,
+   so createPost / saveEditPost are untouched.
+═══════════════════════════════════════════════════════ */
+
+const PAD_MAX = { np: 4000, ep: 4000, cm: 1000 };
+
+function edOf(pfx){ return document.getElementById(pfx + '-editor'); }
+
+/* DOM -> the stored [[PHRASE|TAG:VAL]] text */
+function edWalk(node, out){
+  if(node.nodeType === 3){ out.push(node.nodeValue); return; }
+  if(node.nodeType !== 1) return;
+
+  if(node.classList && node.classList.contains('ci')){
+    const p     = node.querySelector('.ci-p');
+    const parts = Array.prototype.map.call(node.querySelectorAll('.ci-v'),
+      v => '|' + v.dataset.tag + ':' + v.dataset.val).join('');
+    if(parts) out.push('[[' + (p ? p.textContent : '') + parts + ']]');
+    return;
+  }
+  if(node.tagName === 'BR'){ out.push('\n'); return; }
+
+  const block = /^(DIV|P|LI)$/.test(node.tagName);
+  if(block && out.length && !/\n$/.test(out[out.length - 1])) out.push('\n');
+  Array.prototype.forEach.call(node.childNodes, ch => edWalk(ch, out));
+}
+
+function edSerialize(pfx){
+  const ed = edOf(pfx);
+  if(!ed) return '';
+  const out = [];
+  Array.prototype.forEach.call(ed.childNodes, n => edWalk(n, out));
+  return out.join('').replace(/\u200b/g, '').replace(/\n{3,}/g, '\n\n');
+}
+
+/* Push the editor's state into the hidden field + counter */
+function edSync(pfx){
+  // browsers leave a stray <br> behind when you delete everything,
+  // which would keep the :empty placeholder from showing
+  const ed = edOf(pfx);
+  if(ed && ed.innerHTML && !ed.querySelector('.ci') && !ed.textContent.trim()) ed.innerHTML = '';
+
+  const text = edSerialize(pfx);
+  const box  = document.getElementById(pfx + '-content');
+  if(box) box.value = text;
+  const counter = document.getElementById(pfx + '-char-count');
+  if(counter) counter.textContent = stripTokens(text).length + ' / ' + (PAD_MAX[pfx] || 4000);
+}
+
+function edLoad(pfx, text){
+  const ed = edOf(pfx);
+  if(!ed) return;
+  ed.innerHTML = renderDecode(text || '', true);
+  edSync(pfx);
+}
+
+/* The tile an element sits inside, if any */
+function edTile(node, root){
+  let n = node;
+  while(n && n !== root){
+    if(n.nodeType === 1 && n.classList.contains('ci')) return n;
+    n = n.parentNode;
+  }
+  return null;
+}
+
+/* The live range, but only when it belongs to this editor */
+function edRange(pfx){
+  const ed  = edOf(pfx);
+  const sel = window.getSelection();
+  if(!ed || !sel || !sel.rangeCount) return null;
+  const r = sel.getRangeAt(0);
+  return ed.contains(r.commonAncestorContainer) ? r : null;
+}
+
+function edSelectNode(node){
+  const r = document.createRange();
+  r.selectNode(node);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(r);
+}
+
+function padBuild(pfx){
+  const grid = document.getElementById(pfx + '-grid');
+  if(!grid || grid.childElementCount) return;
+
+  grid.innerHTML = CIPHERS.map((c, i) => `
+    <div class="cp-tile off" style="color:${c.color}" data-k="${c.k}" title="${c.name}  (ALT+${(i+1)%10})">
+      <span class="cp-tile-name">${c.tag}</span>
+      <span class="cp-tile-val" id="${pfx}-v-${c.k}">0</span>
+    </div>`).join('');
+
+  grid.querySelectorAll('.cp-tile').forEach(tile => {
+    // mousedown, not click: the editor must not lose its selection first
+    const fire = e => { e.preventDefault(); padAdd(pfx, tile.dataset.k); };
+    tile.addEventListener('mousedown', fire);
+    tile.addEventListener('touchstart', fire, { passive: false });
+  });
+
+  const ed = edOf(pfx);
+
+  ['keyup','mouseup','input','focus'].forEach(ev => {
+    ed.addEventListener(ev, () => { if(ev === 'input') edSync(pfx); padCalc(pfx); });
+  });
+
+  // tapping a finished tile re-arms it so you can stack another cipher
+  ed.addEventListener('click', e => {
+    const t = edTile(e.target, ed);
+    if(t){ edSelectNode(t); padCalc(pfx); }
+  });
+
+  // plain text only — no pasted markup can enter the editor
+  ed.addEventListener('paste', e => {
+    e.preventDefault();
+    const txt = (e.clipboardData || window.clipboardData).getData('text');
+    document.execCommand('insertText', false, txt.replace(/[[\]|]/g, ''));
+  });
+
+  ed.addEventListener('keydown', e => {
+    if(!e.altKey || e.ctrlKey || e.metaKey) return;
+    const n = '1234567890'.indexOf(e.key);
+    if(n === -1 || !CIPHERS[n]) return;
+    e.preventDefault();
+    padAdd(pfx, CIPHERS[n].k);
+  });
+}
+
+/* One listener for every pad — comment forms are rebuilt on each render,
+   so per-pad document listeners would pile up. */
+document.addEventListener('selectionchange', () => {
+  const el = document.activeElement;
+  if(el && el.classList && el.classList.contains('cp-editor')){
+    padCalc(el.id.replace('-editor',''));
+  }
+});
+
+/* Only a real selection counts — most words are just words. */
+function padActive(pfx){
+  const ed = edOf(pfx);
+  const r  = edRange(pfx);
+  if(!ed || !r) return '';
+
+  const tile = edTile(r.commonAncestorContainer, ed)
+            || (r.startContainer === r.endContainer && r.endOffset - r.startOffset === 1
+                ? edTile(r.startContainer.childNodes[r.startOffset], ed) : null);
+  if(tile){
+    const p = tile.querySelector('.ci-p');
+    return p ? p.textContent.trim() : '';
+  }
+  if(r.collapsed) return '';
+  return r.toString().replace(/[[\]|]/g, '').trim();
+}
+
+function padCalc(pfx){
+  const phrase = padActive(pfx);
+  const totals = cipherTotals(phrase);
+  const empty  = !phrase;
+  const live   = document.getElementById(pfx + '-live');
+
+  if(live) live.textContent = phrase;
+  CIPHERS.forEach(c => {
+    const el = document.getElementById(pfx + '-v-' + c.k);
+    if(el) el.textContent = empty ? '0' : totals[c.k];
+  });
+  document.querySelectorAll('#' + pfx + '-grid .cp-tile').forEach(t => {
+    t.classList.toggle('off', empty);
+  });
+}
+
+function padAdd(pfx, key){
+  const ed = edOf(pfx);
+  const r  = edRange(pfx);
+  if(!ed || !r) return;
+
+  const c = cipherByKey(key) || CIPHERS[0];
+
+  // already a tile? stack this cipher onto it
+  const existing = edTile(r.commonAncestorContainer, ed)
+                || (r.startContainer === r.endContainer && r.endOffset - r.startOffset === 1
+                    ? edTile(r.startContainer.childNodes[r.startOffset], ed) : null);
+  if(existing){
+    if(existing.querySelector('.ci-v[data-tag="' + c.tag + '"]')) return;
+    const p      = existing.querySelector('.ci-p');
+    const phrase = p ? p.textContent.trim() : '';
+    if(!phrase) return;
+    existing.insertAdjacentHTML('beforeend',
+      valueSegments([{ c, value: cipherTotals(phrase)[key] }]));
+    edSelectNode(existing);
+    edSync(pfx);
+    padCalc(pfx);
+    return;
+  }
+
+  if(r.collapsed) return;
+  const phrase = r.toString().replace(/[[\]|]/g, '').trim();
+  if(!phrase) return;
+
+  const holder = document.createElement('span');
+  holder.innerHTML = tileHTML(esc(phrase), [{ c, value: cipherTotals(phrase)[key] }], true);
+  const tile = holder.firstChild;
+
+  r.deleteContents();
+  r.insertNode(tile);
+
+  ed.focus();
+  edSelectNode(tile);
+  edSync(pfx);
+  padCalc(pfx);
+}
+
+function padInit(pfx, text){
+  padBuild(pfx);
+  edLoad(pfx, text || '');
+  padCalc(pfx);
+}
+
+/* ── Inline cipher tokens ──
+   [[PHRASE|ORD:110|SAT:455]]  — the phrase lives inside the tile.
+   [ORD:110]                   — older value-only tokens still render.
+   Literal regexes on purpose: a source string built at runtime is one
+   escaping mistake away from silently matching nothing. */
+const TAG_RE   = /^[A-Z]{1,2}\.?[A-Z]{2,3}$/i;
+const TOKEN_RE = /\[\[([^\][|]{1,80})((?:\|[A-Z]{1,2}\.?[A-Z]{2,3}:\d{1,6})+)\]\]/gi;
+const OLD_RE   = /\[([A-Z]{1,2}\.?[A-Z]{2,3}):(\d{1,6})\]/gi;
+
+const CIPHER_BY_TAG = {};
+CIPHERS.forEach(c => { CIPHER_BY_TAG[c.tag.toLowerCase()] = c; });
+function cipherByTag(t){ return CIPHER_BY_TAG[String(t || '').trim().toLowerCase()] || null; }
+
+function hexRgba(hex, a){
+  const h = hex.replace('#','');
+  return 'rgba(' + parseInt(h.slice(0,2),16) + ',' + parseInt(h.slice(2,4),16) + ',' +
+                   parseInt(h.slice(4,6),16) + ',' + a + ')';
+}
+
+/* "|ORD:110|SAT:455" -> [{c, value}, ...] */
+function parseParts(str){
+  return String(str || '').split('|').filter(Boolean).map(seg => {
+    const bit = seg.split(':');
+    const c = cipherByTag(bit[0]);
+    return c ? { c, value: bit[1] } : null;
+  }).filter(Boolean);
+}
+
+function valueSegments(parts){
+  return parts.map(pt =>
+    '<span class="ci-v" data-tag="' + pt.c.tag + '" data-val="' + esc(pt.value) + '"' +
+      ' style="color:' + pt.c.color + ';border-color:' + pt.c.color +
+      ';background:' + hexRgba(pt.c.color, 0.13) + '">' +
+      '<i>' + pt.c.tag + '</i>' + esc(pt.value) +
+    '</span>').join('');
+}
+
+function tileHTML(phrase, list, atomic){
+  return '<span class="ci"' + (atomic ? ' contenteditable="false"' : '') +
+           ' style="border-color:' + list[0].c.color + '">' +
+           (phrase ? '<span class="ci-p">' + phrase + '</span>' : '') +
+           valueSegments(list) +
+         '</span>';
+}
+
+/* Escape first, then swap tokens for tiles — never the reverse.
+   atomic=true is for the live editor, where a tile is one uneditable unit. */
+function renderDecode(text, atomic){
+  let out = esc(String(text || ''));
+
+  out = out.replace(TOKEN_RE, (m, phrase, parts) => {
+    const list = parseParts(parts);
+    return list.length ? tileHTML(phrase, list, atomic) : m;
+  });
+
+  out = out.replace(OLD_RE, (m, tag, val) => {
+    const c = cipherByTag(tag);
+    return c ? tileHTML('', [{ c, value: val }], atomic) : m;
+  });
+
+  return out;
+}
+
+/* For previews, titles and length checks: keep the phrase, drop the markup. */
+function stripTokens(text){
+  return String(text || '')
+    .replace(TOKEN_RE, (m, phrase) => phrase)
+    .replace(OLD_RE, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+/* The token the cursor is sitting inside, if any. */
+function tokenAt(v, a, b){
+  TOKEN_RE.lastIndex = 0;
+  let m;
+  while((m = TOKEN_RE.exec(v)) !== null){
+    const st = m.index, en = st + m[0].length;
+    if(a >= st && b <= en) return { start: st, end: en, phrase: m[1], parts: m[2] };
+  }
+  return null;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -1739,7 +2268,9 @@ async function createSection(){
 function openNewPost(){
   document.getElementById('np-title').value   = '';
   document.getElementById('np-content').value = '';
+  edOf('np').setAttribute('data-ph', 'WRITE YOUR DECODE');
   document.getElementById('np-ciphers').value = '';
+  padInit('np', '');
   document.getElementById('np-error').style.display = 'none';
   document.getElementById('np-char-count').textContent = '0 / 4000';
   openModal('modal-new-post');
@@ -1747,22 +2278,26 @@ function openNewPost(){
 }
 
 function updateCharCount(){
-  const len = document.getElementById('np-content').value.length;
+  edSync('np');
+  const len = stripTokens(document.getElementById('np-content').value).length;
   document.getElementById('np-char-count').textContent = len + ' / 4000';
 }
 
 async function createPost(){
   if(!currentSectionId){ closeModal('modal-new-post'); return; }
   const title   = document.getElementById('np-title').value.trim().toUpperCase();
+  edSync('np');
   const content = document.getElementById('np-content').value.trim().toUpperCase();
   const ciphers = document.getElementById('np-ciphers').value.trim().toUpperCase();
   const errEl   = document.getElementById('np-error');
   const btnTxt  = document.querySelector('#modal-new-post .submit-txt');
   errEl.style.display = 'none';
 
-  if(!content || content.length < 20){ errEl.textContent='CONTENT TOO SHORT — MIN 20 CHARACTERS'; errEl.style.display='block'; return; }
+  if(!content || stripTokens(content).length < 20){ errEl.textContent='CONTENT TOO SHORT — MIN 20 CHARACTERS'; errEl.style.display='block'; return; }
+  if(content.length > 4000){ errEl.textContent='DECODE TOO LONG'; errEl.style.display='block'; return; }
 
-  const finalTitle = title || content.substring(0, 60).replace(/\n/g,' ') + (content.length > 60 ? '...' : '');
+  const plain      = stripTokens(content).replace(/\n/g,' ');
+  const finalTitle = title || plain.substring(0, 60) + (plain.length > 60 ? '...' : '');
 
   btnTxt.textContent = 'SUBMITTING...';
   try{
@@ -1787,10 +2322,13 @@ async function createPost(){
 }
 
 async function submitComment(postId){
-  const text   = document.getElementById('new-comment-text').value.trim().toUpperCase();
+  edSync('cm');
+  const text   = document.getElementById('cm-content').value.trim().toUpperCase();
   const btnTxt = document.querySelector('#comment-form-area .submit-txt');
-  if(!text){ showToast('COMMENT CANNOT BE EMPTY', true); return; }
-  if(text.length < 5){ showToast('COMMENT TOO SHORT', true); return; }
+  const plain  = stripTokens(text);
+  if(!plain){ showToast('COMMENT CANNOT BE EMPTY', true); return; }
+  if(plain.length < 5){ showToast('COMMENT TOO SHORT', true); return; }
+  if(text.length > 1000){ showToast('COMMENT TOO LONG', true); return; }
 
   if(btnTxt) btnTxt.textContent = 'POSTING...';
   try{
@@ -1878,6 +2416,8 @@ async function openEditPost(postId){
   document.getElementById('ep-title').value   = post.title || '';
   document.getElementById('ep-content').value = post.content || '';
   document.getElementById('ep-ciphers').value = post.cipher_data || '';
+  edOf('ep').setAttribute('data-ph', 'WRITE YOUR DECODE');
+  padInit('ep', post.content || '');
   document.getElementById('ep-char-count').textContent = (post.content||'').length + ' / 4000';
   document.getElementById('ep-error').style.display = 'none';
   openModal('modal-edit-post');
@@ -1885,24 +2425,28 @@ async function openEditPost(postId){
 }
 
 function updateEditCharCount(){
-  const len = document.getElementById('ep-content').value.length;
+  edSync('ep');
+  const len = stripTokens(document.getElementById('ep-content').value).length;
   document.getElementById('ep-char-count').textContent = len + ' / 4000';
 }
 
 async function saveEditPost(){
   const id      = document.getElementById('ep-id').value;
   const title   = document.getElementById('ep-title').value.trim().toUpperCase();
+  edSync('ep');
   const content = document.getElementById('ep-content').value.trim().toUpperCase();
   const ciphers = document.getElementById('ep-ciphers').value.trim().toUpperCase();
   const errEl   = document.getElementById('ep-error');
   const btnTxt  = document.querySelector('#modal-edit-post .submit-txt');
   errEl.style.display = 'none';
 
-  if(!content || content.length < 20){
+  if(!content || stripTokens(content).length < 20){
     errEl.textContent = 'CONTENT TOO SHORT — MIN 20 CHARACTERS';
     errEl.style.display = 'block'; return;
   }
-  const finalTitle = title || content.substring(0,60).replace(/\n/g,' ') + (content.length > 60 ? '...' : '');
+  if(content.length > 4000){ errEl.textContent='DECODE TOO LONG'; errEl.style.display='block'; return; }
+  const plainC     = stripTokens(content).replace(/\n/g,' ');
+  const finalTitle = title || plainC.substring(0,60) + (plainC.length > 60 ? '...' : '');
   btnTxt.textContent = 'SAVING...';
   try{
     await SB.updatePost(id, { title: finalTitle, content, cipher_data: ciphers });
